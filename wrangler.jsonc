@@ -1,0 +1,11 @@
+{
+  "name": "mywebsite",
+  "compatibility_date": "2026-01-14",
+  "main": "worker.js",
+  "kv_namespaces": [
+    {
+      "binding": "UNIQUE_KV",
+      "id": "3aaf430ddb2a4ad5a3f273f3f30aa48d"
+    }
+  ]
+}
