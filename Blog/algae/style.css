@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* { margin: 0; box-sizing: border-box; }
+
+::selection { background: #f8955c20; }
+
+html {
+  container-type: inline-size;
+  scroll-behavior: smooth;
+}
+
+body, main, article, footer, section { display: grid; }
+
+body {
+  --fgc: #dcdcdc;
+  --hlc: #f8955c;
+  grid-template-columns: 1lh min(100cqw - 2lh, 550px) 1lh;
+  justify-content: space-evenly;
+  align-items: start;
+  position: relative;
+  background: #28292b;
+  color: var(--fgc);
+  font: clamp(.875em, 3vw, 1.375em)/3 "Cormorant", serif;
+}
+
+body::before {
+  grid-area: 1/1/span 1/span 3;
+  justify-self: center;
+  width: 100cqw;
+  height: 50vh;
+  background: url(https://thrivous.com/cdn/shop/articles/algae.jpg?v=1664900041) 50%/cover;
+  mask: linear-gradient(red, #0000);
+  content: '';
+}
+
+a {
+  --hov: 0;
+  color: color-mix(in srgb, var(--hlc) calc(var(--hov)*100%), var(--fgc));
+  opacity: calc(1 - .2*(1 - var(--hov)));
+  text-decoration: none;
+  transition: translate .5s, color .5s;
+}
+
+a:is(:hover, :focus) { --hov: 1; }
+
+.skip-link {
+  position: fixed;
+  left: 12px;
+  z-index: 3;
+  padding: 8px 0;
+  font-style: italic;
+  writing-mode: vertical-rl;
+  color: var(--fgc);
+  text-decoration: none;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.skip-link::after {
+  content: '';
+  display: block;
+  width: 2px;
+  height: 80px;
+  margin: 6px auto 0;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.skip-link:hover,
+.skip-link:focus {
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.skip-link[href="#"] {
+  top: 14vh;
+}
+
+.skip-link[href="#footer"] {
+  bottom: 14vh;
+}
+
+main {
+  grid-area: 1/2;
+  grid-gap: 1em;
+  container-type: inline-size;
+  z-index: 1;
+  padding-top: 20vh;
+  line-height: 1.125;
+}
+
+h1, h2, h3, h4 { font-weight: 400; }
+
+article { grid-gap: 1.5em; }
+
+article h1 { font-size: clamp(2rem, 10cqw, 3.5em); }
+
+article h2 {
+  font-size: clamp(1.25rem, 7cqw, 3em);
+  font-style: italic;
+}
+
+article h3 {
+  font-size: clamp(1.1rem, 5cqw, 2.6em);
+}
+
+article p, article blockquote { line-height: 1.5; }
+
+article blockquote {
+  border-left: solid 4px;
+  padding-left: 1em;
+  font-weight: 700;
+}
+
+footer {
+  grid-gap: 2em;
+  padding: min(9em, 5vw + 4em) 0;
+  border-image: conic-gradient(#222325 0 0) fill 0/ /0 50vw 1em;
+  line-height: 1.5;
+}
+
+footer h3 { font-size: clamp(1.375rem, 13cqw, 5em); }
+
+footer h4 {
+  font-size: clamp(1.125rem, 8cqw, 4em);
+  font-style: italic;
+}
+
+footer ul { list-style: none; padding: 0; }
+
+footer a { display: inline-block; translate: calc(var(--hov)*.5em); }
+
+section { grid-gap: .5em; }

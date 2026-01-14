@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serene Waves</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="world"></div>
+
+  <div id="home-view" class="view active">
+    <img
+      class="center-image"
+      src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c"
+      alt="Centered visual"
+    />
+    <div class="glass-card">
+      <button class="back-button" aria-label="Back to prompt">&#8592;</button>
+      <div class="profile-badge">
+        <div class="profile-glass">
+          <img src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c" alt="Profile photo" />
+        </div>
+        <div class="profile-text">
+            <div class="profile-name">Camron Farjami</div>
+            <div class="profile-title">Builder · Researcher</div>
+            <div class="social-chips">
+              <a class="social-chip" href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1-.001 5.001A2.5 2.5 0 0 1 4.98 3.5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31c-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg>
+              </a>
+              <a class="social-chip" href="https://discord.com/users/1042651808557977600" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.317 4.3698a19.793 19.793 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.211.375-.445.865-.609 1.25a16.017 16.017 0 0 0-5.487 0c-.163-.394-.406-.875-.618-1.25a.077.077 0 0 0-.078-.037a19.738 19.738 0 0 0-4.885 1.515a.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056a19.889 19.889 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.042-.106a12.3 12.3 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.794 8.18 1.794 12.061 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.127a12.3 12.3 0 0 1-1.873.891a.077.077 0 0 0-.04.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029a19.887 19.887 0 0 0 6.002-3.03a.077.077 0 0 0 .031-.055c.5-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.331a2.42 2.42 0 1 1 0-4.838a2.42 2.42 0 0 1 0 4.838Zm7.955 0a2.42 2.42 0 1 1 0-4.838a2.42 2.42 0 0 1 0 4.838Z"/></svg>
+              </a>
+              <a class="social-chip" href="https://open.spotify.com/user/wt4h8d6mugrn5aid768agec53?si=2d0397c651144bd5" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5C6.201 1.5 1.5 6.201 1.5 12S6.201 22.5 12 22.5 22.5 17.799 22.5 12 17.799 1.5 12 1.5zm5.384 15.436a.703.703 0 0 1-.968.238c-2.651-1.625-5.984-1.994-9.915-1.099a.703.703 0 0 1-.29-1.373c4.31-.91 8.03-.479 11.023 1.318a.703.703 0 0 1 .15.916zm1.379-3.067a.879.879 0 0 1-1.213.297c-3.031-1.862-7.653-2.402-11.223-1.316a.879.879 0 0 1-.505-1.685c4.062-1.215 9.123-.612 12.578 1.5a.879.879 0 0 1 .363 1.204zm.12-3.253c-3.636-2.164-9.622-2.363-13.085-1.3a1.055 1.055 0 0 1-.606-2.021c3.987-1.196 10.66-.96 15.007 1.619a1.055 1.055 0 1 1-1.116 1.802z"/></svg>
+              </a>
+              <button class="social-chip copy-chip" id="social-email" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4l-8 5l-8-5V6l8 5l8-5Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      <div class="terminal-body terminal-scroll"></div>
+      <input
+        id="hidden-input"
+        class="terminal-input"
+        name="terminal-input"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-hidden="true"
+        data-lpignore="true"
+        data-bwignore="true"
+        data-bitwarden-watching="false"
+        inputmode="text"
+      />
+      <div class="blog-content-block">
+        <div class="blog-hero">
+          <div class="blog-avatar-circle">
+            <img src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c" alt="Profile photo" />
+          </div>
+          <div class="blog-chat glassy" id="blog-chat">
+            <div class="chat-typing" id="chat-typing">
+              <svg viewBox="0 0 140 48" aria-hidden="true">
+                <g class="typing-1">
+                  <rect x="14" y="6" width="90" height="36" rx="18" class="bubble" />
+                  <circle cx="19" cy="38" r="8" class="bubble" />
+                  <circle cx="9" cy="44" r="4" class="bubble" />
+                  <circle cx="35" cy="24" r="5" class="dot dot-1"></circle>
+                  <circle cx="55" cy="24" r="5" class="dot dot-2"></circle>
+                  <circle cx="75" cy="24" r="5" class="dot dot-3"></circle>
+                </g>
+              </svg>
+            </div>
+            <div class="blog-chat-text" id="blog-chat-text"></div>
+          </div>
+        </div>
+        <div class="pub-container glassy">
+          <h3 class="blog-section-title">Publications</h3>
+          <div class="pub-grid" id="pub-grid">
+            <p class="blog-loading">Loading publications…</p>
+          </div>
+        </div>
+        <h3 class="blog-section-title">Articles</h3>
+        <div class="blog-grid" id="blog-grid">
+          <p class="blog-loading">Loading blog…</p>
+        </div>
+      </div>
+      <div class="work-content">
+        <div class="work-tabs">
+          <button class="work-tab is-active" data-target="#work-about">About</button>
+      <button class="work-tab" data-target="#work-experience">Experience</button>
+      <button class="work-tab" data-target="#work-contact">Contact</button>
+    </div>
+        <div class="work-sections">
+          <section id="work-about" class="work-section is-active">
+            <h3>About</h3>
+            <p>I’m a curious builder who mixes code, research, and design to ship things that actually get used. I like solving messy problems with simple, clear interfaces.</p>
+          </section>
+          <section id="work-experience" class="work-section">
+            <h3>Experience</h3>
+            <ul class="timeline">
+              <li class="tl-item" style="--i:0;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3v5a4 4 0 0 0 8 0V3"/>
+                    <path d="M10 8v6a4 4 0 0 1-8 0v-1"/>
+                    <path d="M18 14a2 2 0 1 0 0 4h1a2 2 0 1 0 0-4z"/>
+                    <path d="M6 18h6"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Sep 2025 to Present</div>
+                  <div class="tl-title">Assistant Researcher</div>
+                  <div class="tl-sub">USC Norris Comprehensive Cancer Center, Los Angeles, CA</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:1;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10L12 4 2 10l10 6z"/>
+                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Aug 2025 to Present</div>
+                  <div class="tl-title">Student</div>
+                  <div class="tl-sub">New York Academy of Sciences, Remote</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:2;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l-6-6 6-6"/>
+                    <path d="M15 6l6 6-6 6"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">May 2025 to Present</div>
+                  <div class="tl-title">Intern</div>
+                  <div class="tl-sub">UCLA Computer Science, Los Angeles, CA</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:3;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Feb 2025 to Present</div>
+                  <div class="tl-title">Board Member and Lead Web Developer</div>
+                  <div class="tl-sub">South Bay STEM Association, Rancho Palos Verdes, CA</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:4;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 18h8"/>
+                    <path d="M3 22h18"/>
+                    <path d="M14 2v6"/>
+                    <path d="M10 2v6"/>
+                    <path d="M8 8h8"/>
+                    <path d="M10 8l-4 8"/>
+                    <path d="M14 8l4 8"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Jun 2025 to Oct 2025</div>
+                  <div class="tl-title">Student</div>
+                  <div class="tl-sub">Science Mentorship Institute, Remote</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:5;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/>
+                    <path d="M4 5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10"/>
+                    <path d="M8 13h8"/>
+                    <path d="M12 9v8"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Feb 2025 to May 2025</div>
+                  <div class="tl-title">Research Fellow</div>
+                  <div class="tl-sub">Non-Trivial, Remote</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:6;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 7l-8 6-8-6"/>
+                    <path d="M4 7v10l8 4 8-4V7"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Jun 2024 to Aug 2025</div>
+                  <div class="tl-title">Dual Enrollment</div>
+                  <div class="tl-sub">El Camino College</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:7;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10L12 4 2 10l10 6z"/>
+                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">May 2025 to Jul 2025</div>
+                  <div class="tl-title">Dual Enrollment</div>
+                  <div class="tl-sub">Los Angeles Community College District</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:8;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">Feb 2021 to Mar 2023</div>
+                  <div class="tl-title">Instructor</div>
+                  <div class="tl-sub">Rolling Hills Taekwondo, Rolling Hills Estates, CA</div>
+                </div>
+              </li>
+
+              <li class="tl-item" style="--i:9;">
+                <div class="tl-icon" aria-hidden="true">
+                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10L12 4 2 10l10 6z"/>
+                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                  </svg>
+                </div>
+                <div class="tl-body">
+                  <div class="tl-date">2022 to 2026</div>
+                  <div class="tl-title">High School Diploma</div>
+                  <div class="tl-sub">Palos Verdes Peninsula High School</div>
+                </div>
+              </li>
+            </ul>
+          </section>
+          <section id="work-contact" class="work-section">
+            <h3>Contact</h3>
+            <p>Reach out for collaborations, research, or code gigs.</p>
+            <p><strong>Email:</strong> camron@camr.one (click the envelope to copy)</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Copied to clipboard</div>
+
+  <div id="blog-view" class="view">
+    <div class="blog-panel" role="article" id="blog-content">
+      <h1>Loading blog…</h1>
+      <p>Please wait while we pull in the latest post.</p>
+    </div>
+  </div>
+  <script type="x-shader/x-fragment" id="fragmentShader">
+    precision highp float;
+
+    uniform float uTime;
+    uniform vec2 uMousePosition;
+    uniform float uDensity;
+    uniform float uDisplacement;
+    uniform vec3 uPalette[4];
+
+    varying vec2 vUv;
+
+    float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+    vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+    vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+    float rand(vec2 co){
+      return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+    }
+
+    float hue2rgb(float f1, float f2, float hue) {
+      if (hue < 0.0)
+        hue += 1.0;
+      else if (hue > 1.0)
+        hue -= 1.0;
+      float res;
+      if ((6.0 * hue) < 1.0)
+        res = f1 + (f2 - f1) * 6.0 * hue;
+      else if ((2.0 * hue) < 1.0)
+        res = f2;
+      else if ((3.0 * hue) < 2.0)
+        res = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;
+      else
+        res = f1;
+      return res;
+    }
+
+    vec3 hsl2rgb(vec3 hsl) {
+      vec3 rgb;
+
+      if (hsl.y == 0.0) {
+        rgb = vec3(hsl.z);
+      } else {
+        float f2;
+
+        if (hsl.z < 0.5)
+          f2 = hsl.z * (1.0 + hsl.y);
+        else
+          f2 = hsl.z + hsl.y - hsl.y * hsl.z;
+
+        float f1 = 2.0 * hsl.z - f2;
+
+        rgb.r = hue2rgb(f1, f2, hsl.x + (1.0/3.0));
+        rgb.g = hue2rgb(f1, f2, hsl.x);
+        rgb.b = hue2rgb(f1, f2, hsl.x - (1.0/3.0));
+      }
+      return rgb;
+    }
+
+    vec3 hsl2rgb(float h, float s, float l) {
+      return hsl2rgb(vec3(h, s, l));
+    }
+
+    float noise(vec3 p){
+      vec3 a = floor(p);
+      vec3 d = p - a;
+      d = d * d * (3.0 - 2.0 * d);
+
+      vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+      vec4 k1 = perm(b.xyxy);
+      vec4 k2 = perm(k1.xyxy + b.zzww);
+
+      vec4 c = k2 + a.zzzz;
+      vec4 k3 = perm(c);
+      vec4 k4 = perm(c + 1.0);
+
+      vec4 o1 = fract(k3 * (1.0 / 41.0));
+      vec4 o2 = fract(k4 * (1.0 / 41.0));
+
+      vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+      vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+      return o4.y * d.y + o4.x * (1.0 - d.y);
+    }
+
+    vec2 fade(vec2 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
+
+    float cnoise(vec2 P){
+      vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+      vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+      Pi = mod(Pi, 289.0);
+      vec4 ix = Pi.xzxz;
+      vec4 iy = Pi.yyww;
+      vec4 fx = Pf.xzxz;
+      vec4 fy = Pf.yyww;
+      vec4 i = perm(perm(ix) + iy);
+      vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0;
+      vec4 gy = abs(gx) - 0.5;
+      vec4 tx = floor(gx + 0.5);
+      gx = gx - tx;
+      vec2 g00 = vec2(gx.x,gy.x);
+      vec2 g10 = vec2(gx.y,gy.y);
+      vec2 g01 = vec2(gx.z,gy.z);
+      vec2 g11 = vec2(gx.w,gy.w);
+      vec4 norm = 1.79284291400159 - 0.85373472095314 *
+        vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+      g00 *= norm.x;
+      g01 *= norm.y;
+      g10 *= norm.z;
+      g11 *= norm.w;
+      float n00 = dot(g00, vec2(fx.x, fy.x));
+      float n10 = dot(g10, vec2(fx.y, fy.y));
+      float n01 = dot(g01, vec2(fx.z, fy.z));
+      float n11 = dot(g11, vec2(fx.w, fy.w));
+      vec2 fade_xy = fade(Pf.xy);
+      vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+      float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+      return 2.3 * n_xy;
+    }
+
+    void main () {
+      float mouseDistance = length(vUv - uMousePosition);
+      float t = uTime * .005;
+      float elevation =  vUv.y * uDensity * 30.0;
+
+      float shadow = smoothstep(0.0, .3 + sin(t * 5.0 * 3.14) * .1 , mouseDistance);
+      elevation += shadow * 5.0;
+
+      float displacement = cnoise( vec2( t + vUv.y * 2.0, t + vUv.x * 3.0 )) * uDisplacement * 3.0 ;
+
+      elevation += displacement * 4.0;
+      elevation *= 2.0 + cnoise( vec2( t + vUv.y * 1.0, t + .5)) * 2.0 ;
+
+      float light = .9 + fract(elevation);
+      light *= .9 + (1.0 - (displacement * displacement)) * .1;
+
+      // blend across the provided palette with smoother bands to avoid artifacts
+      float band = fract(0.05 * elevation + cnoise(vec2(t * 0.15, vUv.x * 1.5)) * 0.25 + shadow * 0.15);
+      band = smoothstep(0.0, 1.0, band);
+      vec3 baseCol;
+      float seg = band * 3.0;
+      if (seg < 1.0) {
+        baseCol = mix(uPalette[0], uPalette[1], seg);
+      } else if (seg < 2.0) {
+        baseCol = mix(uPalette[1], uPalette[2], seg - 1.0);
+      } else {
+        baseCol = mix(uPalette[2], uPalette[3], seg - 2.0);
+      }
+
+      float brightness = 0.6 + light * 0.4 - mouseDistance * 0.08;
+      vec3 col = clamp(baseCol * brightness, 0.0, 1.0);
+
+      gl_FragColor = vec4(col, 1.);
+    }
+  </script>
+
+  <script type="x-shader/x-vertex" id="vertexShader">
+    attribute vec3 position;
+    attribute vec2 uv;
+
+    uniform mat4 projectionMatrix;
+    uniform mat4 modelViewMatrix;
+    uniform mat3 normalMatrix;
+
+    uniform float uTime;
+    uniform vec2 uMousePosition;
+
+    varying vec2 vUv;
+
+    void main() {
+      vUv = uv;
+      vec4 pos = vec4(position, 1.0);
+      gl_Position = pos;
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script>
+    const parameters = {
+      speed: 0.2,
+      density: 0.5,
+      displacement: 0.66
+    };
+
+    class World {
+      constructor(width, height) {
+        this.renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: true
+        });
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setSize(width, height);
+        this.container = document.getElementsByClassName("world")[0];
+        this.scene = new THREE.Scene();
+        this.width = width;
+        this.height = height;
+        this.aspectRatio = width / height;
+        this.fieldOfView = 50;
+        const nearPlane = .1;
+        const farPlane = 20000;
+        this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, nearPlane, farPlane);
+        this.camera.position.z = 200;
+        this.container.appendChild(this.renderer.domElement);
+        this.timer = 0;
+        this.mousePos = {x:0, y:0};
+        this.targetMousePos = {x:0, y:0};
+        this.createPlane();
+        this.render();
+      }
+
+      createPlane(){
+        this.material = new THREE.RawShaderMaterial({
+          vertexShader: document.getElementById( 'vertexShader' ).textContent,
+          fragmentShader: document.getElementById('fragmentShader').textContent,
+
+          uniforms: {
+            uTime: { type: 'f', value: 0 },
+            uDensity: {type: 'f', value: parameters.density},
+            uDisplacement: {type: 'f', value: parameters.displacement},
+            uMousePosition: {type: 'v2', value: new THREE.Vector2( 0.5, 0.5 ) },
+            uPalette: {
+              value: [
+                new THREE.Color('#330036'),
+                new THREE.Color('#38182f'),
+                new THREE.Color('#2f394d'),
+                new THREE.Color('#56666b')
+              ]
+            }
+          }
+        });
+        this.planeGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+
+        this.plane = new THREE.Mesh(this.planeGeometry, this.material);
+        this.scene.add(this.plane);
+      }
+
+      render() {
+        this.timer += parameters.speed;
+        this.plane.material.uniforms.uTime.value = this.timer;
+
+        this.mousePos.x += (this.targetMousePos.x - this.mousePos.x) * .1;
+        this.mousePos.y += (this.targetMousePos.y - this.mousePos.y) * .1;
+
+        if (this.plane){
+          this.plane.material.uniforms.uMousePosition.value = new THREE.Vector2(this.mousePos.x, this.mousePos.y);
+        }
+
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      loop() {
+        this.render();
+        requestAnimationFrame(this.loop.bind(this));
+      }
+
+      updateSize(w, h) {
+        this.renderer.setSize(w, h);
+        this.camera.aspect = w / h;
+        this.camera.updateProjectionMatrix();
+      }
+      mouseMove(mousePos) {
+        this.targetMousePos.x = mousePos.px;
+        this.targetMousePos.y = mousePos.py;
+      }
+    };
+
+    let mousePos = {x:0, y:0, px:0, py:0};
+    let world;
+
+    document.addEventListener("DOMContentLoaded", domIsReady);
+
+    function domIsReady() {
+      world = new World(window.innerWidth, window.innerHeight);
+      window.addEventListener('resize', handleWindowResize, false);
+      document.addEventListener("mousemove", handleMouseMove, false);
+      handleWindowResize();
+      world.loop();
+    }
+
+    function handleWindowResize() {
+      if (!world) return;
+      world.updateSize(window.innerWidth, window.innerHeight);
+    }
+
+    function handleMouseMove(e) {
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+      mousePos.px = mousePos.x / window.innerWidth;
+      mousePos.py = 1.0 - mousePos.y / window.innerHeight;
+      world.mouseMove(mousePos);
+    }
+  </script>
+
+  <script>
+    // Simple in-box terminal (vanilla JS, no inputs)
+    const terminalEl = document.querySelector('.terminal-body');
+    const promptSymbol = '➜';
+    const pathSymbol = '~';
+    const ownerTimeZone = 'America/Los_Angeles';
+    const charDelay = 18; // ms per character for type effect
+    const lineDelay = 120; // pause between lines
+    const homeView = document.getElementById('home-view');
+    const blogView = document.getElementById('blog-view');
+    const blogPanel = document.getElementById('blog-content');
+    const blogGrid = document.getElementById('blog-grid');
+    const pubGrid = document.getElementById('pub-grid');
+    const glassCard = document.querySelector('.glass-card');
+    const workContent = document.querySelector('.work-content');
+    const blogContentBlock = document.querySelector('.blog-content-block');
+    const backButton = document.querySelector('.back-button');
+    const profileBadge = document.querySelector('.profile-badge');
+    const emailChip = document.getElementById('social-email');
+    const toastEl = document.getElementById('toast');
+    const hiddenInput = document.getElementById('hidden-input');
+    const uniqueApi = 'http://localhost:3000/api/unique'; // in production, proxy to /api/unique on same origin
+    let blogLoaded = false;
+    let blogChatRan = false;
+    const chatTyping = document.getElementById('chat-typing');
+    let commandHistory = [];
+    let historyIndex = 0;
+    let currentCommand = '';
+    let inputSpan = null;
+    let cursorSpan = null;
+    function scrollToBottom() {
+      terminalEl.scrollTop = terminalEl.scrollHeight;
+    }
+
+    // —–– Navigation helpers (fix missing functions) —––
+    // Site renders inside the glass card. Keep /blog in the URL for sharing and back-button support.
+    function setActiveView() {
+      if (!homeView) return;
+      homeView.classList.add('active');
+      if (blogView) blogView.classList.remove('active');
+    }
+
+    function navigateTo(path, push = true) {
+      const isBlog = path === '/blog' || (typeof path === 'string' && path.startsWith('/blog/'));
+      if (push) history.pushState({}, '', path);
+
+      setActiveView();
+
+      if (isBlog) {
+        if (typeof enterBlogMode === 'function') enterBlogMode();
+      } else {
+        if (typeof exitOverlay === 'function') exitOverlay();
+      }
+    }
+
+    function initNavigation() {
+      window.addEventListener('popstate', () => {
+        navigateTo(location.pathname, false);
+      });
+
+      document.addEventListener('click', (e) => {
+        const a = e.target.closest && e.target.closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || !href.startsWith('/')) return;
+        e.preventDefault();
+        navigateTo(href, true);
+      });
+    }
+
+    const commands = {
+      clear: async () => {
+        terminalEl.innerHTML = '';
+      },
+      help: async () => {
+        await appendOutput('Available commands: work, blog, clear, help, echo, kanye');
+      },
+      echo: async (args) => {
+        await appendOutput(args.join(' '));
+      },
+      blog: async () => {
+        await enterBlogMode();
+      },
+      kanye: async () => {
+        try {
+          const res = await fetch('https://api.kanye.rest/');
+          if (!res.ok) throw new Error('Request failed');
+          const data = await res.json();
+          await appendOutput(`"${data.quote || '...'}"`);
+        } catch (err) {
+          await appendOutput('Could not reach Kanye right now.');
+        }
+      },
+      work: async () => {
+        enterWorkMode();
+      }
+    };
+
+    function typeOutput(text) {
+      return new Promise((resolve) => {
+        const lines = text.split('\n');
+        let lineIndex = 0;
+
+        function typeLine() {
+          if (lineIndex >= lines.length) {
+            resolve();
+            return;
+          }
+          const lineEl = document.createElement('div');
+          terminalEl.appendChild(lineEl);
+          const content = lines[lineIndex];
+          let i = 0;
+          const tick = () => {
+            if (i <= content.length) {
+              lineEl.textContent = content.slice(0, i);
+              scrollToBottom();
+              i++;
+              setTimeout(tick, charDelay);
+            } else {
+              lineIndex++;
+              if (lineIndex < lines.length) {
+                setTimeout(typeLine, lineDelay);
+              } else {
+                resolve();
+              }
+            }
+          };
+          tick();
+        }
+
+        typeLine();
+      });
+    }
+
+    function appendOutput(str) {
+      return typeOutput(str);
+    }
+
+    function displayPrompt() {
+      const line = document.createElement('div');
+      line.className = 'line';
+
+      const promptSpan = document.createElement('span');
+      promptSpan.className = 'prompt';
+      promptSpan.textContent = promptSymbol + ' ';
+      line.appendChild(promptSpan);
+
+      const pathSpan = document.createElement('span');
+      pathSpan.className = 'path';
+      pathSpan.textContent = pathSymbol + ' ';
+      line.appendChild(pathSpan);
+
+      inputSpan = document.createElement('span');
+      inputSpan.className = 'input';
+      line.appendChild(inputSpan);
+
+      cursorSpan = document.createElement('span');
+      cursorSpan.className = 'cursor';
+      cursorSpan.textContent = '|';
+      line.appendChild(cursorSpan);
+
+      terminalEl.appendChild(line);
+      scrollToBottom();
+      if (hiddenInput) hiddenInput.focus();
+    }
+
+    function setCommandText(text) {
+      currentCommand = text;
+      if (inputSpan) {
+        inputSpan.textContent = text;
+        scrollToBottom();
+      }
+    }
+
+    async function processCommand() {
+      if (!currentCommand.trim()) return;
+      const parts = currentCommand.trim().split(' ');
+      const cmd = parts.shift();
+      const args = parts;
+
+      if (commands[cmd]) {
+        await commands[cmd](args);
+      } else {
+        await appendOutput(`zsh: command not found: ${cmd}`);
+      }
+      commandHistory.push(currentCommand);
+      historyIndex = commandHistory.length;
+    }
+
+    function finalizeLine() {
+      if (cursorSpan) {
+        cursorSpan.remove();
+        cursorSpan = null;
+      }
+    }
+
+    window.addEventListener('keydown', async (e) => {
+      if (e.target === hiddenInput) return;
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        if (currentCommand.length > 0) {
+          setCommandText(currentCommand.slice(0, -1));
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (commandHistory.length === 0) return;
+        if (e.key === 'ArrowUp') {
+          historyIndex = Math.max(0, historyIndex - 1);
+        } else {
+          historyIndex = Math.min(commandHistory.length - 1, historyIndex + 1);
+        }
+        setCommandText(commandHistory[historyIndex] || '');
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        finalizeLine();
+        await processCommand();
+        setCommandText('');
+        displayPrompt();
+        return;
+      }
+
+      if (e.key.length === 1 && !e.metaKey && !e.ctrlKey) {
+        setCommandText(currentCommand + e.key);
+      }
+    });
+
+    if (hiddenInput) {
+      hiddenInput.addEventListener('input', () => {
+        setCommandText(hiddenInput.value);
+      });
+      hiddenInput.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          finalizeLine();
+          await processCommand();
+          setCommandText('');
+          hiddenInput.value = '';
+          displayPrompt();
+        }
+      });
+      glassCard?.addEventListener('click', () => hiddenInput.focus());
+    }
+
+    function isoDay() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    async function fetchUniqueCount() {
+      const page = location.pathname && location.pathname.startsWith('/') ? location.pathname : '/';
+      const day = isoDay();
+      const key = `unique_view_sent_${day}_${page}`;
+      const usePost = !sessionStorage.getItem(key);
+      const url = `${uniqueApi}?page=${encodeURIComponent(page)}`;
+      const method = usePost ? 'POST' : 'GET';
+      try {
+        const res = await fetch(url, { method });
+        if (!res.ok) throw new Error('bad status');
+        const data = await res.json();
+        if (data && Number.isFinite(data.uniqueAllTime)) {
+          if (usePost) sessionStorage.setItem(key, '1');
+          return `This website has been viewed ${data.uniqueAllTime} unique times.`;
+        }
+      } catch (e) {
+        return null;
+      }
+      return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const camronTime = new Intl.DateTimeFormat('en-US', {
+        timeZone: ownerTimeZone,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }).format(new Date());
+      await appendOutput(`camron's local time is ${camronTime}`);
+      const visitMsg = await fetchUniqueCount();
+      if (visitMsg) await appendOutput(visitMsg);
+      await appendOutput('What would you like to do?');
+      await appendOutput('Hint: try typing "help"');
+      displayPrompt();
+
+      initNavigation();
+      initWorkCard();
+      if (hiddenInput) hiddenInput.focus();
+      // Ensure correct view if user lands directly on /blog
+      navigateTo(location.pathname, false);
+
+      // If redirected from /blog entry page, auto-open blog view and push state
+      if (sessionStorage.getItem('goto-blog') === '1') {
+        sessionStorage.removeItem('goto-blog');
+        navigateTo('/blog', true);
+      }
+    });
+
+    // ------- Work card toggle -------
+    function enterWorkMode() {
+      exitOverlay();
+      document.body.classList.add('work-mode');
+    }
+
+    function enterBlogMode() {
+      exitOverlay();
+      document.body.classList.add('blog-mode');
+      loadBlogCards();
+      startBlogChat();
+    }
+
+    function exitOverlay() {
+      document.body.classList.remove('work-mode');
+      document.body.classList.remove('blog-mode');
+      document.body.classList.remove('experience-active');
+      if (hiddenInput) hiddenInput.focus();
+    }
+
+    function initWorkCard() {
+      if (backButton) {
+        backButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          exitOverlay();
+        });
+      }
+      const tabButtons = document.querySelectorAll('.work-tab');
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          const target = btn.getAttribute('data-target');
+          document.body.classList.toggle('experience-active', target === '#work-experience');
+          document.querySelectorAll('.work-section').forEach(sec => {
+            sec.classList.toggle('is-active', sec.id === target.slice(1));
+          });
+        });
+      });
+
+      if (emailChip && navigator.clipboard) {
+        emailChip.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText('camron@camr.one');
+            showToast();
+          } catch (err) {
+            showToast('Unable to copy');
+          }
+        });
+      }
+    }
+
+    function showToast(message = 'Copied to clipboard') {
+      if (!toastEl) return;
+      toastEl.textContent = message;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2000);
+    }
+
+    // Load blog cards into the glass card
+    async function loadBlogCards() {
+      if (blogLoaded) return;
+      const publications = [
+        {
+          title: 'Living Machines: The Potential of ABBMs',
+          href: 'https://www.authorea.com/users/955969/articles/1376990-living-machines-the-potential-of-abbms-for-precision-oncology',
+          image: 'https://i.ibb.co/d4cnwjg7/Featured-Volbot.png'
+        },
+        {
+          title: 'BDPCN',
+          href: '',
+          image: 'https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13000-023-01301-3/MediaObjects/13000_2023_1301_Fig3_HTML.png'
+        }
+      ];
+      if (pubGrid) {
+        pubGrid.innerHTML = '';
+        publications.forEach((pub) => {
+          const card = pub.href
+            ? document.createElement('a')
+            : document.createElement('div');
+          card.className = 'blog-card pub-card' + (pub.href ? '' : ' disabled');
+          if (pub.href) {
+            card.href = pub.href;
+            card.target = '_blank';
+            card.rel = 'noreferrer';
+          }
+          const img = document.createElement('img');
+          img.src = pub.image;
+          img.alt = pub.title;
+          card.appendChild(img);
+          const overlay = document.createElement('div');
+          overlay.className = 'blog-overlay';
+          overlay.textContent = pub.title;
+          card.appendChild(overlay);
+          pubGrid.appendChild(card);
+        });
+      }
+
+      if (blogGrid) {
+        blogGrid.innerHTML = '<p class="blog-loading">Articles coming soon.</p>';
+      }
+      blogLoaded = true;
+    }
+
+    function startBlogChat() {
+      if (blogChatRan) return;
+      const chat = document.getElementById('blog-chat');
+      const chatText = document.getElementById('blog-chat-text');
+      if (!chat || !chatText) return;
+      const message = "In my freetime I like to research, read, and sometimes write. Here are a couple things I'm interested in.";
+      chat.classList.add('show');
+      chatText.textContent = '';
+      if (chatTyping) {
+        chatTyping.classList.remove('hidden');
+      }
+      let i = 0;
+      const tick = () => {
+        if (i <= message.length) {
+          chatText.textContent = message.slice(0, i);
+          i++;
+          setTimeout(tick, 22);
+        }
+      };
+      setTimeout(() => {
+        if (chatTyping) chatTyping.classList.add('hidden');
+        tick();
+      }, 300);
+      blogChatRan = true;
+    }
+  </script>
+</body>
+</html>
