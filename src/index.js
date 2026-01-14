@@ -33,9 +33,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Only handle the API route
-    if (!url.pathname.startsWith("/api/unique")) {
-      return new Response("Not found", { status: 404 });
+    // Route: analytics API
+    if (url.pathname.startsWith("/api/unique")) {
+      // continue below
+    } else {
+      // Route: static site assets (served from ./public via Wrangler assets)
+      if (env.ASSETS && typeof env.ASSETS.fetch === "function") {
+        return env.ASSETS.fetch(request);
+      }
+      return new Response("Assets not configured", { status: 500 });
     }
 
     // CORS preflight

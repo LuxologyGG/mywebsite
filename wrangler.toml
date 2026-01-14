@@ -5,3 +5,6 @@ compatibility_date = "2026-01-14"
 kv_namespaces = [
   { binding = "UNIQUE_KV", id = "3aaf430ddb2a4ad5a3f273f3f30aa48d" }
 ]
+
+[assets]
+directory = "./public"
