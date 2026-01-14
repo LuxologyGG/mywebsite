@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Serene Waves</title>
+  <title>camr.one</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -636,7 +636,19 @@
         terminalEl.innerHTML = '';
       },
       help: async () => {
-        await appendOutput('Available commands: work, blog, clear, help, echo, kanye');
+        const helpText = [
+          'Commands (grouped):',
+          '  about/',
+          '    work',
+          '    blog',
+          '  fun/',
+          '    kanye',
+          '    echo',
+          '  system/',
+          '    clear',
+          '    help'
+        ].join('\n');
+        await appendOutput(helpText);
       },
       echo: async (args) => {
         await appendOutput(args.join(' '));
