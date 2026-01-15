@@ -638,16 +638,16 @@
       },
       help: async () => {
         const helpText = [
-          'Commands (grouped):',
-          '  about/',
-          '    work',
-          '    blog',
-          '  fun/',
-          '    kanye',
-          '    echo',
-          '  system/',
-          '    clear',
-          '    help'
+          'Commands',
+          '├─ about/',
+          '│   ├─ work',
+          '│   └─ blog',
+          '├─ fun/',
+          '│   ├─ kanye',
+          '│   └─ echo',
+          '└─ system/',
+          '    ├─ clear',
+          '    └─ help'
         ].join('\n');
         await appendOutput(helpText);
       },
