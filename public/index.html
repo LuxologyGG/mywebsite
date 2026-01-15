@@ -13,14 +13,14 @@
   <div id="home-view" class="view active">
     <img
       class="center-image"
-      src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c"
+      src="https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/pfp.png?raw=true"
       alt="Centered visual"
     />
     <div class="glass-card">
       <button class="back-button" aria-label="Back to prompt">&#8592;</button>
       <div class="profile-badge">
         <div class="profile-glass">
-          <img src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c" alt="Profile photo" />
+          <img src="https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/pfp.png?raw=true" alt="Profile photo" />
         </div>
         <div class="profile-text">
             <div class="profile-name">Camron Farjami</div>
@@ -96,12 +96,32 @@
         <div class="work-sections">
           <section id="work-about" class="work-section is-active">
             <h3>About</h3>
-            <p>I’m a curious builder who mixes code, research, and design to ship things that actually get used. I like solving messy problems with simple, clear interfaces.</p>
+            <p>I like science, skiing, and cooking.</p>
+            <div class="about-current glassy">
+              <div class="about-logo glassy">
+                <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC logo">
+              </div>
+              <div class="about-current-text glassy">
+                <div class="about-current-title">I'm currently working at <strong>USC</strong></div>
+                <div class="about-current-sub">Research Intern</div>
+                <div class="about-current-body">I currently work with Dr. Yaghmour researching BPDCN. I've been there <span id="days-since-usc"></span> days.</div>
+              </div>
+            </div>
           </section>
           <section id="work-experience" class="work-section">
             <h3>Experience</h3>
-            <ul class="timeline">
-              <li class="tl-item" style="--i:0;">
+            <div class="exp-tabs">
+              <button class="exp-tab is-active" data-target="exp-pane-work">Work</button>
+              <button class="exp-tab" data-target="exp-pane-coding">Coding</button>
+            </div>
+            <div class="exp-pane is-active" id="exp-pane-work">
+            <div class="exp-detail" id="exp-detail" aria-live="polite">
+              <div class="exp-detail-title" id="exp-detail-title"></div>
+              <div class="exp-detail-meta" id="exp-detail-meta"></div>
+              <div class="exp-detail-body" id="exp-detail-body"></div>
+            </div>
+            <ul class="timeline" id="exp-timeline">
+              <li class="tl-item" style="--i:0;" data-exp="assistant_researcher">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 3v5a4 4 0 0 0 8 0V3"/>
@@ -117,7 +137,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:1;">
+              <li class="tl-item" style="--i:1;" data-exp="nyas_student">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 10L12 4 2 10l10 6z"/>
@@ -131,7 +151,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:2;">
+              <li class="tl-item" style="--i:2;" data-exp="ucla_intern">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 18l-6-6 6-6"/>
@@ -145,7 +165,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:3;">
+              <li class="tl-item" style="--i:3;" data-exp="southbay_board">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -161,7 +181,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:4;">
+              <li class="tl-item" style="--i:4;" data-exp="smi_student">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 18h8"/>
@@ -180,7 +200,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:5;">
+              <li class="tl-item" style="--i:5;" data-exp="nontrivial_fellow">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/>
@@ -196,7 +216,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:6;">
+              <li class="tl-item" style="--i:6;" data-exp="instructor_tkd">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 7l-8 6-8-6"/>
@@ -210,7 +230,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:7;">
+              <li class="tl-item" style="--i:7;" data-exp="elcamino_dual">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 10L12 4 2 10l10 6z"/>
@@ -224,7 +244,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:8;">
+              <li class="tl-item" style="--i:8;" data-exp="laccd_dual">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/>
@@ -237,7 +257,7 @@
                 </div>
               </li>
 
-              <li class="tl-item" style="--i:9;">
+              <li class="tl-item" style="--i:9;" data-exp="hs_diploma">
                 <div class="tl-icon" aria-hidden="true">
                   <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 10L12 4 2 10l10 6z"/>
@@ -251,6 +271,177 @@
                 </div>
               </li>
             </ul>
+            </div>
+            <div class="exp-pane" id="exp-pane-coding">
+              <div class="coding-categories">
+                <button class="coding-cat-toggle is-active" data-cat="front">Front End</button>
+                <button class="coding-cat-toggle" data-cat="back">Back End</button>
+                <button class="coding-cat-toggle" data-cat="other">Other Technologies</button>
+              </div>
+
+              <div class="coding-list active" data-cat="front">
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/HTML5_Badge.svg" alt="HTML logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">HTML</div>
+                    <div class="tech-sub">Semantic, accessible structure.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg" alt="CSS logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">CSS</div>
+                    <div class="tech-sub">Responsive theming & motion.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg" alt="JavaScript logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">JavaScript</div>
+                    <div class="tech-sub">SPA patterns, async, DOM.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">React</div>
+                    <div class="tech-sub">Hooks, components, state.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt="Figma logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">Figma</div>
+                    <div class="tech-sub">Interface design & prototyping.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg" alt="WordPress logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">WordPress</div>
+                    <div class="tech-sub">Themes, page building, SEO basics.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="coding-list" data-cat="back">
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">Python</div>
+                    <div class="tech-sub">APIs, automation, data tasks.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg" alt="R logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">R</div>
+                    <div class="tech-sub">Statistics & visualization.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="data:image/svg+xml;utf8,<svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><circle cx='16' cy='16' r='14' fill='%238892BF'/><path d='M14.4392 10H16.1192L15.6444 12.5242H17.154C17.9819 12.5419 18.5986 12.7269 19.0045 13.0793C19.4184 13.4316 19.5402 14.1014 19.3698 15.0881L18.5541 19.4889H16.8497L17.6288 15.2863C17.7099 14.8457 17.6856 14.533 17.5558 14.348C17.426 14.163 17.146 14.0705 16.7158 14.0705L15.3644 14.0573L14.3661 19.4889H12.6861L14.4392 10Z' fill='white'/><path fill-rule='evenodd' clip-rule='evenodd' d='M6.74092 12.5243H10.0036C10.9612 12.533 11.6552 12.8327 12.0854 13.4229C12.5156 14.0132 12.6576 14.8193 12.5115 15.8414C12.4548 16.3085 12.3289 16.7665 12.1341 17.2159C11.9474 17.6652 11.6878 18.0704 11.355 18.4317C10.9491 18.8898 10.5149 19.1805 10.0523 19.304C9.58969 19.4274 9.11076 19.489 8.61575 19.489H7.15484L6.69222 22H5L6.74092 12.5243ZM7.43485 17.9956L8.16287 14.0441H8.40879C8.49815 14.0441 8.5914 14.0396 8.6888 14.0309C9.33817 14.0221 9.87774 14.0882 10.308 14.2291C10.7462 14.37 10.8923 14.9031 10.7462 15.8282C10.5678 16.9296 10.2186 17.5727 9.69926 17.7577C9.1799 17.934 8.53053 18.0176 7.75138 18.0088H7.58094C7.53224 18.0088 7.48355 18.0043 7.43485 17.9956Z' fill='white'/><path fill-rule='evenodd' clip-rule='evenodd' d='M24.4365 12.5243H21.1738L19.4329 22H21.1251L21.5878 19.489H23.0487C23.5437 19.489 24.0226 19.4274 24.4852 19.304C24.9479 19.1805 25.382 18.8898 25.7879 18.4317C26.1207 18.0704 26.3803 17.6652 26.567 17.2159C26.7618 16.7665 26.8877 16.3085 26.9444 15.8414C27.0905 14.8193 26.9486 14.0132 26.5183 13.4229C26.0881 12.8327 25.3942 12.533 24.4365 12.5243ZM22.5958 14.0441L21.8678 17.9956C21.9165 18.0043 21.9652 18.0088 22.0139 18.0088H22.1843C22.9635 18.0176 23.6128 17.934 24.1322 17.7577C24.6515 17.5727 25.0007 16.9296 25.1792 15.8282C25.3253 14.9031 25.1792 14.37 24.7409 14.2291C24.3107 14.0882 23.7711 14.0221 23.1217 14.0309C23.0243 14.0396 22.9311 14.0441 22.8417 14.0441H22.5958Z' fill='white'/></svg>" alt="PHP logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">PHP</div>
+                    <div class="tech-sub">Server-side scripting.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" alt="MongoDB logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">MongoDB</div>
+                    <div class="tech-sub">Document databases.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="coding-list" data-cat="other">
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" alt="Git logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">Git</div>
+                    <div class="tech-sub">Branching, reviews, CI basics.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">GitHub</div>
+                    <div class="tech-sub">Repos, issues, Actions.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" alt="npm logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">npm</div>
+                    <div class="tech-sub">Packages & scripts.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">Vercel</div>
+                    <div class="tech-sub">Deployments & previews.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://r2.e-z.host/2082d908-7c65-4fc3-b02a-5f50f9141543/me2uv8xk95n010sdwz.png" alt="Cloudflare logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">Cloudflare</div>
+                    <div class="tech-sub">DNS, caching, workers.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">VS Code</div>
+                    <div class="tech-sub">Editor workflow & extensions.</div>
+                  </div>
+                </div>
+                <div class="tech-card glassy">
+                  <div class="tech-icon">
+                    <img src="https://raw.githubusercontent.com/Ixiko/AHK-Forum/master/images/AHK%20main%20icon.png" alt="AutoHotkey logo">
+                  </div>
+                  <div class="tech-text">
+                    <div class="tech-title">AutoHotkey</div>
+                    <div class="tech-sub">Shortcuts & macros.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
           </section>
           <section id="work-contact" class="work-section">
             <h3>Contact</h3>
@@ -542,6 +733,7 @@
 
     function domIsReady() {
       world = new World(window.innerWidth, window.innerHeight);
+      updatePalette(document.body.classList.contains('light-mode') ? 'light' : 'dark');
       window.addEventListener('resize', handleWindowResize, false);
       document.addEventListener("mousemove", handleMouseMove, false);
       handleWindowResize();
@@ -584,6 +776,10 @@
     const toastEl = document.getElementById('toast');
     const hiddenInput = document.getElementById('hidden-input');
     const uniqueApi = 'http://localhost:3000/api/unique'; // in production, proxy to /api/unique on same origin
+    const palettes = {
+      dark: ['#330036', '#38182f', '#2f394d', '#56666b'],
+      light: ['#f5f6fb', '#dfe4ef', '#cfd6e3', '#aebacd']
+    };
     let blogLoaded = false;
     let blogChatRan = false;
     const chatTyping = document.getElementById('chat-typing');
@@ -632,6 +828,18 @@
       });
     }
 
+    function updatePalette(mode = 'dark') {
+      if (!world || !world.plane || !world.plane.material || !world.plane.material.uniforms?.uPalette) return;
+      const arr = palettes[mode] || palettes.dark;
+      world.plane.material.uniforms.uPalette.value = arr.map(c => new THREE.Color(c));
+    }
+
+    function setTheme(mode) {
+      const isLight = mode === 'light';
+      document.body.classList.toggle('light-mode', isLight);
+      updatePalette(isLight ? 'light' : 'dark');
+    }
+
     const commands = {
       clear: async () => {
         terminalEl.innerHTML = '';
@@ -645,6 +853,9 @@
           '├─ fun/',
           '│   ├─ kanye',
           '│   └─ echo',
+          '├─ theme/',
+          '│   ├─ light-mode',
+          '│   └─ dark-mode',
           '└─ system/',
           '    ├─ clear',
           '    └─ help'
@@ -653,6 +864,14 @@
       },
       echo: async (args) => {
         await appendOutput(args.join(' '));
+      },
+      'light-mode': async () => {
+        setTheme('light');
+        await appendOutput('Switched to light mode.');
+      },
+      'dark-mode': async () => {
+        setTheme('dark');
+        await appendOutput('Switched to dark mode.');
       },
       blog: async () => {
         await enterBlogMode();
@@ -848,6 +1067,15 @@
       return null;
     }
 
+    function initDaysSince() {
+      const el = document.getElementById('days-since-usc');
+      if (!el) return;
+      const start = Date.UTC(2025, 8, 18); // Sept 18, 2025 (months 0-indexed)
+      const now = Date.now();
+      const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      el.textContent = days >= 0 ? days : 0;
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       const camronTime = new Intl.DateTimeFormat('en-US', {
         timeZone: ownerTimeZone,
@@ -868,6 +1096,8 @@
 
       initNavigation();
       initWorkCard();
+      initExperienceDetails();
+      initDaysSince();
       if (hiddenInput) hiddenInput.focus();
       // Ensure correct view if user lands directly on /blog
       navigateTo(location.pathname, false);
@@ -946,12 +1176,12 @@
         {
           title: 'Living Machines: The Potential of ABBMs',
           href: 'https://www.authorea.com/users/955969/articles/1376990-living-machines-the-potential-of-abbms-for-precision-oncology',
-          image: 'https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/Featured-Volbot.webp?raw=true'
+          image: 'photos/Featured-Volbot.webp'
         },
         {
           title: 'BDPCN',
           href: '',
-          image: 'https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/13000_2023_1301_Fig3_HTML.webp?raw=true'
+          image: 'photos/13000_2023_1301_Fig3_HTML.webp'
         }
       ];
       if (pubGrid) {
@@ -1008,6 +1238,234 @@
         tick();
       }, 300);
       blogChatRan = true;
+    }
+
+    // Experience detail toggle with FLIP + typewriter
+    function initExperienceDetails() {
+      const timeline = document.getElementById('exp-timeline');
+      const detail = document.getElementById('exp-detail');
+      const detailTitle = document.getElementById('exp-detail-title');
+      const detailMeta = document.getElementById('exp-detail-meta');
+      const detailBody = document.getElementById('exp-detail-body');
+      const tabs = Array.from(document.querySelectorAll('.exp-tab'));
+      const panes = Array.from(document.querySelectorAll('.exp-pane'));
+      if (!timeline || !detail || !detailTitle || !detailMeta || !detailBody) return;
+
+      const items = Array.from(timeline.querySelectorAll('.tl-item'));
+      const codingCatButtons = Array.from(document.querySelectorAll('.coding-cat-toggle'));
+      const codingLists = Array.from(document.querySelectorAll('.coding-list'));
+      const expData = {
+        assistant_researcher: {
+          title: 'Assistant Researcher',
+          meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 – Present · Los Angeles, CA (On-site)',
+          body: [
+            'Observed hematology/oncology rounds (AML, stem cell transplantation, novel maintenance therapies).',
+            'Learned regimen selection (7+3, FLAG, CPX-351) and managed engraftment/transplant toxicities.',
+            'Coordinated multidisciplinary care across oncology, cardiology, and nephrology.',
+            'Discussed targeted inhibitors, immunotherapy, and evolving standards in hematologic malignancies.',
+            'Co-authored case reports (e.g., BPDCN in systemic mastocytosis).'
+          ]
+        },
+        nyas_student: {
+          title: 'Student',
+          meta: 'New York Academy of Sciences · Aug 2025 – Present · Remote',
+          body: [
+            'Selected for a global community of high-achieving students and STEM mentors.',
+            'Collaborating on sustainability, energy, and global health challenges.'
+          ]
+        },
+        ucla_intern: {
+          title: 'Intern',
+          meta: 'UCLA Computer Science (GLITCH) · May 2025 – Present · Los Angeles, CA (Hybrid)',
+          body: [
+            'Contributed to Hot Potato, a GPS-based multiplayer mobile game for real-world interaction.',
+            'Collaborated on design, development, debugging, and agile teamwork.',
+            'Refined gameplay logic, UX, and proximity detection.'
+          ]
+        },
+        southbay_board: {
+          title: 'Board Member & Lead Web Developer',
+          meta: 'South Bay STEM Association · Feb 2025 – Present · Rancho Palos Verdes, CA',
+          body: [
+            'Oversee STEM initiatives, mentor students, and build web platforms for education and outreach.',
+            'Skills: web dev, non-profit management, STEM, volunteering, WordPress/JS/CSS/HTML.'
+          ]
+        },
+        smi_student: {
+          title: 'Student',
+          meta: 'Science Mentorship Institute · Jun 2025 – Oct 2025 · Remote',
+          body: [
+            'Accepted into Biology Mentorship Program (10% acceptance rate).',
+            'Conducted independent research; earned presentation certificate for cancer research.'
+          ]
+        },
+        nontrivial_fellow: {
+          title: 'Research Fellow',
+          meta: 'Non-Trivial · Feb 2025 – May 2025 · Remote',
+          body: [
+            'Selective research training (<10% selection). Proposal on algae-based microrobots for precision tumor targeting.',
+            'Skills: student engagement, research, STEM, clinical research.'
+          ]
+        },
+        instructor_tkd: {
+          title: 'Instructor',
+          meta: 'Rolling Hills Taekwondo · Feb 2021 – Mar 2023 · Rolling Hills Estates, CA',
+          body: [
+            'Taught taekwondo fundamentals, discipline, and self-defense in a structured, fast-paced environment.',
+            'Managed classes and supported children in training.'
+          ]
+        },
+        elcamino_dual: {
+          title: 'Dual Enrollment',
+          meta: 'El Camino College · Jun 2024 – Aug 2025 · GPA 4.00/4.00',
+          body: [
+            'Coursework: HIST-102 (A), PSYC-101 (A), PHYS-2A.'
+          ]
+        },
+        laccd_dual: {
+          title: 'Dual Enrollment',
+          meta: 'Los Angeles Community College District · May 2025 – Jul 2025 · GPA 4.00/4.00',
+          body: [
+            'Coursework: STAT-001 (A).'
+          ]
+        },
+        hs_diploma: {
+          title: 'High School Diploma',
+          meta: 'Palos Verdes Peninsula High School · 2022 – 2026',
+          body: [
+            'Activities: SNHS, TSA, Philosophy Club Treasurer, Co-Founder Aerospace Club, CSF, Tennis, Science Olympiad.',
+            'Coursework: AP Bio, AP Chem, AP Lang, AP Psych, AP Euro, AP CSP, AP Lit, AP Calc AB, AP Gov, AP Macro, AP Spanish.'
+          ]
+        }
+      };
+
+      let activeKey = null;
+
+      const measureRects = () =>
+        items.map((el) => ({
+          el,
+          rect: el.getBoundingClientRect()
+        }));
+
+      const animateFlip = (before, after) => {
+        before.forEach(({ el, rect }) => {
+          const newRect = after.find((a) => a.el === el)?.rect;
+          if (!newRect) return;
+          const dx = rect.left - newRect.left;
+          const dy = rect.top - newRect.top;
+          if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+            el.style.transform = `translate(${dx}px, ${dy}px)`;
+            // force reflow, then animate back to 0 for smoothness
+            requestAnimationFrame(() => {
+              el.getBoundingClientRect();
+              requestAnimationFrame(() => {
+                el.style.transform = '';
+              });
+            });
+          }
+        });
+      };
+
+      const closeDetail = () => {
+        const before = measureRects();
+        items.forEach((el) => {
+          el.style.order = '';
+          el.classList.remove('active');
+        });
+        if (detail.parentNode === timeline) {
+          timeline.parentNode.insertBefore(detail, timeline);
+        }
+        detail.classList.remove('show');
+        detailTitle.textContent = '';
+        detailMeta.textContent = '';
+        detailBody.textContent = '';
+        activeKey = null;
+        timeline.classList.remove('detail-open');
+        const after = measureRects();
+        animateFlip(before, after);
+      };
+
+      const openDetail = (li, key) => {
+        const data = expData[key];
+        if (!data) return;
+        const before = measureRects();
+        items.forEach((el) => {
+          el.style.order = '';
+          el.classList.remove('active');
+        });
+        li.style.order = -1;
+        li.classList.add('active');
+        timeline.classList.add('detail-open');
+        timeline.insertBefore(detail, li.nextSibling);
+        detailTitle.textContent = data.title;
+        detailMeta.textContent = data.meta;
+        const text = data.body.join('\n');
+        detail.classList.add('show');
+        const after = measureRects();
+        animateFlip(before, after);
+        detailBody.textContent = text;
+        activeKey = key;
+        detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      items.forEach((li) => {
+        const key = li.dataset.exp;
+        li.addEventListener('click', () => {
+          if (!key) return;
+          if (activeKey === key) {
+            closeDetail();
+          } else {
+            openDetail(li, key);
+          }
+        });
+      });
+
+      // tab switching
+      tabs.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.target;
+          if (!target) return;
+          tabs.forEach(b => b.classList.remove('is-active'));
+          panes.forEach(p => p.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          const pane = document.getElementById(target);
+          if (pane) pane.classList.add('is-active');
+          if (target !== 'exp-pane-work') {
+            closeDetail();
+          }
+        });
+      });
+
+      const setCodingCategory = (cat) => {
+        codingCatButtons.forEach((b) => b.classList.toggle('is-active', b.dataset.cat === cat));
+        codingLists.forEach((list) => {
+          const isMatch = list.dataset.cat === cat;
+          list.classList.toggle('active', isMatch);
+          if (isMatch) {
+            const cards = Array.from(list.querySelectorAll('.tech-card'));
+            cards.forEach((card, idx) => {
+              card.style.transitionDelay = `${idx * 35}ms`;
+            });
+          } else {
+            const cards = Array.from(list.querySelectorAll('.tech-card'));
+            cards.forEach((card) => {
+              card.style.transitionDelay = '0ms';
+            });
+          }
+        });
+      };
+
+      codingCatButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const cat = btn.dataset.cat;
+          if (!cat) return;
+          setCodingCategory(cat);
+        });
+      });
+
+      if (codingCatButtons.length) {
+        setCodingCategory(codingCatButtons.find((b) => b.classList.contains('is-active'))?.dataset.cat || codingCatButtons[0].dataset.cat);
+      }
     }
   </script>
 </body>
