@@ -30,63 +30,60 @@ function corsHeaders(origin) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Route: analytics API
+    // 1) API route
     if (url.pathname.startsWith("/api/unique")) {
-      // continue below
-    } else {
-      // Route: static site assets (served from ./public via Wrangler assets)
-      if (env.ASSETS && typeof env.ASSETS.fetch === "function") {
-        return env.ASSETS.fetch(request);
+      // CORS preflight
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: corsHeaders(request.headers.get("Origin")),
+        });
       }
-      return new Response("Assets not configured", { status: 500 });
-    }
 
-    // CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: corsHeaders(request.headers.get("Origin")) });
-    }
+      const origin = request.headers.get("Origin");
+      const headers = { ...corsHeaders(origin), "content-type": "application/json" };
 
-    const origin = request.headers.get("Origin");
-    const headers = { ...corsHeaders(origin), "content-type": "application/json" };
+      const page = cleanPage(url.searchParams.get("page"));
+      const day = isoDay();
 
-    const page = cleanPage(url.searchParams.get("page"));
-    const day = isoDay();
-
-    if (!env.IP_SALT) {
-      return new Response(JSON.stringify({ error: "Missing IP_SALT" }), { status: 500, headers });
-    }
-
-    const ua = request.headers.get("User-Agent") || "";
-    const cfConnectingIp = request.headers.get("CF-Connecting-IP") || "";
-    const ip = cfConnectingIp || request.headers.get("X-Forwarded-For") || "0.0.0.0";
-
-    const ipHash = await sha256Hex(ip + env.IP_SALT);
-
-    // KV keys
-    const dedupeKey = `u:${day}:${page}:${ipHash}`;
-    const allKey = `count:all:${page}`;
-    const todayKey = `count:today:${day}:${page}`;
-
-    // Insert only on POST and only if not bot
-    if (request.method === "POST" && !isBot(ua)) {
-      const exists = await env.UNIQUE_KV.get(dedupeKey);
-      if (!exists) {
-        await env.UNIQUE_KV.put(dedupeKey, "1", { expirationTtl: 60 * 60 * 24 * 7 });
-
-        const all = Number(await env.UNIQUE_KV.get(allKey)) || 0;
-        const today = Number(await env.UNIQUE_KV.get(todayKey)) || 0;
-
-        await env.UNIQUE_KV.put(allKey, String(all + 1));
-        await env.UNIQUE_KV.put(todayKey, String(today + 1), { expirationTtl: 60 * 60 * 24 * 8 });
+      if (!env.IP_SALT) {
+        return new Response(JSON.stringify({ error: "Missing IP_SALT" }), { status: 500, headers });
       }
+
+      const ua = request.headers.get("User-Agent") || "";
+      const ip = request.headers.get("CF-Connecting-IP") ||
+                 request.headers.get("X-Forwarded-For") ||
+                 "0.0.0.0";
+
+      const ipHash = await sha256Hex(ip + env.IP_SALT);
+
+      const dedupeKey = `u:${day}:${page}:${ipHash}`;
+      const allKey = `count:all:${page}`;
+      const todayKey = `count:today:${day}:${page}`;
+
+      if (request.method === "POST" && !isBot(ua)) {
+        const exists = await env.UNIQUE_KV.get(dedupeKey);
+        if (!exists) {
+          await env.UNIQUE_KV.put(dedupeKey, "1", { expirationTtl: 60 * 60 * 24 * 7 });
+
+          const all = Number(await env.UNIQUE_KV.get(allKey)) || 0;
+          const today = Number(await env.UNIQUE_KV.get(todayKey)) || 0;
+
+          await env.UNIQUE_KV.put(allKey, String(all + 1));
+          await env.UNIQUE_KV.put(todayKey, String(today + 1), { expirationTtl: 60 * 60 * 24 * 8 });
+        }
+      }
+
+      const uniqueAllTime = Number(await env.UNIQUE_KV.get(allKey)) || 0;
+      const uniqueToday = Number(await env.UNIQUE_KV.get(todayKey)) || 0;
+
+      return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
-    const uniqueAllTime = Number(await env.UNIQUE_KV.get(allKey)) || 0;
-    const uniqueToday = Number(await env.UNIQUE_KV.get(todayKey)) || 0;
-
-    return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
+    // 2) Everything else: serve static assets from ./public
+    return env.ASSETS.fetch(request);
   },
 };
