@@ -97,7 +97,7 @@
           <section id="work-about" class="work-section is-active">
             <h3>About</h3>
             <p>I like science, skiing, and cooking.</p>
-            <div class="about-current glassy">
+            <div class="about-current about-current--small glassy">
               <div class="about-logo glassy">
                 <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC logo">
               </div>
@@ -105,6 +105,22 @@
                 <div class="about-current-title">I'm currently working at <strong>USC</strong></div>
                 <div class="about-current-sub">Research Intern</div>
                 <div class="about-current-body">I currently work with Dr. Yaghmour researching BPDCN. I've been there <strong><span id="days-since-usc"></span> days</strong>.</div>
+              </div>
+            </div>
+            <div class="discord-presence glassy" id="discord-presence">
+              <div class="discord-presence-header">
+                <span class="discord-status-dot" id="discord-status-dot"></span>
+                <span class="discord-username" id="discord-username">Discord</span>
+                <span class="discord-status-text" id="discord-status-text">Connecting...</span>
+              </div>
+              <div class="discord-activity" id="discord-activity" style="display:none;">
+                <img class="discord-activity-img" id="discord-activity-img" alt="" />
+                <div class="discord-activity-info">
+                  <div class="discord-activity-title" id="discord-activity-title"></div>
+                  <div class="discord-activity-details" id="discord-activity-details"></div>
+                  <div class="discord-activity-state" id="discord-activity-state"></div>
+                  <div class="discord-activity-time" id="discord-activity-time"></div>
+                </div>
               </div>
             </div>
           </section>
@@ -1076,6 +1092,117 @@
       el.textContent = days >= 0 ? days : 0;
     }
 
+    // ------- Discord Presence (Lanyard) -------
+    const DISCORD_USER_ID = '1042651808557977600';
+    let lanyardWs = null;
+    let lanyardHeartbeat = null;
+
+    function initDiscordPresence() {
+      connectLanyard();
+    }
+
+    function connectLanyard() {
+      if (lanyardWs) { try { lanyardWs.close(); } catch(e) {} }
+      lanyardWs = new WebSocket('wss://api.lanyard.rest/socket');
+
+      lanyardWs.addEventListener('message', (event) => {
+        const msg = JSON.parse(event.data);
+        switch (msg.op) {
+          case 1: // Hello
+            if (lanyardHeartbeat) clearInterval(lanyardHeartbeat);
+            lanyardHeartbeat = setInterval(() => {
+              if (lanyardWs.readyState === WebSocket.OPEN) {
+                lanyardWs.send(JSON.stringify({ op: 3 }));
+              }
+            }, msg.d.heartbeat_interval);
+            lanyardWs.send(JSON.stringify({
+              op: 2,
+              d: { subscribe_to_id: DISCORD_USER_ID }
+            }));
+            break;
+          case 0: // Event
+            if (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE') {
+              renderDiscordPresence(msg.d);
+            }
+            break;
+        }
+      });
+
+      lanyardWs.addEventListener('close', () => {
+        if (lanyardHeartbeat) clearInterval(lanyardHeartbeat);
+        setTimeout(connectLanyard, 5000);
+      });
+
+      lanyardWs.addEventListener('error', () => {
+        lanyardWs.close();
+      });
+    }
+
+    function renderDiscordPresence(data) {
+      const dot = document.getElementById('discord-status-dot');
+      const username = document.getElementById('discord-username');
+      const statusText = document.getElementById('discord-status-text');
+      const activityEl = document.getElementById('discord-activity');
+      const activityImg = document.getElementById('discord-activity-img');
+      const activityTitle = document.getElementById('discord-activity-title');
+      const activityDetails = document.getElementById('discord-activity-details');
+      const activityState = document.getElementById('discord-activity-state');
+      const activityTime = document.getElementById('discord-activity-time');
+
+      if (!dot) return;
+
+      const status = data.discord_status || 'offline';
+      dot.className = 'discord-status-dot ' + status;
+      username.textContent = data.discord_user?.global_name || data.discord_user?.username || 'Discord';
+
+      const statusLabels = { online: 'Online', idle: 'Idle', dnd: 'Do Not Disturb', offline: 'Offline' };
+      statusText.textContent = statusLabels[status] || 'Offline';
+
+      // Find best activity to display (skip Custom Status type 4)
+      const activities = data.activities || [];
+      const activity = activities.find(a => a.type !== 4);
+
+      if (activity) {
+        activityEl.style.display = 'grid';
+
+        // Activity type labels
+        const typeLabels = { 0: 'Playing', 1: 'Streaming', 2: 'Listening to', 3: 'Watching', 5: 'Competing in' };
+        const prefix = typeLabels[activity.type] || 'Playing';
+        activityTitle.textContent = `${prefix} ${activity.name}`;
+
+        activityDetails.textContent = activity.details || '';
+        activityState.textContent = activity.state || '';
+
+        // Large image
+        let imgSrc = '';
+        if (activity.assets?.large_image) {
+          const li = activity.assets.large_image;
+          if (li.startsWith('mp:external/')) {
+            imgSrc = 'https://media.discordapp.net/external/' + li.replace('mp:external/', '');
+          } else if (li.startsWith('spotify:')) {
+            imgSrc = 'https://i.scdn.co/image/' + li.replace('spotify:', '');
+          } else {
+            imgSrc = `https://cdn.discordapp.com/app-assets/${activity.application_id}/${li}.png`;
+          }
+        }
+        activityImg.src = imgSrc || '';
+        activityImg.style.display = imgSrc ? 'block' : 'none';
+        activityEl.style.gridTemplateColumns = imgSrc ? '50px 1fr' : '1fr';
+
+        // Elapsed time
+        if (activity.timestamps?.start) {
+          const elapsed = Date.now() - activity.timestamps.start;
+          const mins = Math.floor(elapsed / 60000);
+          const hrs = Math.floor(mins / 60);
+          activityTime.textContent = hrs > 0 ? `${hrs}h ${mins % 60}m elapsed` : `${mins}m elapsed`;
+        } else {
+          activityTime.textContent = '';
+        }
+      } else {
+        activityEl.style.display = 'none';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       const camronTime = new Intl.DateTimeFormat('en-US', {
         timeZone: ownerTimeZone,
@@ -1098,6 +1225,7 @@
       initWorkCard();
       initExperienceDetails();
       initDaysSince();
+      initDiscordPresence();
       if (hiddenInput) hiddenInput.focus();
       // Ensure correct view if user lands directly on /blog
       navigateTo(location.pathname, false);
