@@ -596,9 +596,19 @@ body.light-mode .about-current-sub {
 .work-mode .glass-card {
   top: 50%;
   transform: translate(-50%, -50%);
+  width: 640px;
+  max-width: 92vw;
   height: 540px;
   max-height: 540px;
   padding-top: 44px;
+}
+
+.work-mode.experience-active .glass-card {
+  width: 94vw;
+  max-width: 1240px;
+  height: 84vh;
+  max-height: 84vh;
+  padding-top: 58px;
 }
 
 .work-mode .terminal-body {
@@ -607,6 +617,8 @@ body.light-mode .about-current-sub {
 
 .work-mode .work-content {
   display: flex;
+  height: 100%;
+  overflow: visible;
 }
 
 .work-content,
@@ -631,6 +643,17 @@ body.light-mode .about-current-sub {
   display: flex;
 }
 
+.work-mode.experience-active .profile-badge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 8;
+}
+
+.work-mode.experience-active .work-sections {
+  padding-top: 56px;
+}
+
 .work-mode .center-image {
   opacity: 0;
   pointer-events: none;
@@ -638,6 +661,101 @@ body.light-mode .about-current-sub {
 
 .work-mode .profile-glass img {
   opacity: 1;
+}
+
+#work-experience .exp-tabs,
+#work-experience .exp-pane {
+  display: none !important;
+}
+
+.exp-hc-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  min-height: 0;
+  margin-bottom: 64px;
+}
+
+.exp-hc-shell.has-selection .experience-chart {
+  min-height: 280px;
+  height: 280px;
+}
+
+.exp-hc-note {
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.experience-chart {
+  min-height: 430px;
+  height: 430px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  transition: height 260ms ease, min-height 260ms ease;
+}
+
+.exp-hc-fallback {
+  min-height: 430px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.9;
+  padding: 20px;
+}
+
+.exp-hc-detail {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px 12px;
+}
+
+.exp-hc-date {
+  font-size: 11px;
+  opacity: 0.78;
+}
+
+.exp-hc-title {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.exp-hc-meta {
+  margin-top: 3px;
+  font-size: 12px;
+  opacity: 0.86;
+  line-height: 1.35;
+}
+
+.exp-hc-body {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.experience-chart .highcharts-axis-labels text,
+.experience-chart .highcharts-range-label text,
+.experience-chart .highcharts-range-selector-buttons text,
+.experience-chart .highcharts-xaxis-labels text,
+.experience-chart .highcharts-navigator-xaxis text,
+.experience-chart .highcharts-title,
+.experience-chart .highcharts-subtitle {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+body.light-mode .experience-chart,
+body.light-mode .exp-hc-detail {
+  color: #111;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.14);
 }
 
 .blog-mode .glass-card {

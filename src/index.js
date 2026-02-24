@@ -55,17 +55,45 @@ function titleForActivity(type, name) {
   return `${prefix} ${name || ""}`.trim();
 }
 
+const appIconCache = new Map();
+
+async function fetchDiscordAppIcon(applicationId) {
+  if (!applicationId) return null;
+  if (appIconCache.has(applicationId)) return appIconCache.get(applicationId);
+  try {
+    const res = await fetch(`https://discord.com/api/v10/applications/${applicationId}/rpc`);
+    if (!res.ok) {
+      appIconCache.set(applicationId, null);
+      return null;
+    }
+    const app = await res.json();
+    const icon = app?.icon
+      ? `https://cdn.discordapp.com/app-icons/${applicationId}/${app.icon}.webp?size=512`
+      : null;
+    appIconCache.set(applicationId, icon);
+    return icon;
+  } catch {
+    appIconCache.set(applicationId, null);
+    return null;
+  }
+}
+
 function normalizeLanyardAsset(raw, applicationId) {
   if (!raw) return null;
   if (raw.startsWith("spotify:")) return `https://i.scdn.co/image/${raw.replace("spotify:", "")}`;
   if (raw.startsWith("youtube:")) return `https://i.ytimg.com/vi/${raw.replace("youtube:", "")}/hqdefault_live.jpg`;
-  if (raw.startsWith("mp:external/https/")) return `https://${raw.split("mp:external/https/")[1]}`;
+  if (raw.startsWith("mp:external/")) {
+    const marker = "https/";
+    if (raw.includes(marker)) return `https://${raw.split(marker)[1]}`;
+    return null;
+  }
   if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
+  if (raw.startsWith("twitch:")) return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${raw.replace("twitch:", "")}-640x360.jpg`;
   if (applicationId) return `https://cdn.discordapp.com/app-assets/${applicationId}/${raw}.png?size=512`;
   return null;
 }
 
-function mapLanyardPresence(payload, userId) {
+async function mapLanyardPresence(payload, userId) {
   if (!payload || !payload.success || !payload.data) return offlinePresence(userId);
   const data = payload.data;
   const user = data.discord_user || {};
@@ -110,12 +138,15 @@ function mapLanyardPresence(payload, userId) {
     }
     if (!act || act.name === "Spotify") continue;
     const appId = act.application_id || null;
+    const largeImage = normalizeLanyardAsset(act.assets?.large_image || null, appId);
+    const smallImage = normalizeLanyardAsset(act.assets?.small_image || null, appId);
+    const appIconFallback = !largeImage && !smallImage ? await fetchDiscordAppIcon(appId) : null;
     activities.push({
       applicationId: appId,
       assets: {
-        largeImage: normalizeLanyardAsset(act.assets?.large_image || null, appId),
+        largeImage: largeImage || appIconFallback,
         largeText: act.assets?.large_text || null,
-        smallImage: normalizeLanyardAsset(act.assets?.small_image || null, appId),
+        smallImage: smallImage || null,
         smallText: act.assets?.small_text || null,
       },
       details: act.details || null,
@@ -172,7 +203,7 @@ export default {
           return new Response(JSON.stringify(offlinePresence(userId)), { status: 200, headers });
         }
         const payload = await lanyardRes.json();
-        return new Response(JSON.stringify(mapLanyardPresence(payload, userId)), { status: 200, headers });
+        return new Response(JSON.stringify(await mapLanyardPresence(payload, userId)), { status: 200, headers });
       } catch {
         return new Response(JSON.stringify(offlinePresence(userId)), { status: 200, headers });
       }

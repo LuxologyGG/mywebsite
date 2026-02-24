@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>camr.one</title>
-  <link rel="icon" type="image/png" href="https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/poker-chip(1).png?raw=true">
+  <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,14 +13,14 @@
   <div id="home-view" class="view active">
     <img
       class="center-image"
-      src="https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/pfp.png?raw=true"
+      src="/photos/pfp.png"
       alt="Centered visual"
     />
     <div class="glass-card">
       <button class="back-button" aria-label="Back to prompt">&#8592;</button>
       <div class="profile-badge">
         <div class="profile-glass">
-          <img src="https://github.com/LuxologyGG/mywebsite/blob/main/public/Photos/pfp.png?raw=true" alt="Profile photo" />
+          <img src="/photos/pfp.png" alt="Profile photo" />
         </div>
         <div class="profile-text">
             <div class="profile-name">Camron Farjami</div>
@@ -58,7 +58,7 @@
       <div class="blog-content-block">
         <div class="blog-hero">
           <div class="blog-avatar-circle">
-            <img src="https://lh3.googleusercontent.com/a/ACg8ocLL8iGrVCUevQfq9WEtR4BCnBq1GHvCwmtS7TJVomn1FoDO3sMc=s400-c" alt="Profile photo" />
+            <img src="/photos/pfp.png" alt="Profile photo" />
           </div>
           <div class="blog-chat glassy" id="blog-chat">
             <div class="chat-typing" id="chat-typing">
@@ -128,6 +128,16 @@
           </section>
           <section id="work-experience" class="work-section">
             <h3>Experience</h3>
+            <div class="exp-hc-shell">
+              <div class="exp-hc-note">Use drag/scroll to explore. Zoom is limited to month and year ranges.</div>
+              <div id="experience-chart" class="experience-chart"></div>
+              <div class="exp-hc-detail" id="exp-hc-detail">
+                <div class="exp-hc-date" id="exp-hc-date">Click a point on the timeline</div>
+                <div class="exp-hc-title" id="exp-hc-title">Experience details</div>
+                <div class="exp-hc-meta" id="exp-hc-meta"></div>
+                <ul class="exp-hc-body" id="exp-hc-body"></ul>
+              </div>
+            </div>
             <div class="exp-tabs">
               <button class="exp-tab is-active" data-target="exp-pane-work">Work</button>
               <button class="exp-tab" data-target="exp-pane-coding">Coding</button>
@@ -479,6 +489,7 @@
       <p>Please wait while we pull in the latest post.</p>
     </div>
   </div>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
   <script type="x-shader/x-fragment" id="fragmentShader">
     precision highp float;
 
@@ -834,6 +845,8 @@
     let discordEndpointIdx = 0;
     let discordApiIdx = 0;
     let discordHadMessage = false;
+    let playExperienceTimelineIntro = null;
+    let experienceChart = null;
     function scrollToBottom() {
       terminalEl.scrollTop = terminalEl.scrollHeight;
     }
@@ -1068,6 +1081,382 @@
         discordSocket.close();
         discordSocket = null;
       }
+    }
+
+    const WORK_TIMELINE_DATA = [
+      {
+        id: 'assistant_researcher',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'Sep 2025 - Present',
+        title: 'Assistant Researcher',
+        org: 'USC Norris Comprehensive Cancer Center · Los Angeles, CA',
+        meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 - Present · Los Angeles, CA (On-site)',
+        body: [
+          'Observed hematology/oncology rounds (AML, stem cell transplantation, novel maintenance therapies).',
+          'Learned regimen selection (7+3, FLAG, CPX-351) and managed engraftment/transplant toxicities.',
+          'Coordinated multidisciplinary care across oncology, cardiology, and nephrology.',
+          'Discussed targeted inhibitors, immunotherapy, and evolving standards in hematologic malignancies.',
+          'Co-authored case reports (e.g., BPDCN in systemic mastocytosis).'
+        ]
+      },
+      {
+        id: 'nyas_student',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'Aug 2025 - Present',
+        title: 'Student',
+        org: 'New York Academy of Sciences · Remote',
+        meta: 'New York Academy of Sciences · Aug 2025 - Present · Remote',
+        body: [
+          'Selected for a global community of high-achieving students and STEM mentors.',
+          'Collaborating on sustainability, energy, and global health challenges.'
+        ]
+      },
+      {
+        id: 'ucla_intern',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'May 2025 - Present',
+        title: 'Intern',
+        org: 'UCLA Computer Science (GLITCH) · Los Angeles, CA',
+        meta: 'UCLA Computer Science (GLITCH) · May 2025 - Present · Los Angeles, CA (Hybrid)',
+        body: [
+          'Contributed to Hot Potato, a GPS-based multiplayer mobile game for real-world interaction.',
+          'Collaborated on design, development, debugging, and agile teamwork.',
+          'Refined gameplay logic, UX, and proximity detection.'
+        ]
+      },
+      {
+        id: 'southbay_board',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'Feb 2025 - Present',
+        title: 'Board Member & Lead Web Developer',
+        org: 'South Bay STEM Association · Rancho Palos Verdes, CA',
+        meta: 'South Bay STEM Association · Feb 2025 - Present · Rancho Palos Verdes, CA',
+        body: [
+          'Oversee STEM initiatives, mentor students, and build web platforms for education and outreach.',
+          'Skills: web dev, non-profit management, STEM, volunteering, WordPress/JS/CSS/HTML.'
+        ]
+      },
+      {
+        id: 'smi_student',
+        yearStart: 2025,
+        yearEnd: 2025,
+        date: 'Jun 2025 - Oct 2025',
+        title: 'Student',
+        org: 'Science Mentorship Institute · Remote',
+        meta: 'Science Mentorship Institute · Jun 2025 - Oct 2025 · Remote',
+        body: [
+          'Accepted into Biology Mentorship Program (10% acceptance rate).',
+          'Conducted independent research and presented cancer research outcomes.'
+        ]
+      },
+      {
+        id: 'nontrivial_fellow',
+        yearStart: 2025,
+        yearEnd: 2025,
+        date: 'Feb 2025 - May 2025',
+        title: 'Research Fellow',
+        org: 'Non-Trivial · Remote',
+        meta: 'Non-Trivial · Feb 2025 - May 2025 · Remote',
+        body: [
+          'Selective research training (<10% selection).',
+          'Proposal on algae-based microrobots for precision tumor targeting.'
+        ]
+      },
+      {
+        id: 'elcamino_dual',
+        yearStart: 2024,
+        yearEnd: 2025,
+        date: 'Jun 2024 - Aug 2025',
+        title: 'Dual Enrollment',
+        org: 'El Camino College',
+        meta: 'El Camino College · Jun 2024 - Aug 2025 · GPA 4.00/4.00',
+        body: ['Coursework: HIST-102 (A), PSYC-101 (A), PHYS-2A.']
+      },
+      {
+        id: 'laccd_dual',
+        yearStart: 2025,
+        yearEnd: 2025,
+        date: 'May 2025 - Jul 2025',
+        title: 'Dual Enrollment',
+        org: 'Los Angeles Community College District',
+        meta: 'Los Angeles Community College District · May 2025 - Jul 2025 · GPA 4.00/4.00',
+        body: ['Coursework: STAT-001 (A).']
+      },
+      {
+        id: 'hs_diploma',
+        yearStart: 2022,
+        yearEnd: 2026,
+        date: '2022 - 2026',
+        title: 'High School Diploma',
+        org: 'Palos Verdes Peninsula High School',
+        meta: 'Palos Verdes Peninsula High School · 2022 - 2026',
+        body: [
+          'Activities: SNHS, TSA, Philosophy Club Treasurer, Co-Founder Aerospace Club, CSF, Tennis, Science Olympiad.',
+          'Coursework: AP Bio, AP Chem, AP Lang, AP Psych, AP Euro, AP CSP, AP Lit, AP Calc AB, AP Gov, AP Macro, AP Spanish.'
+        ]
+      },
+      {
+        id: 'instructor_tkd',
+        yearStart: 2021,
+        yearEnd: 2023,
+        date: 'Feb 2021 - Mar 2023',
+        title: 'Instructor',
+        org: 'Rolling Hills Taekwondo · Rolling Hills Estates, CA',
+        meta: 'Rolling Hills Taekwondo · Feb 2021 - Mar 2023 · Rolling Hills Estates, CA',
+        body: [
+          'Taught taekwondo fundamentals, discipline, and self-defense in a structured, fast-paced environment.',
+          'Managed classes and supported students in training.'
+        ]
+      }
+    ];
+
+    function initHorizontalExperienceTimeline() {
+      const chartEl = document.getElementById('experience-chart');
+      const shellEl = document.querySelector('.exp-hc-shell');
+      const noteEl = document.querySelector('.exp-hc-note');
+      const detailDate = document.getElementById('exp-hc-date');
+      const detailTitle = document.getElementById('exp-hc-title');
+      const detailMeta = document.getElementById('exp-hc-meta');
+      const detailBody = document.getElementById('exp-hc-body');
+      if (!chartEl || !shellEl || !detailDate || !detailTitle || !detailMeta || !detailBody) return;
+      if (chartEl.dataset.ready === '1') return;
+      if (!window.Highcharts || !window.Highcharts.stockChart) {
+        chartEl.innerHTML = '<div class="exp-hc-fallback">Timeline library failed to load. Refresh the page.</div>';
+        if (noteEl) noteEl.textContent = 'Chart dependency missing. Try hard refresh (Cmd+Shift+R).';
+        return;
+      }
+
+      const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+      const DAY = 24 * 3600 * 1000;
+      const MONTH = 30 * DAY;
+      const YEAR = 365 * DAY;
+
+      function parseStart(dateText) {
+        const m = String(dateText || '').match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})/);
+        if (m) return Date.UTC(Number(m[2]), monthMap[m[1]], 1);
+        const y = String(dateText || '').match(/(20\d{2})/);
+        if (y) return Date.UTC(Number(y[1]), 0, 1);
+        return Date.UTC(2025, 0, 1);
+      }
+
+      const points = WORK_TIMELINE_DATA
+        .map((item, idx) => ({
+          x: parseStart(item.date),
+          y: (idx % 5) - 2,
+          name: item.title,
+          custom: { item }
+        }))
+        .sort((a, b) => a.x - b.x);
+
+      if (!points.length) return;
+      const dataMinX = points[0].x;
+      const dataMaxX = points[points.length - 1].x;
+      const chartMinX = Date.UTC(new Date(dataMinX).getUTCFullYear(), 0, 1);
+      const now = new Date();
+      const nowYearFloor = Date.UTC(now.getUTCFullYear(), 0, 1);
+      const nowPlusOneYear = Date.UTC(now.getUTCFullYear() + 1, 0, 1);
+      const dataNextYear = Date.UTC(new Date(dataMaxX).getUTCFullYear() + 1, 0, 1);
+      const chartMaxX = Math.max(nowYearFloor, nowPlusOneYear, dataNextYear);
+
+      function renderDetail(item, focus = false) {
+        detailDate.textContent = item.date;
+        detailTitle.textContent = item.title;
+        detailMeta.textContent = item.meta;
+        detailBody.innerHTML = '';
+        item.body.forEach((line) => {
+          const li = document.createElement('li');
+          li.textContent = line;
+          detailBody.appendChild(li);
+        });
+        if (focus) {
+          shellEl.classList.add('has-selection');
+          requestAnimationFrame(() => {
+            if (experienceChart) experienceChart.reflow();
+          });
+        }
+      }
+
+      const chart = Highcharts.stockChart(chartEl, {
+        chart: {
+          backgroundColor: 'transparent',
+          animation: true,
+          spacingTop: 8,
+          spacingBottom: 8,
+          style: {
+            color: '#ffffff'
+          }
+        },
+        credits: { enabled: false },
+        exporting: { enabled: false },
+        legend: { enabled: false },
+        scrollbar: { enabled: false },
+        rangeSelector: {
+          enabled: true,
+          selected: 0,
+          inputEnabled: false,
+          buttonTheme: {
+            width: 52,
+            fill: 'rgba(255,255,255,0.10)',
+            stroke: 'rgba(255,255,255,0.25)',
+            style: { color: '#ffffff' },
+            states: {
+              select: {
+                fill: 'rgba(255,255,255,0.24)',
+                style: { color: '#ffffff' }
+              }
+            }
+          },
+          labelStyle: { color: '#ffffff' },
+          buttons: [
+            { type: 'month', count: 6, text: 'Month' },
+            { type: 'year', count: 3, text: 'Year' }
+          ]
+        },
+        navigator: {
+          enabled: true,
+          height: 62,
+          maskFill: 'rgba(255,255,255,0.2)',
+          outlineColor: 'rgba(255,255,255,0.36)',
+          handles: {
+            backgroundColor: 'rgba(255,255,255,0.55)',
+            borderColor: 'rgba(255,255,255,0.8)'
+          },
+          xAxis: {
+            type: 'datetime',
+            tickInterval: YEAR,
+            labels: {
+              format: '{value:%Y}',
+              style: { color: '#ffffff' }
+            }
+          },
+          yAxis: {
+            min: 0,
+            max: 0,
+            labels: { enabled: false },
+            gridLineWidth: 0
+          },
+          series: {
+            type: 'line',
+            data: points.map((p) => [p.x, 0]),
+            color: '#9cc8ff',
+            lineWidth: 1.6,
+            marker: { enabled: false }
+          }
+        },
+        xAxis: {
+          type: 'datetime',
+          minRange: MONTH,
+          maxRange: YEAR * 10,
+          min: chartMinX,
+          max: chartMaxX,
+          tickPositioner: function () {
+            const positions = [];
+            const min = this.min || 0;
+            const max = this.max || 0;
+            const range = max - min;
+            if (!min || !max) return positions;
+
+            if (range > YEAR * 1.5) {
+              let t = Date.UTC(new Date(min).getUTCFullYear(), 0, 1);
+              if (t < min) t = Date.UTC(new Date(min).getUTCFullYear() + 1, 0, 1);
+              for (; t <= max; t = Date.UTC(new Date(t).getUTCFullYear() + 1, 0, 1)) {
+                positions.push(t);
+              }
+            } else {
+              let t = Date.UTC(new Date(min).getUTCFullYear(), new Date(min).getUTCMonth(), 1);
+              if (t < min) t = Date.UTC(new Date(min).getUTCFullYear(), new Date(min).getUTCMonth() + 1, 1);
+              for (; t <= max; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
+                positions.push(t);
+              }
+            }
+            return positions;
+          },
+          labels: {
+            formatter: function () {
+              const range = this.axis.max - this.axis.min;
+              return range > YEAR * 1.5
+                ? Highcharts.dateFormat('%Y', this.value)
+                : Highcharts.dateFormat("%b '%y", this.value);
+            },
+            style: { color: '#ffffff' }
+          },
+          gridLineWidth: 1,
+          gridLineColor: 'rgba(255,255,255,0.08)',
+          lineColor: 'rgba(255,255,255,0.25)'
+        },
+        yAxis: {
+          visible: false,
+          min: -3,
+          max: 3,
+          gridLineWidth: 0
+        },
+        tooltip: {
+          shared: false,
+          useHTML: true,
+          pointFormatter: function () {
+            return `<b>${this.custom.item.title}</b><br>${this.custom.item.date}`;
+          }
+        },
+        plotOptions: {
+          series: { animation: { duration: 600 } },
+          scatter: {
+            marker: {
+              symbol: 'circle',
+              radius: 6,
+              lineWidth: 2,
+              lineColor: 'rgba(255,255,255,0.9)',
+              fillColor: '#92f3d0'
+            },
+            states: {
+              hover: {
+                enabled: true,
+                halo: { size: 10, opacity: 0.24 }
+              }
+            },
+            point: {
+              events: {
+                click: function () {
+                  const axis = this.series.chart.xAxis[0];
+                  const range = axis.max - axis.min;
+                  const min = Math.max(axis.dataMin, this.x - range / 2);
+                  const max = Math.min(axis.dataMax, this.x + range / 2);
+                  axis.setExtremes(min, max, true, { duration: 360 });
+                  renderDetail(this.custom.item, true);
+                }
+              }
+            }
+          }
+        },
+        series: [
+          {
+            type: 'line',
+            data: points.map((p) => [p.x, 0]),
+            color: 'rgba(255,255,255,0.42)',
+            lineWidth: 2,
+            enableMouseTracking: false,
+            showInNavigator: false
+          },
+          {
+            type: 'scatter',
+            marker: { symbol: 'circle' },
+            data: points,
+            showInNavigator: false
+          }
+        ]
+      });
+
+      renderDetail(points[points.length - 1].custom.item, false);
+      experienceChart = chart;
+      playExperienceTimelineIntro = () => {
+        chart.series.forEach((s) => s.update({ animation: { duration: 420 } }, false));
+        chart.reflow();
+        chart.redraw();
+      };
+      chartEl.dataset.ready = '1';
     }
 
     const commands = {
@@ -1326,7 +1715,6 @@
 
       initNavigation();
       initWorkCard();
-      initExperienceDetails();
       initDaysSince();
       if (hiddenInput) hiddenInput.focus();
       // Ensure correct view if user lands directly on /blog
@@ -1369,16 +1757,29 @@
           exitOverlay();
         });
       }
+
       const tabButtons = document.querySelectorAll('.work-tab');
+      const sections = document.querySelectorAll('.work-section');
       tabButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
-          tabButtons.forEach(b => b.classList.remove('is-active'));
+          tabButtons.forEach((b) => b.classList.remove('is-active'));
           btn.classList.add('is-active');
           const target = btn.getAttribute('data-target');
-          document.body.classList.toggle('experience-active', target === '#work-experience');
-          document.querySelectorAll('.work-section').forEach(sec => {
-            sec.classList.toggle('is-active', sec.id === target.slice(1));
-          });
+          if (!target) return;
+          const isExperience = target === '#work-experience';
+          document.body.classList.toggle('experience-active', isExperience);
+          sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));
+          if (isExperience) {
+            initHorizontalExperienceTimeline();
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                if (experienceChart) experienceChart.reflow();
+                if (typeof playExperienceTimelineIntro === 'function') {
+                  playExperienceTimelineIntro();
+                }
+              });
+            });
+          }
         });
       });
 
@@ -1408,12 +1809,12 @@
         {
           title: 'Living Machines: The Potential of ABBMs',
           href: 'https://www.authorea.com/users/955969/articles/1376990-living-machines-the-potential-of-abbms-for-precision-oncology',
-          image: 'Photos/Featured-Volbot.webp'
+          image: '/photos/Featured-Volbot.webp'
         },
         {
           title: 'BDPCN',
           href: '',
-          image: 'Photos/13000_2023_1301_Fig3_HTML.webp'
+          image: '/photos/13000_2023_1301_Fig3_HTML.webp'
         }
       ];
       if (pubGrid) {
