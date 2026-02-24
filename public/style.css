@@ -333,7 +333,7 @@ body.light-mode .profile-title {
   flex: 1;
   overflow-y: auto;
   padding-right: 4px;
-  padding-bottom: 48px;
+  padding-bottom: 78px;
   /* Work section scrollbar (keeps it dark, avoids white hover track) */
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.22) transparent;
@@ -378,22 +378,24 @@ body.light-mode .profile-title {
 
 .about-current {
   display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 12px;
-  padding: 12px;
+  grid-template-columns: 64px 1fr;
+  gap: 10px;
+  padding: 10px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   align-items: center;
+  width: calc(100% - 10px);
+  margin-right: auto;
 }
 
 .about-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -408,8 +410,8 @@ body.light-mode .profile-title {
 }
 
 .about-current-text {
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -417,22 +419,150 @@ body.light-mode .profile-title {
 .about-current-title {
   font-weight: 800;
   margin-bottom: 4px;
+  font-size: 14px;
 }
 
 .about-current-sub {
-  font-size: 13px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 4px;
 }
 
 .about-current-body {
-  font-size: 13px;
+  font-size: 12px;
   opacity: 0.9;
+}
+
+.about-presence {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  margin-top: -2px;
+}
+
+.presence-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.presence-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.presence-status-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.presence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.presence-dot.status-online {
+  background: #43b581;
+}
+
+.presence-dot.status-idle {
+  background: #faa61a;
+}
+
+.presence-dot.status-dnd {
+  background: #f04747;
+}
+
+.presence-dot.status-offline {
+  background: #ffffff;
+}
+
+.presence-main {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.presence-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.presence-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.presence-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+  line-height: 1.35;
+}
+
+.presence-art-wrap {
+  width: 62px;
+  height: 62px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.presence-art-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.presence-art-wrap.is-vinyl {
+  border-radius: 50%;
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.35), inset 0 0 0 10px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.presence-art-wrap.is-vinyl img {
+  border-radius: 50%;
+  animation: vinyl-spin 7s linear infinite;
+}
+
+.presence-art-wrap.is-vinyl::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 body.light-mode .about-current,
 body.light-mode .about-current-text,
-body.light-mode .about-logo {
+body.light-mode .about-logo,
+body.light-mode .about-presence {
   background: rgba(0, 0, 0, 0.06);
   border-color: rgba(0, 0, 0, 0.14);
   color: #111;

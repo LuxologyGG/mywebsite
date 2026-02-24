@@ -8,3 +8,6 @@ kv_namespaces = [
 
 [assets]
 directory = "./public"
+
+[vars]
+DISCORD_USER_ID = "1042651808557977600"

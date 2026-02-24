@@ -107,6 +107,24 @@
                 <div class="about-current-body">I currently work with Dr. Yaghmour researching BPDCN. I've been there <strong><span id="days-since-usc"></span> days</strong>.</div>
               </div>
             </div>
+            <div class="about-presence glassy" id="discord-presence-card" aria-live="polite">
+              <div class="presence-head">
+                <div class="presence-title">What I'm currently up to</div>
+                <div class="presence-status-wrap">
+                  <span class="presence-dot status-offline" id="discord-status-dot" aria-hidden="true"></span>
+                  <span id="discord-status-text">Connecting...</span>
+                </div>
+              </div>
+              <div class="presence-content">
+                <div class="presence-art-wrap" id="discord-art-wrap" hidden>
+                  <img id="discord-art" alt="Current Discord activity artwork" />
+                </div>
+                <div class="presence-copy">
+                  <div class="presence-main" id="discord-main">Waiting for presence updates.</div>
+                  <div class="presence-sub" id="discord-sub"></div>
+                </div>
+              </div>
+            </div>
           </section>
           <section id="work-experience" class="work-section">
             <h3>Experience</h3>
@@ -775,7 +793,28 @@
     const emailChip = document.getElementById('social-email');
     const toastEl = document.getElementById('toast');
     const hiddenInput = document.getElementById('hidden-input');
-    const uniqueApi = 'http://localhost:3000/api/unique'; // in production, proxy to /api/unique on same origin
+    const discordStatusDot = document.getElementById('discord-status-dot');
+    const discordStatusText = document.getElementById('discord-status-text');
+    const discordMain = document.getElementById('discord-main');
+    const discordSub = document.getElementById('discord-sub');
+    const discordArtWrap = document.getElementById('discord-art-wrap');
+    const discordArt = document.getElementById('discord-art');
+    const discordIdleArt = '/photos/discord-idle.png';
+    const uniqueApi = `${location.origin}/api/unique`;
+    const discordPresenceEndpoints = [
+      `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/presence`,
+      'ws://localhost:3000/presence'
+    ];
+    const discordPresenceApiEndpoints = [
+      `${location.origin}/api/presence`,
+      'http://localhost:3000/api/presence'
+    ];
+    const discordStatusLabel = {
+      online: 'Online',
+      idle: 'Idle',
+      dnd: 'Do Not Disturb',
+      offline: 'Not Active'
+    };
     const palettes = {
       dark: ['#330036', '#38182f', '#2f394d', '#56666b'],
       light: ['#f5f6fb', '#dfe4ef', '#cfd6e3', '#aebacd']
@@ -788,6 +827,13 @@
     let currentCommand = '';
     let inputSpan = null;
     let cursorSpan = null;
+    let discordSocket = null;
+    let discordReconnectTimer = null;
+    let discordPollTimer = null;
+    let discordPresenceEnabled = false;
+    let discordEndpointIdx = 0;
+    let discordApiIdx = 0;
+    let discordHadMessage = false;
     function scrollToBottom() {
       terminalEl.scrollTop = terminalEl.scrollHeight;
     }
@@ -838,6 +884,190 @@
       const isLight = mode === 'light';
       document.body.classList.toggle('light-mode', isLight);
       updatePalette(isLight ? 'light' : 'dark');
+    }
+
+    function setDiscordFallback(message) {
+      if (discordStatusDot) {
+        discordStatusDot.className = 'presence-dot status-offline';
+      }
+      if (discordStatusText) {
+        discordStatusText.textContent = 'Unavailable';
+      }
+      if (discordMain) {
+        discordMain.textContent = message;
+      }
+      if (discordSub) {
+        discordSub.textContent = '';
+      }
+      if (discordArtWrap) discordArtWrap.hidden = false;
+      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
+      if (discordArt) discordArt.src = discordIdleArt;
+    }
+
+    function renderDiscordPresence(data) {
+      if (!data) {
+        setDiscordFallback('No Discord presence data available.');
+        return;
+      }
+
+      const status = data.status || 'offline';
+      if (discordStatusDot) {
+        discordStatusDot.className = `presence-dot status-${status}`;
+      }
+      if (discordStatusText) {
+        discordStatusText.textContent = discordStatusLabel[status] || status;
+      }
+
+      const custom = data.customStatus?.name;
+      const activities = Array.isArray(data.activities) ? data.activities : [];
+      const primary = activities[0] || null;
+
+      if (primary) {
+        const title = primary.title || primary.name || 'Activity';
+        const detail = [primary.details, primary.state].filter(Boolean).join(' · ');
+        const art = primary.assets?.largeImage || primary.assets?.smallImage || null;
+        const isMusic = primary.type === '2'
+          || (primary.title || '').toLowerCase().startsWith('listening to')
+          || (primary.name || '').toLowerCase() === 'spotify';
+        if (discordMain) discordMain.textContent = title;
+        if (discordSub) discordSub.textContent = detail || (custom ? `Custom: ${custom}` : '');
+        if (discordArtWrap) {
+          discordArtWrap.hidden = false;
+          discordArtWrap.classList.toggle('is-vinyl', Boolean(isMusic && art));
+        }
+        if (discordArt) {
+          if (art) {
+            discordArt.src = art;
+          } else {
+            discordArt.src = discordIdleArt;
+          }
+        }
+        return;
+      }
+
+      if (custom) {
+        if (discordMain) discordMain.textContent = `Custom: ${custom}`;
+        if (discordSub) discordSub.textContent = "I'm not active right now, probably sleeping.";
+        if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
+        if (discordStatusText) discordStatusText.textContent = 'Not Active';
+        if (discordArtWrap) discordArtWrap.hidden = false;
+        if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
+        if (discordArt) discordArt.src = discordIdleArt;
+        return;
+      }
+
+      if (discordMain) discordMain.textContent = "I'm not active right now, probably sleeping.";
+      if (discordSub) discordSub.textContent = '';
+      if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
+      if (discordStatusText) discordStatusText.textContent = 'Not Active';
+      if (discordArtWrap) discordArtWrap.hidden = false;
+      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
+      if (discordArt) discordArt.src = discordIdleArt;
+    }
+
+    function scheduleDiscordReconnect() {
+      if (!discordPresenceEnabled) return;
+      clearTimeout(discordReconnectTimer);
+      discordReconnectTimer = setTimeout(connectDiscordPresence, 3000);
+    }
+
+    async function fetchDiscordPresence() {
+      const endpoint = discordPresenceApiEndpoints[discordApiIdx] || discordPresenceApiEndpoints[0];
+      if (!endpoint) return false;
+      try {
+        const res = await fetch(endpoint, { method: 'GET' });
+        if (!res.ok) throw new Error('bad status');
+        const payload = await res.json();
+        renderDiscordPresence(payload);
+        return true;
+      } catch (_) {
+        discordApiIdx = (discordApiIdx + 1) % discordPresenceApiEndpoints.length;
+        return false;
+      }
+    }
+
+    function startDiscordPolling() {
+      if (!discordPresenceEnabled || discordPollTimer) return;
+      discordPollTimer = setInterval(async () => {
+        if (!discordPresenceEnabled) return;
+        const ok = await fetchDiscordPresence();
+        if (!ok && !discordHadMessage) {
+          setDiscordFallback('Could not connect to Discord presence service.');
+        }
+      }, 5000);
+    }
+
+    function stopDiscordPolling() {
+      if (discordPollTimer) {
+        clearInterval(discordPollTimer);
+        discordPollTimer = null;
+      }
+    }
+
+    function connectDiscordPresence() {
+      if (!discordPresenceEnabled) return;
+      const endpoint = discordPresenceEndpoints[discordEndpointIdx] || discordPresenceEndpoints[0];
+      if (!endpoint) return;
+
+      if (discordSocket && (discordSocket.readyState === WebSocket.OPEN || discordSocket.readyState === WebSocket.CONNECTING)) {
+        return;
+      }
+
+      try {
+        discordSocket = new WebSocket(endpoint);
+      } catch (_) {
+        discordEndpointIdx = (discordEndpointIdx + 1) % discordPresenceEndpoints.length;
+        scheduleDiscordReconnect();
+        return;
+      }
+
+      discordSocket.addEventListener('open', () => {
+        discordEndpointIdx = 0;
+        fetchDiscordPresence();
+        startDiscordPolling();
+      });
+
+      discordSocket.addEventListener('message', (evt) => {
+        try {
+          const payload = JSON.parse(evt.data);
+          discordHadMessage = true;
+          renderDiscordPresence(payload);
+        } catch (_) {
+          setDiscordFallback('Presence response could not be parsed.');
+        }
+      });
+
+      discordSocket.addEventListener('close', () => {
+        discordSocket = null;
+        discordEndpointIdx = (discordEndpointIdx + 1) % discordPresenceEndpoints.length;
+        scheduleDiscordReconnect();
+      });
+
+      discordSocket.addEventListener('error', () => {
+        if (discordSocket) {
+          discordSocket.close();
+        }
+      });
+    }
+
+    function startDiscordPresence() {
+      discordPresenceEnabled = true;
+      discordHadMessage = false;
+      setDiscordFallback('Connecting to Discord presence...');
+      fetchDiscordPresence();
+      startDiscordPolling();
+      connectDiscordPresence();
+    }
+
+    function stopDiscordPresence() {
+      discordPresenceEnabled = false;
+      clearTimeout(discordReconnectTimer);
+      discordReconnectTimer = null;
+      stopDiscordPolling();
+      if (discordSocket) {
+        discordSocket.close();
+        discordSocket = null;
+      }
     }
 
     const commands = {
@@ -1113,6 +1343,7 @@
     function enterWorkMode() {
       exitOverlay();
       document.body.classList.add('work-mode');
+      startDiscordPresence();
     }
 
     function enterBlogMode() {
@@ -1126,6 +1357,7 @@
       document.body.classList.remove('work-mode');
       document.body.classList.remove('blog-mode');
       document.body.classList.remove('experience-active');
+      stopDiscordPresence();
       if (hiddenInput) hiddenInput.focus();
     }
 
@@ -1176,12 +1408,12 @@
         {
           title: 'Living Machines: The Potential of ABBMs',
           href: 'https://www.authorea.com/users/955969/articles/1376990-living-machines-the-potential-of-abbms-for-precision-oncology',
-          image: 'photos/Featured-Volbot.webp'
+          image: 'Photos/Featured-Volbot.webp'
         },
         {
           title: 'BDPCN',
           href: '',
-          image: 'photos/13000_2023_1301_Fig3_HTML.webp'
+          image: 'Photos/13000_2023_1301_Fig3_HTML.webp'
         }
       ];
       if (pubGrid) {
