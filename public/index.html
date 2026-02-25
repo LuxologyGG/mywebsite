@@ -115,13 +115,21 @@
                 <div class="about-current-text glassy">
                   <div class="about-current-title">I'm currently working at <strong>USC</strong></div>
                   <div class="about-current-sub">Research Intern</div>
-                  <div class="about-current-body">Where I work  with Dr. Yaghmour researching BPDCN. I've been there <strong><span id="days-since-usc"></span> days</strong>.</div>
+                  <div class="about-current-body">Where I work  with Dr. Yaghmour researching BPDCN. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
                 </div>
               </div>
               <div class="about-row">
                 <div class="about-logo glassy">
                   <div class="presence-art-wrap" id="discord-art-wrap">
-                    <img id="discord-art" src="/photos/discord-idle.png" alt="Current Discord activity artwork" />
+                    <div class="presence-cover">
+                      <img id="discord-art" src="/photos/discord-idle.png" alt="Current activity artwork" />
+                    </div>
+                    <div class="presence-vinyl" aria-hidden="true">
+                      <div class="presence-vinyl-label">
+                        <img id="discord-vinyl-art" src="/photos/discord-idle.png" alt="" />
+                      </div>
+                      <div class="presence-vinyl-hole"></div>
+                    </div>
                   </div>
                 </div>
                 <div class="about-current-text glassy" id="discord-presence-card" aria-live="polite">
@@ -833,6 +841,7 @@
     const discordSub = document.getElementById('discord-sub');
     const discordArtWrap = document.getElementById('discord-art-wrap');
     const discordArt = document.getElementById('discord-art');
+    const discordVinylArt = document.getElementById('discord-vinyl-art');
     const discordPresenceCard = document.getElementById('discord-presence-card');
     const discordProgressWrap = document.getElementById('discord-progress-wrap');
     const discordProgressCurrent = document.getElementById('discord-progress-current');
@@ -1015,7 +1024,9 @@
         discordSub.textContent = '';
       }
       if (discordArtWrap) discordArtWrap.hidden = false;
+      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
       if (discordArt) discordArt.src = discordIdleArt;
+      if (discordVinylArt) discordVinylArt.src = discordIdleArt;
     }
 
     function renderDiscordPresence(data) {
@@ -1047,12 +1058,15 @@
         if (discordSub) discordSub.textContent = detail || (custom ? `Custom: ${custom}` : '');
         if (discordArtWrap) {
           discordArtWrap.hidden = false;
+          discordArtWrap.classList.toggle('is-vinyl', Boolean(isMusic && art));
         }
         if (discordArt) {
           if (art) {
             discordArt.src = art;
+            if (discordVinylArt) discordVinylArt.src = art;
           } else {
             discordArt.src = discordIdleArt;
+            if (discordVinylArt) discordVinylArt.src = discordIdleArt;
           }
         }
         renderDiscordMusicProgress(primary, isMusic);
@@ -1066,7 +1080,9 @@
         if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
         if (discordStatusText) discordStatusText.textContent = 'Not Active';
         if (discordArtWrap) discordArtWrap.hidden = false;
+        if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
         if (discordArt) discordArt.src = discordIdleArt;
+        if (discordVinylArt) discordVinylArt.src = discordIdleArt;
         return;
       }
 
@@ -1076,7 +1092,9 @@
       if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
       if (discordStatusText) discordStatusText.textContent = 'Not Active';
       if (discordArtWrap) discordArtWrap.hidden = false;
+      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
       if (discordArt) discordArt.src = discordIdleArt;
+      if (discordVinylArt) discordVinylArt.src = discordIdleArt;
     }
 
     function scheduleDiscordReconnect() {
