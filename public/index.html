@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="/Paste/style.css">
 </head>
 <body>
+  <div class="site-preloader" id="site-preloader">
+    <span class="loader"></span>
+  </div>
   <div class="world"></div>
 
   <div id="home-view" class="view active">
@@ -119,7 +122,7 @@
                   <div class="about-current-body">Where I work  with Dr. Yaghmour researching BPDCN. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
                 </div>
               </div>
-              <div class="about-row">
+              <div class="about-row discord-row" id="discord-row">
                 <div class="about-logo glassy">
                   <div class="presence-art-wrap" id="discord-art-wrap">
                     <div class="presence-cover">
@@ -347,6 +350,7 @@
               <div class="search-results" id="search-results"></div>
             </div>
           </section>
+          <section id="work-paste" class="work-section" aria-live="polite"></section>
         </div>
       </div>
     </div>
@@ -360,7 +364,12 @@
       <p>Please wait while we pull in the latest post.</p>
     </div>
   </div>
-  <div id="paste-view" class="view" aria-live="polite"></div>
+  <script>
+    window.PASTE_BACKEND_URL =
+      (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000'
+        : 'https://camrone-paste.onrender.com';
+  </script>
   <script src="/Paste/script.js"></script>
   <script>
     /* ── Graph-paper background with animated connecting lines ── */
@@ -580,7 +589,7 @@
     const ownerTimeZone = 'America/Los_Angeles';
     const homeView = document.getElementById('home-view');
     const blogView = document.getElementById('blog-view');
-    const pasteView = document.getElementById('paste-view');
+    const pasteSection = document.getElementById('work-paste');
     const blogPanel = document.getElementById('blog-content');
     const blogGrid = document.getElementById('blog-grid');
     const pubGrid = document.getElementById('pub-grid');
@@ -609,6 +618,7 @@
     const discordVinylMeta = document.getElementById('discord-vinyl-meta');
     const discordVinylSong = document.getElementById('discord-vinyl-song');
     const discordVinylArtist = document.getElementById('discord-vinyl-artist');
+    const discordRow = document.getElementById('discord-row');
     const waveEmojiEl = document.getElementById('wave-emoji');
     const aboutTypewriterEl = document.getElementById('about-typewriter');
     const discordIdleArt = '/photos/discord-idle.png';
@@ -645,15 +655,14 @@
     // —–– Navigation helpers (fix missing functions) —––
     // Site renders inside the glass card. Keep /blog in the URL for sharing and back-button support.
     async function ensurePasteView() {
-      if (!pasteView || !window.PasteApp) return;
-      await window.PasteApp.init(pasteView);
+      if (!pasteSection || !window.PasteApp) return;
+      await window.PasteApp.init(pasteSection);
     }
 
     function setActiveView(name = 'home') {
       if (!homeView) return;
       homeView.classList.toggle('active', name === 'home');
       if (blogView) blogView.classList.toggle('active', name === 'blog');
-      if (pasteView) pasteView.classList.toggle('active', name === 'paste');
     }
 
     async function navigateTo(path, push = true) {
@@ -665,8 +674,10 @@
         setActiveView('blog');
         if (typeof enterBlogMode === 'function') enterBlogMode();
       } else if (isPaste) {
-        setActiveView('paste');
         if (typeof exitOverlay === 'function') exitOverlay();
+        setActiveView('home');
+        enterWorkMode({ initial: false, target: '#work-paste' });
+        document.body.classList.add('paste-active');
         await ensurePasteView();
         if (window.PasteApp) {
           await window.PasteApp.open(path);
@@ -824,22 +835,7 @@
 
     function setDiscordFallback(message) {
       clearDiscordProgress();
-      if (discordStatusDot) {
-        discordStatusDot.className = 'presence-dot status-offline';
-      }
-      if (discordStatusText) {
-        discordStatusText.textContent = 'Unavailable';
-      }
-      if (discordMain) {
-        discordMain.textContent = message;
-      }
-      if (discordSub) {
-        discordSub.textContent = '';
-      }
-      if (discordArtWrap) discordArtWrap.hidden = false;
-      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
-      if (discordArt) discordArt.src = discordIdleArt;
-      if (discordVinylArt) discordVinylArt.src = discordIdleArt;
+      if (discordRow) discordRow.classList.remove('is-visible');
     }
 
     function renderDiscordPresence(data) {
@@ -861,6 +857,7 @@
       const primary = activities[0] || null;
 
       if (primary) {
+        if (discordRow) discordRow.classList.add('is-visible');
         const title = primary.title || primary.name || 'Activity';
         const detail = [primary.details, primary.state].filter(Boolean).join(' · ');
         const art = primary.assets?.largeImage || primary.assets?.smallImage || null;
@@ -905,28 +902,8 @@
         return;
       }
 
-      if (custom) {
-        clearDiscordProgress();
-        if (discordMain) discordMain.textContent = `Custom: ${custom}`;
-        if (discordSub) discordSub.textContent = "I'm not active right now, probably sleeping.";
-        if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
-        if (discordStatusText) discordStatusText.textContent = 'Not Active';
-        if (discordArtWrap) discordArtWrap.hidden = false;
-        if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
-        if (discordArt) discordArt.src = discordIdleArt;
-        if (discordVinylArt) discordVinylArt.src = discordIdleArt;
-        return;
-      }
-
       clearDiscordProgress();
-      if (discordMain) discordMain.textContent = "I'm not active right now, probably sleeping.";
-      if (discordSub) discordSub.textContent = '';
-      if (discordStatusDot) discordStatusDot.className = 'presence-dot status-offline';
-      if (discordStatusText) discordStatusText.textContent = 'Not Active';
-      if (discordArtWrap) discordArtWrap.hidden = false;
-      if (discordArtWrap) discordArtWrap.classList.remove('is-vinyl');
-      if (discordArt) discordArt.src = discordIdleArt;
-      if (discordVinylArt) discordVinylArt.src = discordIdleArt;
+      if (discordRow) discordRow.classList.remove('is-visible');
     }
 
     function scheduleDiscordReconnect() {
@@ -1484,6 +1461,15 @@
         sessionStorage.removeItem('goto-blog');
         navigateTo('/blog', true);
       }
+
+      // Hide preloader
+      const preloader = document.getElementById('site-preloader');
+      if (preloader) {
+        setTimeout(() => {
+          preloader.classList.add('is-hidden');
+          preloader.addEventListener('transitionend', () => preloader.remove(), { once: true });
+        }, 400);
+      }
     });
 
     // ------- Work card toggle -------
@@ -1510,7 +1496,7 @@
         document.body.classList.add('work-initializing');
       }
       const activeWorkTab = document.querySelector('.work-tab.is-active');
-      const target = activeWorkTab ? activeWorkTab.getAttribute('data-target') : '#work-about';
+      const target = opts.target || (activeWorkTab ? activeWorkTab.getAttribute('data-target') : '#work-about');
       setActiveWorkTab(target);
       document.body.classList.add('work-mode');
       startDiscordPresence();
@@ -1533,6 +1519,7 @@
     function exitOverlay() {
       document.body.classList.remove('work-mode');
       document.body.classList.remove('blog-mode');
+      document.body.classList.remove('paste-active');
       document.body.classList.remove('experience-active');
       stopDiscordPresence();
     }
@@ -1542,6 +1529,10 @@
         backButton.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
+          if (document.body.classList.contains('paste-active')) {
+            navigateTo('/', true);
+            return;
+          }
           exitOverlay();
         });
       }
@@ -1567,6 +1558,7 @@
       }
     }
 
+    window.showToast = showToast;
     function showToast(message = 'Copied to clipboard') {
       if (!toastEl) return;
       toastEl.textContent = message;

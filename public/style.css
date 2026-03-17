@@ -116,7 +116,10 @@ body{
   inset: 0;
   z-index: 3000;
   background: #000;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20vh;
   opacity: 1;
   transition: opacity 420ms ease;
 }
@@ -124,6 +127,54 @@ body{
 .site-preloader.is-hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+.loader {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 20px, 0 -20px;
+  border-radius: 3px;
+  background: currentColor;
+  display: block;
+  position: relative;
+  color: #FFF;
+  transform: translateY(20px);
+  box-sizing: border-box;
+  animation: animloader 2s ease infinite;
+}
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 20px, 0 -20px;
+  border-radius: 3px;
+  background: currentColor;
+  color: #FFF;
+  position: absolute;
+  left: 20px;
+  top: 0;
+  animation: animloader 2s 0.2s ease infinite;
+}
+.loader::before {
+  animation-delay: 0.4s;
+  left: 40px;
+}
+
+@keyframes animloader {
+  0% {
+    top: 0;
+    color: white;
+  }
+  50% {
+    top: 20px;
+    color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    top: 0;
+    color: white;
+  }
 }
 
 .purse {
@@ -268,17 +319,6 @@ canvas {
   padding-top: 120px;
   font-family: 'Roboto Mono', monospace;
   height: 100vh;
-  overflow-y: auto;
-}
-
-#paste-view {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 86px 20px 28px;
   overflow-y: auto;
 }
 
@@ -779,6 +819,17 @@ body.light-mode .profile-title {
   width: 100%;
 }
 
+.about-row.discord-row {
+  display: none;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.about-row.discord-row.is-visible {
+  display: grid;
+  opacity: 1;
+}
+
 .about-logo {
   width: 64px;
   height: 64px;
@@ -1158,6 +1209,55 @@ body.light-mode .about-current-sub {
 
 .work-mode .profile-badge {
   display: flex;
+}
+
+.paste-active .glass-card {
+  width: 94vw;
+  max-width: 1240px;
+  height: 84vh;
+  max-height: 84vh;
+  padding-top: 58px;
+}
+
+.paste-active .work-tabs {
+  display: none;
+}
+
+.paste-active .work-sections {
+  padding-bottom: 0;
+}
+
+.paste-active .profile-badge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 8;
+}
+
+.paste-active .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paste-active .center-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.paste-active #work-paste {
+  display: block;
+  height: 100%;
+}
+
+.paste-active #work-paste .paste-textarea {
+  min-height: 0;
+  height: calc(100% - 80px);
+  resize: none;
+}
+
+.paste-active .work-sections {
+  padding-top: 56px;
 }
 
 .work-mode.experience-active .profile-badge {
@@ -1695,7 +1795,6 @@ body.light-mode .glassy {
   height: 18px;
   object-fit: contain;
   display: block;
-  filter: invert(1);
 }
 
 
@@ -1715,7 +1814,7 @@ body.light-mode .social-chip {
 }
 
 body.light-mode .social-chip img {
-  filter: none;
+  filter: invert(1);
 }
 
 body.light-mode .social-chip:hover {

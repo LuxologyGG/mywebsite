@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "wrangler": "^4.68.0"
+  },
+  "dependencies": {
+    "mongodb": "^7.1.0"
   }
 }
