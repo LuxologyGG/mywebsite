@@ -8,6 +8,10 @@ kv_namespaces = [
 
 [assets]
 directory = "./public"
+binding = "ASSETS"
+
+[assets.routing]
+not_found_handling = "single-page-application"
 
 [vars]
 DISCORD_USER_ID = "1042651808557977600"

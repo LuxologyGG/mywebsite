@@ -1246,13 +1246,14 @@ body.light-mode .about-current-sub {
 }
 
 .paste-active #work-paste {
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .paste-active #work-paste .paste-textarea {
+  flex: 1;
   min-height: 0;
-  height: calc(100% - 80px);
   resize: none;
 }
 

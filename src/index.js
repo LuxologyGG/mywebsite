@@ -265,12 +265,7 @@ export default {
       return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
-    // ✅ SPA fallback for /paste routes → serve index.html from assets
-    if (url.pathname.startsWith("/paste")) {
-      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
-    }
-
-    // default — pass through to asset serving
+    // Everything else → asset serving (SPA fallback configured in wrangler.toml)
     return env.ASSETS.fetch(request);
   },
 };
