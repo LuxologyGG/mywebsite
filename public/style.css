@@ -1240,6 +1240,10 @@ body.light-mode .about-current-sub {
   justify-content: center;
 }
 
+.paste-active .toggle {
+  display: none;
+}
+
 .paste-active .center-image {
   opacity: 0;
   pointer-events: none;
