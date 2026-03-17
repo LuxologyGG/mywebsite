@@ -27,7 +27,7 @@
         return data;
       } catch (err) {
         if (attempt === 1) throw err;
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 1500));
       }
     }
   }
@@ -42,6 +42,21 @@
     } catch { return ''; }
   }
 
+  function formatExpiry(v) {
+    if (!v) return '';
+    try {
+      const d = new Date(v);
+      const now = new Date();
+      const diff = d - now;
+      if (diff <= 0) return 'Expired';
+      const hours = Math.floor(diff / 3600000);
+      const days = Math.floor(hours / 24);
+      if (days > 0) return `Expires in ${days}d`;
+      if (hours > 0) return `Expires in ${hours}h`;
+      return 'Expires soon';
+    } catch { return ''; }
+  }
+
   function status(text) {
     if (els?.status) els.status.textContent = text;
   }
@@ -53,7 +68,10 @@
     els.content.readOnly = true;
     els.save.disabled = true;
     els.copy.disabled = !currentId;
-    status(paste?.createdAt ? `Saved · ${formatDate(paste.createdAt)}` : 'Saved');
+    if (els.expiry) els.expiry.style.display = 'none';
+    const dateStr = paste?.createdAt ? formatDate(paste.createdAt) : '';
+    const expiryStr = paste?.expiresAt ? ` · ${formatExpiry(paste.expiresAt)}` : '';
+    status(dateStr ? `Saved · ${dateStr}${expiryStr}` : 'Saved');
   }
 
   function showEditor() {
@@ -63,6 +81,7 @@
     els.content.readOnly = false;
     els.save.disabled = false;
     els.copy.disabled = true;
+    if (els.expiry) els.expiry.style.display = '';
     status('Draft');
   }
 
@@ -81,16 +100,20 @@
     const content = els.content.value;
     if (!content.trim()) { status('Add some text first'); return; }
 
+    const expiresIn = els.expiry ? els.expiry.value : '1d';
+
     status('Saving...');
+    els.save.disabled = true;
     try {
       const data = await apiFetch('/paste', {
         method: 'POST',
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, expiresIn }),
       });
       if (!data?.id) throw new Error('No ID returned');
       history.replaceState({}, '', `/paste/${data.id}`);
       await load(data.id);
     } catch (err) {
+      els.save.disabled = false;
       status(err.message || 'Could not save');
     }
   }
@@ -111,6 +134,7 @@
       save: root.querySelector('[data-paste-save]'),
       copy: root.querySelector('[data-paste-copy]'),
       status: root.querySelector('[data-paste-status]'),
+      expiry: root.querySelector('[data-paste-expiry]'),
     };
     if (!els.content || !els.save) { els = null; return; }
     if (!bound) {
@@ -122,7 +146,7 @@
 
   async function open(path) {
     bind();
-    if (!els) return;
+    if (!els) { console.warn('PasteApp: could not bind to DOM elements'); return; }
     const id = parseId(path);
     if (id) { await load(id); } else { showEditor(); }
   }

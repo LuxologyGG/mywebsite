@@ -36,10 +36,21 @@ if (!uri) {
 const client = new MongoClient(uri);
 let collection;
 
+const EXPIRY_MAP = {
+  "1h": 3600,
+  "1d": 86400,
+  "7d": 604800,
+  "30d": 2592000,
+};
+
 async function start() {
   await client.connect();
   const db = client.db("pastes");
   collection = db.collection("entries");
+
+  // TTL index — MongoDB auto-deletes docs when expiresAt passes
+  await collection.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }).catch(() => {});
+
   console.log("Connected to MongoDB");
 
   app.listen(PORT, () => {
@@ -55,20 +66,28 @@ app.get("/health", (req, res) => {
 // CREATE paste
 app.post("/paste", async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, expiresIn } = req.body;
 
     if (!content || !content.trim()) {
       return res.status(400).json({ error: "Content is required" });
     }
 
-    const result = await collection.insertOne({
+    const doc = {
       content,
       createdAt: new Date(),
-    });
+    };
 
-    // ✅ FIX: always return string id
+    // Set expiration (default 1 day)
+    const seconds = EXPIRY_MAP[expiresIn] || EXPIRY_MAP["1d"];
+    if (expiresIn !== "never") {
+      doc.expiresAt = new Date(Date.now() + seconds * 1000);
+    }
+
+    const result = await collection.insertOne(doc);
+
     res.json({
-      id: result.insertedId.toString()
+      id: result.insertedId.toString(),
+      expiresAt: doc.expiresAt || null,
     });
 
   } catch (err) {
@@ -94,11 +113,16 @@ app.get("/paste/:id", async (req, res) => {
       return res.status(404).json({ error: "Paste not found" });
     }
 
-    // ✅ FIX: normalize response shape
+    // Check if expired (belt-and-suspenders, TTL index handles cleanup)
+    if (paste.expiresAt && new Date(paste.expiresAt) < new Date()) {
+      return res.status(404).json({ error: "Paste has expired" });
+    }
+
     res.json({
       id: paste._id.toString(),
       content: paste.content,
-      createdAt: paste.createdAt
+      createdAt: paste.createdAt,
+      expiresAt: paste.expiresAt || null,
     });
 
   } catch (err) {
