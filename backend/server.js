@@ -13,6 +13,9 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:8787",
 ];
 
+// trust proxy (important for Cloudflare + Render)
+app.set("trust proxy", true);
+
 app.use(cors({
   origin(origin, cb) {
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
@@ -44,13 +47,16 @@ async function start() {
   });
 }
 
+// health check
 app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
+// CREATE paste
 app.post("/paste", async (req, res) => {
   try {
     const { content } = req.body;
+
     if (!content || !content.trim()) {
       return res.status(400).json({ error: "Content is required" });
     }
@@ -60,16 +66,22 @@ app.post("/paste", async (req, res) => {
       createdAt: new Date(),
     });
 
-    res.json({ id: result.insertedId });
+    // ✅ FIX: always return string id
+    res.json({
+      id: result.insertedId.toString()
+    });
+
   } catch (err) {
     console.error("POST /paste error:", err);
     res.status(500).json({ error: "Could not save paste" });
   }
 });
 
+// GET paste
 app.get("/paste/:id", async (req, res) => {
   try {
     let oid;
+
     try {
       oid = new ObjectId(req.params.id);
     } catch {
@@ -77,11 +89,18 @@ app.get("/paste/:id", async (req, res) => {
     }
 
     const paste = await collection.findOne({ _id: oid });
+
     if (!paste) {
       return res.status(404).json({ error: "Paste not found" });
     }
 
-    res.json(paste);
+    // ✅ FIX: normalize response shape
+    res.json({
+      id: paste._id.toString(),
+      content: paste.content,
+      createdAt: paste.createdAt
+    });
+
   } catch (err) {
     console.error("GET /paste/:id error:", err);
     res.status(500).json({ error: "Could not load paste" });
