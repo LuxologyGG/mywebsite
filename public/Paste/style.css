@@ -1,0 +1,376 @@
+.paste-shell {
+  width: min(1120px, 100%);
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  animation: paste-shell-in 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.paste-card {
+  display: grid;
+  gap: 18px;
+  min-height: calc(100vh - 148px);
+  padding: 22px;
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+  color: #f4f7ff;
+  background:
+    radial-gradient(circle at top right, rgba(168, 227, 255, 0.12), transparent 42%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.paste-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.08), transparent 26%),
+    radial-gradient(circle at 82% 0%, rgba(180, 255, 255, 0.08), transparent 28%);
+  pointer-events: none;
+}
+
+.paste-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.paste-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.paste-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  font: 700 12px/1 "Noto Sans", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.paste-home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-decoration: none;
+  font: 600 13px/1 "Noto Sans", sans-serif;
+  opacity: 0.88;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.paste-home-link:hover {
+  opacity: 1;
+}
+
+.paste-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.paste-title {
+  margin: 0;
+  font: 800 clamp(28px, 4vw, 42px)/1 "Noto Sans", sans-serif;
+}
+
+.paste-subtitle {
+  margin: 8px 0 0;
+  font: 400 15px/1.45 "Noto Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.paste-status {
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font: 600 12px/1 "Noto Sans", sans-serif;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.paste-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(180px, 0.65fr) repeat(3, auto);
+  gap: 12px;
+  align-items: center;
+}
+
+.paste-input,
+.paste-select,
+.paste-button,
+.paste-textarea {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  outline: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.paste-input,
+.paste-select {
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 14px;
+  font: 600 14px/1 "Noto Sans", sans-serif;
+}
+
+.paste-input::placeholder,
+.paste-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.paste-button {
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+  font: 700 14px/1 "Noto Sans", sans-serif;
+}
+
+.paste-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.paste-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.paste-button--primary {
+  background: rgba(168, 227, 255, 0.16);
+  border-color: rgba(168, 227, 255, 0.32);
+}
+
+.paste-editor {
+  padding: 10px;
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.paste-textarea {
+  width: 100%;
+  min-height: 380px;
+  resize: vertical;
+  padding: 18px;
+  border-radius: 18px;
+  font: 400 15px/1.65 "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.paste-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.paste-meta-item {
+  display: grid;
+  gap: 6px;
+}
+
+.paste-meta-label {
+  font: 700 11px/1 "Noto Sans", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.paste-meta-value {
+  font: 500 13px/1.4 "Noto Sans", sans-serif;
+  word-break: break-word;
+}
+
+.paste-owned {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.paste-owned-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.paste-owned-head h2 {
+  margin: 0;
+  font: 800 18px/1 "Noto Sans", sans-serif;
+}
+
+.paste-owned-note {
+  font: 500 12px/1.35 "Noto Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.paste-owned-list {
+  display: grid;
+  gap: 10px;
+}
+
+.paste-owned-empty {
+  color: rgba(255, 255, 255, 0.58);
+  font: 500 13px/1.4 "Noto Sans", sans-serif;
+}
+
+.paste-owned-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.paste-owned-link {
+  color: #fff;
+  text-decoration: none;
+  display: grid;
+  gap: 4px;
+}
+
+.paste-owned-title {
+  font: 700 14px/1.3 "Noto Sans", sans-serif;
+}
+
+.paste-owned-meta {
+  font: 500 12px/1.3 "Noto Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.paste-owned-open {
+  justify-self: end;
+}
+
+body.light-mode .paste-card,
+body.light-mode .paste-kicker,
+body.light-mode .paste-status,
+body.light-mode .paste-input,
+body.light-mode .paste-select,
+body.light-mode .paste-button,
+body.light-mode .paste-textarea,
+body.light-mode .paste-home-link,
+body.light-mode .paste-title,
+body.light-mode .paste-meta-value,
+body.light-mode .paste-owned-link {
+  color: #111;
+}
+
+body.light-mode .paste-subtitle,
+body.light-mode .paste-owned-note,
+body.light-mode .paste-owned-meta,
+body.light-mode .paste-meta-label,
+body.light-mode .paste-owned-empty {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+body.light-mode .paste-input,
+body.light-mode .paste-select,
+body.light-mode .paste-button,
+body.light-mode .paste-textarea,
+body.light-mode .paste-home-link {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .paste-input::placeholder,
+body.light-mode .paste-textarea::placeholder {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+@keyframes paste-shell-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 960px) {
+  .paste-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .paste-button--primary {
+    grid-column: span 2;
+  }
+
+  .paste-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .paste-card {
+    padding: 18px;
+    border-radius: 22px;
+    min-height: auto;
+  }
+
+  .paste-header,
+  .paste-owned-head,
+  .paste-topbar {
+    grid-auto-flow: row;
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .paste-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .paste-button--primary {
+    grid-column: auto;
+  }
+
+  .paste-textarea {
+    min-height: 300px;
+  }
+
+  .paste-owned-item {
+    grid-template-columns: 1fr;
+  }
+
+  .paste-owned-open {
+    justify-self: start;
+  }
+}

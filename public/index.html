@@ -6,6 +6,7 @@
   <title>camr.one</title>
   <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/Paste/style.css">
 </head>
 <body>
   <div class="world"></div>
@@ -17,6 +18,10 @@
       alt="Centered visual"
     />
     <div class="glass-card">
+      <label class="toggle" aria-label="Toggle theme">
+        <input id="theme-toggle-input" type="checkbox" aria-label="Toggle light mode and dark mode" />
+        <div></div>
+      </label>
       <button class="back-button" aria-label="Back to prompt">&#8592;</button>
       <div class="profile-badge">
         <div class="profile-glass">
@@ -41,25 +46,21 @@
               <a class="social-chip" href="https://github.com/LuxologyGG" target="_blank" rel="noreferrer">
                 <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38c0-.19-.01-.82-.01-1.49c-2.01.37-2.53-.49-2.69-.94c-.09-.23-.48-.94-.82-1.13c-.28-.15-.68-.52-.01-.53c.63-.01 1.08.58 1.23.82c.72 1.21 1.87.87 2.33.66c.07-.52.28-.87.5-1.07c-1.78-.2-3.64-.89-3.64-3.95c0-.87.31-1.59.82-2.15c-.08-.2-.36-1.02.08-2.12c0 0 .67-.21 2.2.82c.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82c.44 1.1.16 1.92.08 2.12c.51.56.82 1.27.82 2.15c0 3.07-1.87 3.75-3.65 3.95c.29.25.54.73.54 1.48c0 1.07-.01 1.93-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
               </a>
+              <a class="social-chip" href="https://namemc.com/profile/Camronia.1" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M0 0v24h24V0Zm4.8 4.8H16V8h3.2v11.2H16V8H8v11.2H4.8V8Z"/></svg>
+              </a>
+              <a class="social-chip" href="https://steamcommunity.com/id/luxygg/" target="_blank" rel="noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>
+              </a>
+              <a class="social-chip" href="https://www.roblox.com/users/102001891/profile" target="_blank" rel="noreferrer">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Roblox_Logo.svg" alt="Roblox profile" />
+              </a>
               <button class="social-chip copy-chip" id="social-email" type="button">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4l-8 5l-8-5V6l8 5l8-5Z"/></svg>
               </button>
             </div>
           </div>
         </div>
-      <input
-        id="hidden-input"
-        class="terminal-input"
-        name="terminal-input"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        aria-hidden="true"
-        data-lpignore="true"
-        data-bwignore="true"
-        data-bitwarden-watching="false"
-        inputmode="text"
-      />
       <div class="blog-content-block">
         <div class="blog-hero">
           <div class="blog-avatar-circle">
@@ -96,7 +97,7 @@
         <div class="work-tabs">
           <button class="work-tab is-active" data-target="#work-about">About</button>
       <button class="work-tab" data-target="#work-experience">Experience</button>
-      <button class="work-tab" data-target="#work-terminal">Terminal</button>
+      <button class="work-tab" data-target="#work-search">Explore</button>
     </div>
         <div class="work-sections">
           <section id="work-about" class="work-section is-active">
@@ -131,6 +132,10 @@
                       <div class="presence-vinyl-hole"></div>
                     </div>
                   </div>
+                  <div class="presence-vinyl-meta" id="discord-vinyl-meta" hidden>
+                    <div class="presence-vinyl-song" id="discord-vinyl-song"></div>
+                    <div class="presence-vinyl-artist" id="discord-vinyl-artist"></div>
+                  </div>
                 </div>
                 <div class="about-current-text glassy" id="discord-presence-card" aria-live="polite">
                   <div class="presence-head">
@@ -159,179 +164,11 @@
           </section>
           <section id="work-experience" class="work-section">
             <h3>Experience</h3>
-            <div class="exp-hc-shell">
-              <div class="exp-hc-note">Use drag/scroll to explore. Zoom is limited to month and year ranges.</div>
-              <div id="experience-chart" class="experience-chart"></div>
-              <div class="exp-hc-detail" id="exp-hc-detail">
-                <div class="exp-hc-date" id="exp-hc-date">Click a point on the timeline</div>
-                <div class="exp-hc-title" id="exp-hc-title">Experience details</div>
-                <div class="exp-hc-meta" id="exp-hc-meta"></div>
-                <ul class="exp-hc-body" id="exp-hc-body"></ul>
-              </div>
+            <div class="htl-wrap">
+              <div class="htl-track" id="htl-track"></div>
             </div>
-            <div class="exp-tabs">
-              <button class="exp-tab is-active" data-target="exp-pane-work">Work</button>
-              <button class="exp-tab" data-target="exp-pane-coding">Coding</button>
-            </div>
-            <div class="exp-pane is-active" id="exp-pane-work">
-            <div class="exp-detail" id="exp-detail" aria-live="polite">
-              <div class="exp-detail-title" id="exp-detail-title"></div>
-              <div class="exp-detail-meta" id="exp-detail-meta"></div>
-              <div class="exp-detail-body" id="exp-detail-body"></div>
-            </div>
-            <ul class="timeline" id="exp-timeline">
-              <li class="tl-item" style="--i:0;" data-exp="assistant_researcher">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 3v5a4 4 0 0 0 8 0V3"/>
-                    <path d="M10 8v6a4 4 0 0 1-8 0v-1"/>
-                    <path d="M18 14a2 2 0 1 0 0 4h1a2 2 0 1 0 0-4z"/>
-                    <path d="M6 18h6"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Sep 2025 to Present</div>
-                  <div class="tl-title">Assistant Researcher</div>
-                  <div class="tl-sub">USC Norris Comprehensive Cancer Center, Los Angeles, CA</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:1;" data-exp="nyas_student">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10L12 4 2 10l10 6z"/>
-                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Aug 2025 to Present</div>
-                  <div class="tl-title">Student</div>
-                  <div class="tl-sub">New York Academy of Sciences, Remote</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:2;" data-exp="ucla_intern">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l-6-6 6-6"/>
-                    <path d="M15 6l6 6-6 6"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">May 2025 to Present</div>
-                  <div class="tl-title">Intern</div>
-                  <div class="tl-sub">UCLA Computer Science, Los Angeles, CA</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:3;" data-exp="southbay_board">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Feb 2025 to Present</div>
-                  <div class="tl-title">Board Member and Lead Web Developer</div>
-                  <div class="tl-sub">South Bay STEM Association, Rancho Palos Verdes, CA</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:4;" data-exp="smi_student">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 18h8"/>
-                    <path d="M3 22h18"/>
-                    <path d="M14 2v6"/>
-                    <path d="M10 2v6"/>
-                    <path d="M8 8h8"/>
-                    <path d="M10 8l-4 8"/>
-                    <path d="M14 8l4 8"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Jun 2025 to Oct 2025</div>
-                  <div class="tl-title">Student</div>
-                  <div class="tl-sub">Science Mentorship Institute, Remote</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:5;" data-exp="nontrivial_fellow">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/>
-                    <path d="M4 5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10"/>
-                    <path d="M8 13h8"/>
-                    <path d="M12 9v8"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Feb 2025 to May 2025</div>
-                  <div class="tl-title">Research Fellow</div>
-                  <div class="tl-sub">Non-Trivial, Remote</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:6;" data-exp="instructor_tkd">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 7l-8 6-8-6"/>
-                    <path d="M4 7v10l8 4 8-4V7"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Jun 2024 to Aug 2025</div>
-                  <div class="tl-title">Dual Enrollment</div>
-                  <div class="tl-sub">El Camino College</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:7;" data-exp="elcamino_dual">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10L12 4 2 10l10 6z"/>
-                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">May 2025 to Jul 2025</div>
-                  <div class="tl-title">Dual Enrollment</div>
-                  <div class="tl-sub">Los Angeles Community College District</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:8;" data-exp="laccd_dual">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">Feb 2021 to Mar 2023</div>
-                  <div class="tl-title">Instructor</div>
-                  <div class="tl-sub">Rolling Hills Taekwondo, Rolling Hills Estates, CA</div>
-                </div>
-              </li>
-
-              <li class="tl-item" style="--i:9;" data-exp="hs_diploma">
-                <div class="tl-icon" aria-hidden="true">
-                  <svg class="tl-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10L12 4 2 10l10 6z"/>
-                    <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
-                  </svg>
-                </div>
-                <div class="tl-body">
-                  <div class="tl-date">2022 to 2026</div>
-                  <div class="tl-title">High School Diploma</div>
-                  <div class="tl-sub">Palos Verdes Peninsula High School</div>
-                </div>
-              </li>
-            </ul>
-            </div>
-            <div class="exp-pane" id="exp-pane-coding">
+            <div class="htl-detail glassy" id="htl-detail"></div>
+            <div class="exp-coding-section">
               <div class="coding-categories">
                 <button class="coding-cat-toggle is-active" data-cat="front">Front End</button>
                 <button class="coding-cat-toggle" data-cat="back">Back End</button>
@@ -500,12 +337,15 @@
                 </div>
               </div>
             </div>
-            </div>
           </section>
-          <section id="work-terminal" class="work-section">
-            <h3>Terminal</h3>
-            <p>Type commands here.</p>
-            <div class="terminal-body terminal-scroll"></div>
+          <section id="work-search" class="work-section">
+            <div class="search-container">
+              <div class="search-bar glassy">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="search-input" placeholder="Where do you want to go?" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="search-results" id="search-results"></div>
+            </div>
           </section>
         </div>
       </div>
@@ -520,310 +360,227 @@
       <p>Please wait while we pull in the latest post.</p>
     </div>
   </div>
-  <script src="https://code.highcharts.com/stock/highstock.js"></script>
-  <script type="x-shader/x-fragment" id="fragmentShader">
-    precision highp float;
-
-    uniform float uTime;
-    uniform vec2 uMousePosition;
-    uniform float uDensity;
-    uniform float uDisplacement;
-    uniform vec3 uPalette[4];
-
-    varying vec2 vUv;
-
-    float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-    vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-    vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
-
-    float rand(vec2 co){
-      return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-    }
-
-    float hue2rgb(float f1, float f2, float hue) {
-      if (hue < 0.0)
-        hue += 1.0;
-      else if (hue > 1.0)
-        hue -= 1.0;
-      float res;
-      if ((6.0 * hue) < 1.0)
-        res = f1 + (f2 - f1) * 6.0 * hue;
-      else if ((2.0 * hue) < 1.0)
-        res = f2;
-      else if ((3.0 * hue) < 2.0)
-        res = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;
-      else
-        res = f1;
-      return res;
-    }
-
-    vec3 hsl2rgb(vec3 hsl) {
-      vec3 rgb;
-
-      if (hsl.y == 0.0) {
-        rgb = vec3(hsl.z);
-      } else {
-        float f2;
-
-        if (hsl.z < 0.5)
-          f2 = hsl.z * (1.0 + hsl.y);
-        else
-          f2 = hsl.z + hsl.y - hsl.y * hsl.z;
-
-        float f1 = 2.0 * hsl.z - f2;
-
-        rgb.r = hue2rgb(f1, f2, hsl.x + (1.0/3.0));
-        rgb.g = hue2rgb(f1, f2, hsl.x);
-        rgb.b = hue2rgb(f1, f2, hsl.x - (1.0/3.0));
-      }
-      return rgb;
-    }
-
-    vec3 hsl2rgb(float h, float s, float l) {
-      return hsl2rgb(vec3(h, s, l));
-    }
-
-    float noise(vec3 p){
-      vec3 a = floor(p);
-      vec3 d = p - a;
-      d = d * d * (3.0 - 2.0 * d);
-
-      vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
-      vec4 k1 = perm(b.xyxy);
-      vec4 k2 = perm(k1.xyxy + b.zzww);
-
-      vec4 c = k2 + a.zzzz;
-      vec4 k3 = perm(c);
-      vec4 k4 = perm(c + 1.0);
-
-      vec4 o1 = fract(k3 * (1.0 / 41.0));
-      vec4 o2 = fract(k4 * (1.0 / 41.0));
-
-      vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
-      vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
-
-      return o4.y * d.y + o4.x * (1.0 - d.y);
-    }
-
-    vec2 fade(vec2 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
-
-    float cnoise(vec2 P){
-      vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
-      vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
-      Pi = mod(Pi, 289.0);
-      vec4 ix = Pi.xzxz;
-      vec4 iy = Pi.yyww;
-      vec4 fx = Pf.xzxz;
-      vec4 fy = Pf.yyww;
-      vec4 i = perm(perm(ix) + iy);
-      vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0;
-      vec4 gy = abs(gx) - 0.5;
-      vec4 tx = floor(gx + 0.5);
-      gx = gx - tx;
-      vec2 g00 = vec2(gx.x,gy.x);
-      vec2 g10 = vec2(gx.y,gy.y);
-      vec2 g01 = vec2(gx.z,gy.z);
-      vec2 g11 = vec2(gx.w,gy.w);
-      vec4 norm = 1.79284291400159 - 0.85373472095314 *
-        vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
-      g00 *= norm.x;
-      g01 *= norm.y;
-      g10 *= norm.z;
-      g11 *= norm.w;
-      float n00 = dot(g00, vec2(fx.x, fy.x));
-      float n10 = dot(g10, vec2(fx.y, fy.y));
-      float n01 = dot(g01, vec2(fx.z, fy.z));
-      float n11 = dot(g11, vec2(fx.w, fy.w));
-      vec2 fade_xy = fade(Pf.xy);
-      vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
-      float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
-      return 2.3 * n_xy;
-    }
-
-    void main () {
-      float mouseDistance = length(vUv - uMousePosition);
-      float t = uTime * .005;
-      float elevation =  vUv.y * uDensity * 30.0;
-
-      float shadow = smoothstep(0.0, .3 + sin(t * 5.0 * 3.14) * .1 , mouseDistance);
-      elevation += shadow * 5.0;
-
-      float displacement = cnoise( vec2( t + vUv.y * 2.0, t + vUv.x * 3.0 )) * uDisplacement * 3.0 ;
-
-      elevation += displacement * 4.0;
-      elevation *= 2.0 + cnoise( vec2( t + vUv.y * 1.0, t + .5)) * 2.0 ;
-
-      float light = .9 + fract(elevation);
-      light *= .9 + (1.0 - (displacement * displacement)) * .1;
-
-      // blend across the provided palette with smoother bands to avoid artifacts
-      float band = fract(0.05 * elevation + cnoise(vec2(t * 0.15, vUv.x * 1.5)) * 0.25 + shadow * 0.15);
-      band = smoothstep(0.0, 1.0, band);
-      vec3 baseCol;
-      float seg = band * 3.0;
-      if (seg < 1.0) {
-        baseCol = mix(uPalette[0], uPalette[1], seg);
-      } else if (seg < 2.0) {
-        baseCol = mix(uPalette[1], uPalette[2], seg - 1.0);
-      } else {
-        baseCol = mix(uPalette[2], uPalette[3], seg - 2.0);
-      }
-
-      float brightness = 0.6 + light * 0.4 - mouseDistance * 0.08;
-      vec3 col = clamp(baseCol * brightness, 0.0, 1.0);
-
-      gl_FragColor = vec4(col, 1.);
-    }
-  </script>
-
-  <script type="x-shader/x-vertex" id="vertexShader">
-    attribute vec3 position;
-    attribute vec2 uv;
-
-    uniform mat4 projectionMatrix;
-    uniform mat4 modelViewMatrix;
-    uniform mat3 normalMatrix;
-
-    uniform float uTime;
-    uniform vec2 uMousePosition;
-
-    varying vec2 vUv;
-
-    void main() {
-      vUv = uv;
-      vec4 pos = vec4(position, 1.0);
-      gl_Position = pos;
-    }
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <div id="paste-view" class="view" aria-live="polite"></div>
+  <script src="/Paste/script.js"></script>
   <script>
-    const parameters = {
-      speed: 0.2,
-      density: 0.5,
-      displacement: 0.66
-    };
+    /* ── Graph-paper background with animated connecting lines ── */
+    (function () {
+      const CELL = 28;            // grid spacing in px
+      const DOT_R = 1.2;          // dot radius
+      const LINE_W = 1.2;         // connection line width
+      const DRAW_SPEED = 0.0018;  // progress per frame (0→1) — ~9s total animation
 
-    class World {
-      constructor(width, height) {
-        this.renderer = new THREE.WebGLRenderer({
-          alpha: true,
-          antialias: true
-        });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(width, height);
-        this.container = document.getElementsByClassName("world")[0];
-        this.scene = new THREE.Scene();
-        this.width = width;
-        this.height = height;
-        this.aspectRatio = width / height;
-        this.fieldOfView = 50;
-        const nearPlane = .1;
-        const farPlane = 20000;
-        this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, nearPlane, farPlane);
-        this.camera.position.z = 200;
-        this.container.appendChild(this.renderer.domElement);
-        this.timer = 0;
-        this.mousePos = {x:0, y:0};
-        this.targetMousePos = {x:0, y:0};
-        this.createPlane();
-        this.render();
+      const themes = {
+        dark:  { bg: '#0a0a0a', dot: 'rgba(255,255,255,0.10)', line: 'rgba(255,255,255,0.18)' },
+        light: { bg: '#f5f6fb', dot: 'rgba(0,0,0,0.10)', line: 'rgba(0,0,0,0.15)' }
+      };
+
+      let canvas, ctx, cols, rows, edges, drawOrder, progress, raf, theme;
+
+      function init() {
+        const container = document.querySelector('.world');
+        if (!container) return;
+        canvas = document.createElement('canvas');
+        canvas.style.cssText = 'width:100%;height:100%;display:block;';
+        container.appendChild(canvas);
+        ctx = canvas.getContext('2d');
+        theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        resize();
+        window.addEventListener('resize', resize);
       }
 
-      createPlane(){
-        this.material = new THREE.RawShaderMaterial({
-          vertexShader: document.getElementById( 'vertexShader' ).textContent,
-          fragmentShader: document.getElementById('fragmentShader').textContent,
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        generate();
+      }
 
-          uniforms: {
-            uTime: { type: 'f', value: 0 },
-            uDensity: {type: 'f', value: parameters.density},
-            uDisplacement: {type: 'f', value: parameters.displacement},
-            uMousePosition: {type: 'v2', value: new THREE.Vector2( 0.5, 0.5 ) },
-            uPalette: {
-              value: [
-                new THREE.Color('#330036'),
-                new THREE.Color('#38182f'),
-                new THREE.Color('#2f394d'),
-                new THREE.Color('#56666b')
-              ]
+      /* Build the random edge set using a spanning-tree so every dot is connected */
+      function generate() {
+        const w = window.innerWidth, h = window.innerHeight;
+        cols = Math.ceil(w / CELL) + 1;
+        rows = Math.ceil(h / CELL) + 1;
+        const total = cols * rows;
+
+        // adjacency: right, down, down-right, down-left
+        const dirs = [[1,0],[0,1],[1,1],[-1,1]];
+
+        // Build all possible edges
+        const allEdges = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            for (const [dc, dr] of dirs) {
+              const nc = c + dc, nr = r + dr;
+              if (nc >= 0 && nc < cols && nr >= 0 && nr < rows) {
+                allEdges.push([r * cols + c, nr * cols + nc]);
+              }
             }
           }
-        });
-        this.planeGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-
-        this.plane = new THREE.Mesh(this.planeGeometry, this.material);
-        this.scene.add(this.plane);
-      }
-
-      render() {
-        this.timer += parameters.speed;
-        this.plane.material.uniforms.uTime.value = this.timer;
-
-        this.mousePos.x += (this.targetMousePos.x - this.mousePos.x) * .1;
-        this.mousePos.y += (this.targetMousePos.y - this.mousePos.y) * .1;
-
-        if (this.plane){
-          this.plane.material.uniforms.uMousePosition.value = new THREE.Vector2(this.mousePos.x, this.mousePos.y);
         }
 
-        this.renderer.render(this.scene, this.camera);
+        // Shuffle
+        for (let i = allEdges.length - 1; i > 0; i--) {
+          const j = Math.random() * (i + 1) | 0;
+          [allEdges[i], allEdges[j]] = [allEdges[j], allEdges[i]];
+        }
+
+        // Union-Find for spanning tree
+        const parent = Array.from({ length: total }, (_, i) => i);
+        const rank = new Uint8Array(total);
+        function find(x) { while (parent[x] !== x) x = parent[x] = parent[parent[x]]; return x; }
+        function union(a, b) {
+          a = find(a); b = find(b);
+          if (a === b) return false;
+          if (rank[a] < rank[b]) [a, b] = [b, a];
+          parent[b] = a;
+          if (rank[a] === rank[b]) rank[a]++;
+          return true;
+        }
+
+        // Spanning tree edges (guarantees every node connected)
+        const treeEdges = [];
+        for (const e of allEdges) {
+          if (union(e[0], e[1])) treeEdges.push(e);
+        }
+
+        // Add some extra random edges for visual density (~30% of remaining)
+        const extraEdges = [];
+        for (const e of allEdges) {
+          if (find(e[0]) === find(e[1]) && !treeEdges.includes(e)) {
+            if (Math.random() < 0.3) extraEdges.push(e);
+          }
+        }
+
+        edges = treeEdges.concat(extraEdges);
+
+        // BFS from all 4 corners simultaneously to determine draw order
+        const cornerNodes = [
+          0,                              // top-left
+          cols - 1,                       // top-right
+          (rows - 1) * cols,              // bottom-left
+          (rows - 1) * cols + (cols - 1)  // bottom-right
+        ];
+
+        // Build adjacency list from edges
+        const adj = Array.from({ length: total }, () => []);
+        for (let i = 0; i < edges.length; i++) {
+          adj[edges[i][0]].push(i);
+          adj[edges[i][1]].push(i);
+        }
+
+        const edgeDepth = new Float64Array(edges.length);
+        edgeDepth.fill(-1);
+        const visited = new Uint8Array(total);
+        const queue = [];
+        for (const cn of cornerNodes) {
+          visited[cn] = 1;
+          queue.push(cn);
+        }
+
+        let depth = 0;
+        while (queue.length) {
+          const nextQueue = [];
+          for (const node of queue) {
+            for (const ei of adj[node]) {
+              if (edgeDepth[ei] >= 0) continue;
+              const other = edges[ei][0] === node ? edges[ei][1] : edges[ei][0];
+              edgeDepth[ei] = depth;
+              if (!visited[other]) {
+                visited[other] = 1;
+                nextQueue.push(other);
+              }
+            }
+          }
+          queue.length = 0;
+          for (const n of nextQueue) queue.push(n);
+          depth++;
+        }
+
+        // Sort edges by depth so they draw outward from corners
+        drawOrder = edges.map((_, i) => i).sort((a, b) => edgeDepth[a] - edgeDepth[b]);
+        const maxDepth = depth || 1;
+
+        // Assign a normalized start time (0→1) to each edge based on depth
+        edges.forEach((_, i) => {
+          edges[i].startT = edgeDepth[i] / maxDepth;
+        });
+
+        progress = 0;
+        if (!raf) tick();
       }
 
-      loop() {
-        this.render();
-        requestAnimationFrame(this.loop.bind(this));
+      function nodeXY(idx) {
+        const c = idx % cols, r = (idx / cols) | 0;
+        return [c * CELL, r * CELL];
       }
 
-      updateSize(w, h) {
-        this.renderer.setSize(w, h);
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
+      function tick() {
+        raf = requestAnimationFrame(tick);
+        progress = Math.min(1, progress + DRAW_SPEED);
+        draw();
       }
-      mouseMove(mousePos) {
-        this.targetMousePos.x = mousePos.px;
-        this.targetMousePos.y = mousePos.py;
+
+      function draw() {
+        const w = window.innerWidth, h = window.innerHeight;
+        const t = themes[theme] || themes.dark;
+
+        // Background
+        ctx.fillStyle = t.bg;
+        ctx.fillRect(0, 0, w, h);
+
+        // Grid dots
+        ctx.fillStyle = t.dot;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            ctx.beginPath();
+            ctx.arc(c * CELL, r * CELL, DOT_R, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Animated connecting lines
+        ctx.strokeStyle = t.line;
+        ctx.lineWidth = LINE_W;
+        ctx.lineCap = 'round';
+
+        for (const ei of drawOrder) {
+          const e = edges[ei];
+          const startT = e.startT;
+          if (progress <= startT) continue;
+
+          const localP = Math.min(1, (progress - startT) / 0.12); // each line takes 12% of total time to draw
+          const eased = localP * localP * (3 - 2 * localP); // smoothstep
+
+          const [x1, y1] = nodeXY(e[0]);
+          const [x2, y2] = nodeXY(e[1]);
+          const cx = x1 + (x2 - x1) * eased;
+          const cy = y1 + (y2 - y1) * eased;
+
+          ctx.globalAlpha = 0.4 + 0.6 * eased;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(cx, cy);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
       }
-    };
 
-    let mousePos = {x:0, y:0, px:0, py:0};
-    let world;
+      /* Theme switching — called by existing setTheme/updatePalette */
+      window._graphPaperSetTheme = function (mode) {
+        theme = mode;
+      };
 
-    document.addEventListener("DOMContentLoaded", domIsReady);
-
-    function domIsReady() {
-      world = new World(window.innerWidth, window.innerHeight);
-      updatePalette(document.body.classList.contains('light-mode') ? 'light' : 'dark');
-      window.addEventListener('resize', handleWindowResize, false);
-      document.addEventListener("mousemove", handleMouseMove, false);
-      handleWindowResize();
-      world.loop();
-    }
-
-    function handleWindowResize() {
-      if (!world) return;
-      world.updateSize(window.innerWidth, window.innerHeight);
-    }
-
-    function handleMouseMove(e) {
-      mousePos.x = e.clientX;
-      mousePos.y = e.clientY;
-      mousePos.px = mousePos.x / window.innerWidth;
-      mousePos.py = 1.0 - mousePos.y / window.innerHeight;
-      world.mouseMove(mousePos);
-    }
+      document.addEventListener('DOMContentLoaded', init);
+    })();
   </script>
 
   <script>
-    // Simple in-box terminal (vanilla JS, no inputs)
-    const terminalEl = document.querySelector('.terminal-body');
-    const promptSymbol = '➜';
-    const pathSymbol = '~';
     const ownerTimeZone = 'America/Los_Angeles';
-    const charDelay = 18; // ms per character for type effect
-    const lineDelay = 120; // pause between lines
     const homeView = document.getElementById('home-view');
     const blogView = document.getElementById('blog-view');
+    const pasteView = document.getElementById('paste-view');
     const blogPanel = document.getElementById('blog-content');
     const blogGrid = document.getElementById('blog-grid');
     const pubGrid = document.getElementById('pub-grid');
@@ -834,7 +591,9 @@
     const profileBadge = document.querySelector('.profile-badge');
     const emailChip = document.getElementById('social-email');
     const toastEl = document.getElementById('toast');
-    const hiddenInput = document.getElementById('hidden-input');
+    const searchInput = document.getElementById('search-input');
+    const searchResultsEl = document.getElementById('search-results');
+    const themeToggleInput = document.getElementById('theme-toggle-input');
     const discordStatusDot = document.getElementById('discord-status-dot');
     const discordStatusText = document.getElementById('discord-status-text');
     const discordMain = document.getElementById('discord-main');
@@ -847,6 +606,9 @@
     const discordProgressCurrent = document.getElementById('discord-progress-current');
     const discordProgressTotal = document.getElementById('discord-progress-total');
     const discordProgressBar = document.getElementById('discord-progress-bar');
+    const discordVinylMeta = document.getElementById('discord-vinyl-meta');
+    const discordVinylSong = document.getElementById('discord-vinyl-song');
+    const discordVinylArtist = document.getElementById('discord-vinyl-artist');
     const waveEmojiEl = document.getElementById('wave-emoji');
     const aboutTypewriterEl = document.getElementById('about-typewriter');
     const discordIdleArt = '/photos/discord-idle.png';
@@ -865,18 +627,9 @@
       dnd: 'Do Not Disturb',
       offline: 'Not Active'
     };
-    const palettes = {
-      dark: ['#330036', '#38182f', '#2f394d', '#56666b'],
-      light: ['#f5f6fb', '#dfe4ef', '#cfd6e3', '#aebacd']
-    };
     let blogLoaded = false;
     let blogChatRan = false;
     const chatTyping = document.getElementById('chat-typing');
-    let commandHistory = [];
-    let historyIndex = 0;
-    let currentCommand = '';
-    let inputSpan = null;
-    let cursorSpan = null;
     let discordSocket = null;
     let discordReconnectTimer = null;
     let discordPollTimer = null;
@@ -884,33 +637,45 @@
     let discordEndpointIdx = 0;
     let discordApiIdx = 0;
     let discordHadMessage = false;
-    let playExperienceTimelineIntro = null;
-    let experienceChart = null;
-    let terminalBooted = false;
+    let htlBuilt = false;
+    let searchBuilt = false;
     let aboutTypewriterRan = false;
     let discordProgressTimer = null;
-    function scrollToBottom() {
-      terminalEl.scrollTop = terminalEl.scrollHeight;
-    }
 
     // —–– Navigation helpers (fix missing functions) —––
     // Site renders inside the glass card. Keep /blog in the URL for sharing and back-button support.
-    function setActiveView() {
-      if (!homeView) return;
-      homeView.classList.add('active');
-      if (blogView) blogView.classList.remove('active');
+    async function ensurePasteView() {
+      if (!pasteView || !window.PasteApp) return;
+      await window.PasteApp.init(pasteView);
     }
 
-    function navigateTo(path, push = true) {
+    function setActiveView(name = 'home') {
+      if (!homeView) return;
+      homeView.classList.toggle('active', name === 'home');
+      if (blogView) blogView.classList.toggle('active', name === 'blog');
+      if (pasteView) pasteView.classList.toggle('active', name === 'paste');
+    }
+
+    async function navigateTo(path, push = true) {
       const isBlog = path === '/blog' || (typeof path === 'string' && path.startsWith('/blog/'));
+      const isPaste = path === '/paste' || (typeof path === 'string' && path.startsWith('/paste/'));
       if (push) history.pushState({}, '', path);
 
-      setActiveView();
-
       if (isBlog) {
+        setActiveView('blog');
         if (typeof enterBlogMode === 'function') enterBlogMode();
-      } else {
+      } else if (isPaste) {
+        setActiveView('paste');
         if (typeof exitOverlay === 'function') exitOverlay();
+        await ensurePasteView();
+        if (window.PasteApp) {
+          await window.PasteApp.open(path);
+        }
+      } else {
+        setActiveView('home');
+        if (typeof exitOverlay === 'function') exitOverlay();
+        enterWorkMode({ initial: false });
+        setTimeout(runHeroIntroEffects, 100);
       }
     }
 
@@ -930,15 +695,54 @@
     }
 
     function updatePalette(mode = 'dark') {
-      if (!world || !world.plane || !world.plane.material || !world.plane.material.uniforms?.uPalette) return;
-      const arr = palettes[mode] || palettes.dark;
-      world.plane.material.uniforms.uPalette.value = arr.map(c => new THREE.Color(c));
+      if (window._graphPaperSetTheme) window._graphPaperSetTheme(mode);
     }
 
     function setTheme(mode) {
       const isLight = mode === 'light';
       document.body.classList.toggle('light-mode', isLight);
+      document.documentElement.classList.toggle('dark', !isLight);
       updatePalette(isLight ? 'light' : 'dark');
+      if (themeToggleInput) {
+        themeToggleInput.checked = !isLight;
+      }
+    }
+
+    function initThemeToggle() {
+      if (!themeToggleInput) return;
+
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialMode = saved === 'light' || saved === 'dark'
+        ? saved
+        : (document.body.classList.contains('light-mode') ? 'light' : (prefersDark ? 'dark' : 'dark'));
+
+      setTheme(initialMode);
+
+      themeToggleInput.addEventListener('input', () => {
+        const nextMode = themeToggleInput.checked ? 'dark' : 'light';
+        localStorage.setItem('theme', nextMode);
+
+        const toggleEl = themeToggleInput.closest('.toggle');
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        if (toggleEl) {
+          const rect = toggleEl.getBoundingClientRect();
+          x = rect.left + rect.width / 2;
+          y = rect.top + rect.height / 2;
+        }
+        document.documentElement.style.setProperty('--x', `${x}px`);
+        document.documentElement.style.setProperty('--y', `${y}px`);
+
+        if (!document.startViewTransition) {
+          setTheme(nextMode);
+          return;
+        }
+
+        document.startViewTransition(() => {
+          setTheme(nextMode);
+        });
+      });
     }
 
     function formatDurationMs(ms) {
@@ -967,6 +771,15 @@
       }
       if (discordProgressTotal) {
         discordProgressTotal.textContent = '0:00';
+      }
+      if (discordVinylMeta) {
+        discordVinylMeta.hidden = true;
+      }
+      if (discordVinylSong) {
+        discordVinylSong.textContent = '';
+      }
+      if (discordVinylArtist) {
+        discordVinylArtist.textContent = '';
       }
     }
 
@@ -1051,11 +864,19 @@
         const title = primary.title || primary.name || 'Activity';
         const detail = [primary.details, primary.state].filter(Boolean).join(' · ');
         const art = primary.assets?.largeImage || primary.assets?.smallImage || null;
+        const songName = primary.details || primary.name || title;
+        const artistName = primary.state || '';
+        const albumName = primary.assets?.largeText || '';
         const isMusic = primary.type === '2'
           || (primary.title || '').toLowerCase().startsWith('listening to')
           || (primary.name || '').toLowerCase() === 'spotify';
-        if (discordMain) discordMain.textContent = title;
-        if (discordSub) discordSub.textContent = detail || (custom ? `Custom: ${custom}` : '');
+        if (isMusic) {
+          if (discordMain) discordMain.textContent = songName;
+          if (discordSub) discordSub.textContent = [artistName, albumName].filter(Boolean).join('\n');
+        } else {
+          if (discordMain) discordMain.textContent = title;
+          if (discordSub) discordSub.textContent = detail || (custom ? `Custom: ${custom}` : '');
+        }
         if (discordArtWrap) {
           discordArtWrap.hidden = false;
           discordArtWrap.classList.toggle('is-vinyl', Boolean(isMusic && art));
@@ -1067,6 +888,17 @@
           } else {
             discordArt.src = discordIdleArt;
             if (discordVinylArt) discordVinylArt.src = discordIdleArt;
+          }
+        }
+        if (isMusic) {
+          if (discordVinylSong) {
+            discordVinylSong.textContent = primary.details || primary.name || '';
+          }
+          if (discordVinylArtist) {
+            discordVinylArtist.textContent = primary.state || '';
+          }
+          if (discordVinylMeta) {
+            discordVinylMeta.hidden = false;
           }
         }
         renderDiscordMusicProgress(primary, isMusic);
@@ -1334,479 +1166,241 @@
       }
     ];
 
-    function initHorizontalExperienceTimeline() {
-      const chartEl = document.getElementById('experience-chart');
-      const shellEl = document.querySelector('.exp-hc-shell');
-      const noteEl = document.querySelector('.exp-hc-note');
-      const detailDate = document.getElementById('exp-hc-date');
-      const detailTitle = document.getElementById('exp-hc-title');
-      const detailMeta = document.getElementById('exp-hc-meta');
-      const detailBody = document.getElementById('exp-hc-body');
-      if (!chartEl || !shellEl || !detailDate || !detailTitle || !detailMeta || !detailBody) return;
-      if (chartEl.dataset.ready === '1') return;
-      if (!window.Highcharts || !window.Highcharts.stockChart) {
-        chartEl.innerHTML = '<div class="exp-hc-fallback">Timeline library failed to load. Refresh the page.</div>';
-        if (noteEl) noteEl.textContent = 'Chart dependency missing. Try hard refresh (Cmd+Shift+R).';
-        return;
+    function buildHorizontalTimeline() {
+      if (htlBuilt) return;
+      htlBuilt = true;
+      const track = document.getElementById('htl-track');
+      const detailEl = document.getElementById('htl-detail');
+      if (!track || !detailEl) return;
+
+      const data = WORK_TIMELINE_DATA.slice().sort((a, b) => {
+        const pa = a.date.match(/(20\d{2})/);
+        const pb = b.date.match(/(20\d{2})/);
+        return (pa ? +pa[1] : 0) - (pb ? +pb[1] : 0);
+      });
+
+      let activeIdx = -1;
+
+      // Build nodes
+      data.forEach((item, i) => {
+        const node = document.createElement('button');
+        node.className = 'htl-node';
+        node.dataset.idx = i;
+        node.innerHTML = `
+          <span class="htl-dot"></span>
+          <span class="htl-label">${item.title}</span>
+          <span class="htl-date">${item.date}</span>
+        `;
+        track.appendChild(node);
+      });
+
+      function closeDetail() {
+        if (activeIdx === -1) return;
+        const prev = track.querySelector('.htl-node.is-active');
+        if (prev) prev.classList.remove('is-active');
+        detailEl.classList.remove('is-open');
+        detailEl.innerHTML = '';
+        activeIdx = -1;
+        const cs = document.querySelector('.exp-coding-section');
+        if (cs) cs.classList.remove('is-hidden');
       }
 
-      const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-      const DAY = 24 * 3600 * 1000;
-      const MONTH = 30 * DAY;
-      const YEAR = 365 * DAY;
+      const codingSection = document.querySelector('.exp-coding-section');
 
-      function parseStart(dateText) {
-        const m = String(dateText || '').match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})/);
-        if (m) return Date.UTC(Number(m[2]), monthMap[m[1]], 1);
-        const y = String(dateText || '').match(/(20\d{2})/);
-        if (y) return Date.UTC(Number(y[1]), 0, 1);
-        return Date.UTC(2025, 0, 1);
-      }
-
-      const points = WORK_TIMELINE_DATA
-        .map((item, idx) => ({
-          x: parseStart(item.date),
-          y: (idx % 5) - 2,
-          name: item.title,
-          custom: { item }
-        }))
-        .sort((a, b) => a.x - b.x);
-
-      if (!points.length) return;
-      const dataMinX = points[0].x;
-      const dataMaxX = points[points.length - 1].x;
-      const chartMinX = Date.UTC(new Date(dataMinX).getUTCFullYear(), 0, 1);
-      const now = new Date();
-      const nowYearFloor = Date.UTC(now.getUTCFullYear(), 0, 1);
-      const nowPlusOneYear = Date.UTC(now.getUTCFullYear() + 1, 0, 1);
-      const dataNextYear = Date.UTC(new Date(dataMaxX).getUTCFullYear() + 1, 0, 1);
-      const chartMaxX = Math.max(nowYearFloor, nowPlusOneYear, dataNextYear);
-
-      function renderDetail(item, focus = false) {
-        detailDate.textContent = item.date;
-        detailTitle.textContent = item.title;
-        detailMeta.textContent = item.meta;
-        detailBody.innerHTML = '';
-        item.body.forEach((line) => {
-          const li = document.createElement('li');
-          li.textContent = line;
-          detailBody.appendChild(li);
+      function wordReveal(el, text, baseDelay, wordDelay) {
+        el.innerHTML = '';
+        const words = text.split(' ');
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'htl-word';
+          span.textContent = word;
+          span.style.animationDelay = (baseDelay + i * wordDelay) + 'ms';
+          el.appendChild(span);
+          if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
         });
-        if (focus) {
-          shellEl.classList.add('has-selection');
-          requestAnimationFrame(() => {
-            if (experienceChart) experienceChart.reflow();
+      }
+
+      function openDetail(idx) {
+        const item = data[idx];
+        if (!item) return;
+        const wasOpen = activeIdx === idx;
+        closeDetail();
+        if (wasOpen) {
+          if (codingSection) codingSection.classList.remove('is-hidden');
+          return;
+        }
+
+        activeIdx = idx;
+        const nodeEl = track.querySelectorAll('.htl-node')[idx];
+        nodeEl.classList.add('is-active');
+
+        if (codingSection) codingSection.classList.add('is-hidden');
+
+        // Scroll node toward center
+        const wrap = track.parentElement;
+        const nodeRect = nodeEl.getBoundingClientRect();
+        const wrapRect = wrap.getBoundingClientRect();
+        const offset = nodeRect.left - wrapRect.left + track.parentElement.scrollLeft
+                       - (wrapRect.width / 2) + (nodeRect.width / 2);
+        wrap.scrollTo({ left: offset, behavior: 'smooth' });
+
+        detailEl.innerHTML = `
+          <div class="htl-detail-date"></div>
+          <div class="htl-detail-title"></div>
+          <div class="htl-detail-meta"></div>
+          <ul class="htl-detail-body"></ul>
+        `;
+
+        requestAnimationFrame(() => {
+          detailEl.classList.add('is-open');
+          const dateEl = detailEl.querySelector('.htl-detail-date');
+          const titleEl = detailEl.querySelector('.htl-detail-title');
+          const metaEl = detailEl.querySelector('.htl-detail-meta');
+          const bodyEl = detailEl.querySelector('.htl-detail-body');
+
+          wordReveal(dateEl, item.date, 50, 60);
+          wordReveal(titleEl, item.title, 150, 70);
+          wordReveal(metaEl, item.meta, 300, 40);
+
+          const metaWords = item.meta.split(' ').length;
+          const bodyStart = 300 + metaWords * 40 + 100;
+          item.body.forEach((line, i) => {
+            const li = document.createElement('li');
+            bodyEl.appendChild(li);
+            wordReveal(li, line, bodyStart + i * 200, 30);
           });
-        }
+        });
       }
 
-      const chart = Highcharts.stockChart(chartEl, {
-        chart: {
-          backgroundColor: 'transparent',
-          animation: true,
-          spacingTop: 8,
-          spacingBottom: 8,
-          style: {
-            color: '#ffffff'
-          }
-        },
-        credits: { enabled: false },
-        exporting: { enabled: false },
-        legend: { enabled: false },
-        scrollbar: { enabled: false },
-        rangeSelector: {
-          enabled: true,
-          selected: 0,
-          inputEnabled: false,
-          buttonTheme: {
-            width: 52,
-            fill: 'rgba(255,255,255,0.10)',
-            stroke: 'rgba(255,255,255,0.25)',
-            style: { color: '#ffffff' },
-            states: {
-              select: {
-                fill: 'rgba(255,255,255,0.24)',
-                style: { color: '#ffffff' }
-              }
-            }
-          },
-          labelStyle: { color: '#ffffff' },
-          buttons: [
-            { type: 'month', count: 6, text: 'Month' },
-            { type: 'year', count: 3, text: 'Year' }
-          ]
-        },
-        navigator: {
-          enabled: true,
-          height: 62,
-          maskFill: 'rgba(255,255,255,0.2)',
-          outlineColor: 'rgba(255,255,255,0.36)',
-          handles: {
-            backgroundColor: 'rgba(255,255,255,0.55)',
-            borderColor: 'rgba(255,255,255,0.8)'
-          },
-          xAxis: {
-            type: 'datetime',
-            tickInterval: YEAR,
-            labels: {
-              format: '{value:%Y}',
-              style: { color: '#ffffff' }
-            }
-          },
-          yAxis: {
-            min: 0,
-            max: 0,
-            labels: { enabled: false },
-            gridLineWidth: 0
-          },
-          series: {
-            type: 'line',
-            data: points.map((p) => [p.x, 0]),
-            color: '#9cc8ff',
-            lineWidth: 1.6,
-            marker: { enabled: false }
-          }
-        },
-        xAxis: {
-          type: 'datetime',
-          minRange: MONTH,
-          maxRange: YEAR * 10,
-          min: chartMinX,
-          max: chartMaxX,
-          tickPositioner: function () {
-            const positions = [];
-            const min = this.min || 0;
-            const max = this.max || 0;
-            const range = max - min;
-            if (!min || !max) return positions;
-
-            if (range > YEAR * 1.5) {
-              let t = Date.UTC(new Date(min).getUTCFullYear(), 0, 1);
-              if (t < min) t = Date.UTC(new Date(min).getUTCFullYear() + 1, 0, 1);
-              for (; t <= max; t = Date.UTC(new Date(t).getUTCFullYear() + 1, 0, 1)) {
-                positions.push(t);
-              }
-            } else {
-              let t = Date.UTC(new Date(min).getUTCFullYear(), new Date(min).getUTCMonth(), 1);
-              if (t < min) t = Date.UTC(new Date(min).getUTCFullYear(), new Date(min).getUTCMonth() + 1, 1);
-              for (; t <= max; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
-                positions.push(t);
-              }
-            }
-            return positions;
-          },
-          labels: {
-            formatter: function () {
-              const range = this.axis.max - this.axis.min;
-              return range > YEAR * 1.5
-                ? Highcharts.dateFormat('%Y', this.value)
-                : Highcharts.dateFormat("%b '%y", this.value);
-            },
-            style: { color: '#ffffff' }
-          },
-          gridLineWidth: 1,
-          gridLineColor: 'rgba(255,255,255,0.08)',
-          lineColor: 'rgba(255,255,255,0.25)'
-        },
-        yAxis: {
-          visible: false,
-          min: -3,
-          max: 3,
-          gridLineWidth: 0
-        },
-        tooltip: {
-          shared: false,
-          useHTML: true,
-          pointFormatter: function () {
-            return `<b>${this.custom.item.title}</b><br>${this.custom.item.date}`;
-          }
-        },
-        plotOptions: {
-          series: { animation: { duration: 600 } },
-          scatter: {
-            marker: {
-              symbol: 'circle',
-              radius: 6,
-              lineWidth: 2,
-              lineColor: 'rgba(255,255,255,0.9)',
-              fillColor: '#92f3d0'
-            },
-            states: {
-              hover: {
-                enabled: true,
-                halo: { size: 10, opacity: 0.24 }
-              }
-            },
-            point: {
-              events: {
-                click: function () {
-                  const axis = this.series.chart.xAxis[0];
-                  const range = axis.max - axis.min;
-                  const min = Math.max(axis.dataMin, this.x - range / 2);
-                  const max = Math.min(axis.dataMax, this.x + range / 2);
-                  axis.setExtremes(min, max, true, { duration: 360 });
-                  renderDetail(this.custom.item, true);
-                }
-              }
-            }
-          }
-        },
-        series: [
-          {
-            type: 'line',
-            data: points.map((p) => [p.x, 0]),
-            color: 'rgba(255,255,255,0.42)',
-            lineWidth: 2,
-            enableMouseTracking: false,
-            showInNavigator: false
-          },
-          {
-            type: 'scatter',
-            marker: { symbol: 'circle' },
-            data: points,
-            showInNavigator: false
-          }
-        ]
+      track.addEventListener('click', (e) => {
+        const node = e.target.closest('.htl-node');
+        if (!node) return;
+        openDetail(+node.dataset.idx);
       });
 
-      renderDetail(points[points.length - 1].custom.item, false);
-      experienceChart = chart;
-      playExperienceTimelineIntro = () => {
-        chart.series.forEach((s) => s.update({ animation: { duration: 420 } }, false));
-        chart.reflow();
-        chart.redraw();
-      };
-      chartEl.dataset.ready = '1';
-    }
+      // Drag-to-scroll
+      const wrap = track.parentElement;
+      let isDragging = false, startX, scrollLeft;
 
-    const commands = {
-      clear: async () => {
-        terminalEl.innerHTML = '';
-      },
-      help: async () => {
-        const helpText = [
-          'Commands',
-          '├─ about/',
-          '│   ├─ work',
-          '│   └─ blog',
-          '├─ fun/',
-          '│   ├─ kanye',
-          '│   └─ echo',
-          '├─ theme/',
-          '│   ├─ light-mode',
-          '│   └─ dark-mode',
-          '└─ system/',
-          '    ├─ clear',
-          '    └─ help'
-        ].join('\n');
-        await appendOutput(helpText);
-      },
-      echo: async (args) => {
-        await appendOutput(args.join(' '));
-      },
-      'light-mode': async () => {
-        setTheme('light');
-        await appendOutput('Switched to light mode.');
-      },
-      'dark-mode': async () => {
-        setTheme('dark');
-        await appendOutput('Switched to dark mode.');
-      },
-      blog: async () => {
-        await enterBlogMode();
-      },
-      kanye: async () => {
-        try {
-          const res = await fetch('https://api.kanye.rest/');
-          if (!res.ok) throw new Error('Request failed');
-          const data = await res.json();
-          await appendOutput(`"${data.quote || '...'}"`);
-        } catch (err) {
-          await appendOutput('Could not reach Kanye right now.');
-        }
-      },
-      work: async () => {
-        enterWorkMode();
-      }
-    };
-
-    function typeOutput(text) {
-      return new Promise((resolve) => {
-        const lines = text.split('\n');
-        let lineIndex = 0;
-
-        function typeLine() {
-          if (lineIndex >= lines.length) {
-            resolve();
-            return;
-          }
-          const lineEl = document.createElement('div');
-          terminalEl.appendChild(lineEl);
-          const content = lines[lineIndex];
-          let i = 0;
-          const tick = () => {
-            if (i <= content.length) {
-              lineEl.textContent = content.slice(0, i);
-              scrollToBottom();
-              i++;
-              setTimeout(tick, charDelay);
-            } else {
-              lineIndex++;
-              if (lineIndex < lines.length) {
-                setTimeout(typeLine, lineDelay);
-              } else {
-                resolve();
-              }
-            }
-          };
-          tick();
-        }
-
-        typeLine();
+      wrap.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.htl-detail')) return;
+        isDragging = true;
+        wrap.classList.add('is-dragging');
+        startX = e.pageX - wrap.offsetLeft;
+        scrollLeft = wrap.scrollLeft;
       });
-    }
-
-    function appendOutput(str) {
-      return typeOutput(str);
-    }
-
-    function shouldAcceptTerminalKeys() {
-      if (!document.body.classList.contains('work-mode')) return true;
-      return document.body.classList.contains('terminal-active');
-    }
-
-    async function bootTerminalOnce() {
-      if (terminalBooted) return;
-      const camronTime = new Intl.DateTimeFormat('en-US', {
-        timeZone: ownerTimeZone,
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      }).format(new Date());
-      await appendOutput(`camron's local time is ${camronTime}`);
-      const visitMsg = await fetchUniqueCount();
-      if (visitMsg) await appendOutput(visitMsg);
-      await appendOutput('What would you like to do?');
-      await appendOutput('Hint: try typing "help"');
-      displayPrompt();
-      terminalBooted = true;
-    }
-
-    function displayPrompt() {
-      const line = document.createElement('div');
-      line.className = 'line';
-
-      const promptSpan = document.createElement('span');
-      promptSpan.className = 'prompt';
-      promptSpan.textContent = promptSymbol + ' ';
-      line.appendChild(promptSpan);
-
-      const pathSpan = document.createElement('span');
-      pathSpan.className = 'path';
-      pathSpan.textContent = pathSymbol + ' ';
-      line.appendChild(pathSpan);
-
-      inputSpan = document.createElement('span');
-      inputSpan.className = 'input';
-      line.appendChild(inputSpan);
-
-      cursorSpan = document.createElement('span');
-      cursorSpan.className = 'cursor';
-      cursorSpan.textContent = '|';
-      line.appendChild(cursorSpan);
-
-      terminalEl.appendChild(line);
-      scrollToBottom();
-      if (hiddenInput) hiddenInput.focus();
-    }
-
-    function setCommandText(text) {
-      currentCommand = text;
-      if (inputSpan) {
-        inputSpan.textContent = text;
-        scrollToBottom();
-      }
-    }
-
-    async function processCommand() {
-      if (!currentCommand.trim()) return;
-      const parts = currentCommand.trim().split(' ');
-      const cmd = parts.shift();
-      const args = parts;
-
-      if (commands[cmd]) {
-        await commands[cmd](args);
-      } else {
-        await appendOutput(`zsh: command not found: ${cmd}`);
-      }
-      commandHistory.push(currentCommand);
-      historyIndex = commandHistory.length;
-    }
-
-    function finalizeLine() {
-      if (cursorSpan) {
-        cursorSpan.remove();
-        cursorSpan = null;
-      }
-    }
-
-    window.addEventListener('keydown', async (e) => {
-      if (!shouldAcceptTerminalKeys()) return;
-      if (e.target === hiddenInput) return;
-      if (e.key === 'Backspace') {
+      wrap.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
         e.preventDefault();
-        if (currentCommand.length > 0) {
-          setCommandText(currentCommand.slice(0, -1));
-        }
-        return;
-      }
-
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        if (commandHistory.length === 0) return;
-        if (e.key === 'ArrowUp') {
-          historyIndex = Math.max(0, historyIndex - 1);
-        } else {
-          historyIndex = Math.min(commandHistory.length - 1, historyIndex + 1);
-        }
-        setCommandText(commandHistory[historyIndex] || '');
-        return;
-      }
-
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        finalizeLine();
-        await processCommand();
-        setCommandText('');
-        displayPrompt();
-        return;
-      }
-
-      if (e.key.length === 1 && !e.metaKey && !e.ctrlKey) {
-        setCommandText(currentCommand + e.key);
-      }
-    });
-
-    if (hiddenInput) {
-      hiddenInput.addEventListener('input', () => {
-        setCommandText(hiddenInput.value);
+        const x = e.pageX - wrap.offsetLeft;
+        wrap.scrollLeft = scrollLeft - (x - startX);
       });
-      hiddenInput.addEventListener('keydown', async (e) => {
-        if (!shouldAcceptTerminalKeys()) return;
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          finalizeLine();
-          await processCommand();
-          setCommandText('');
-          hiddenInput.value = '';
-          displayPrompt();
-        }
+      const stopDrag = () => { isDragging = false; wrap.classList.remove('is-dragging'); };
+      wrap.addEventListener('mouseup', stopDrag);
+      wrap.addEventListener('mouseleave', stopDrag);
+
+      // Horizontal wheel support
+      wrap.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        wrap.scrollLeft += e.deltaY;
+      }, { passive: false });
+    }
+
+    const SEARCH_PAGES = [
+      {
+        title: 'Blog',
+        path: '/blog',
+        desc: 'Read my thoughts on tech, projects, and life',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+        action: () => navigateTo('/blog', true)
+      },
+      {
+        title: 'Paste',
+        path: '/paste',
+        desc: 'Share code snippets and text',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+        action: () => navigateTo('/paste', true)
+      },
+      {
+        title: 'About',
+        path: '#about',
+        desc: 'Learn more about me and what I do',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+        action: () => setActiveWorkTab('#work-about')
+      },
+      {
+        title: 'Experience',
+        path: '#experience',
+        desc: 'My work history and coding skills',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+        action: () => setActiveWorkTab('#work-experience')
+      },
+      {
+        title: 'Light Mode',
+        path: '#theme',
+        desc: 'Switch to light theme',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+        action: () => setTheme('light')
+      },
+      {
+        title: 'Dark Mode',
+        path: '#theme',
+        desc: 'Switch to dark theme',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+        action: () => setTheme('dark')
+      }
+    ];
+
+    function buildSearchUI() {
+      if (searchBuilt) return;
+      searchBuilt = true;
+      renderSearchResults('');
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          renderSearchResults(searchInput.value.trim().toLowerCase());
+        });
+        searchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const firstVisible = searchResultsEl.querySelector('.search-result-item:not(.is-hidden)');
+            if (firstVisible) firstVisible.click();
+          }
+        });
+      }
+    }
+
+    function renderSearchResults(query) {
+      searchResultsEl.innerHTML = '';
+      const filtered = SEARCH_PAGES.filter(p => {
+        if (!query) return true;
+        return p.title.toLowerCase().includes(query) ||
+               p.path.toLowerCase().includes(query) ||
+               p.desc.toLowerCase().includes(query);
       });
-      glassCard?.addEventListener('click', () => hiddenInput.focus());
+
+      filtered.forEach((page, i) => {
+        const item = document.createElement('button');
+        item.className = 'search-result-item glassy';
+        item.style.animationDelay = (i * 60 + 40) + 'ms';
+        item.innerHTML = `
+          <div class="search-result-icon">${page.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${page.title}</div>
+            <div class="search-result-desc">${page.desc}</div>
+          </div>
+          <span class="search-result-path">${page.path}</span>
+          <svg class="search-result-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        `;
+        item.addEventListener('click', () => page.action());
+        searchResultsEl.appendChild(item);
+      });
+
+      if (filtered.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'search-empty';
+        empty.textContent = 'No results found';
+        searchResultsEl.appendChild(empty);
+      }
     }
 
     function isoDay() {
@@ -1869,10 +1463,17 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavigation();
+      initThemeToggle();
       initWorkCard();
       initDaysSince();
-      if (location.pathname === '/blog' || location.pathname.startsWith('/blog/')) {
-        navigateTo(location.pathname, false);
+      initExperienceDetails();
+      if (
+        location.pathname === '/blog' ||
+        location.pathname.startsWith('/blog/') ||
+        location.pathname === '/paste' ||
+        location.pathname.startsWith('/paste/')
+      ) {
+        await navigateTo(location.pathname, false);
       } else {
         enterWorkMode({ initial: true });
         setTimeout(runHeroIntroEffects, 100);
@@ -1890,25 +1491,16 @@
       const tabButtons = document.querySelectorAll('.work-tab');
       const sections = document.querySelectorAll('.work-section');
       const isExperience = target === '#work-experience';
-      const isTerminal = target === '#work-terminal';
+      const isSearch = target === '#work-search';
       tabButtons.forEach((btn) => btn.classList.toggle('is-active', btn.getAttribute('data-target') === target));
       document.body.classList.toggle('experience-active', isExperience);
-      document.body.classList.toggle('terminal-active', isTerminal);
       sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));
       if (isExperience) {
-        initHorizontalExperienceTimeline();
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            if (experienceChart) experienceChart.reflow();
-            if (typeof playExperienceTimelineIntro === 'function') {
-              playExperienceTimelineIntro();
-            }
-          });
-        });
+        buildHorizontalTimeline();
       }
-      if (isTerminal) {
-        bootTerminalOnce();
-        if (hiddenInput) hiddenInput.focus();
+      if (isSearch) {
+        buildSearchUI();
+        if (searchInput) setTimeout(() => searchInput.focus(), 100);
       }
     }
 
@@ -1942,9 +1534,7 @@
       document.body.classList.remove('work-mode');
       document.body.classList.remove('blog-mode');
       document.body.classList.remove('experience-active');
-      document.body.classList.remove('terminal-active');
       stopDiscordPresence();
-      if (hiddenInput) hiddenInput.focus();
     }
 
     function initWorkCard() {
@@ -1952,10 +1542,6 @@
         backButton.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (document.body.classList.contains('work-mode') && document.body.classList.contains('terminal-active')) {
-            setActiveWorkTab('#work-about');
-            return;
-          }
           exitOverlay();
         });
       }
@@ -2059,201 +1645,9 @@
       blogChatRan = true;
     }
 
-    // Experience detail toggle with FLIP + typewriter
     function initExperienceDetails() {
-      const timeline = document.getElementById('exp-timeline');
-      const detail = document.getElementById('exp-detail');
-      const detailTitle = document.getElementById('exp-detail-title');
-      const detailMeta = document.getElementById('exp-detail-meta');
-      const detailBody = document.getElementById('exp-detail-body');
-      const tabs = Array.from(document.querySelectorAll('.exp-tab'));
-      const panes = Array.from(document.querySelectorAll('.exp-pane'));
-      if (!timeline || !detail || !detailTitle || !detailMeta || !detailBody) return;
-
-      const items = Array.from(timeline.querySelectorAll('.tl-item'));
       const codingCatButtons = Array.from(document.querySelectorAll('.coding-cat-toggle'));
       const codingLists = Array.from(document.querySelectorAll('.coding-list'));
-      const expData = {
-        assistant_researcher: {
-          title: 'Assistant Researcher',
-          meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 – Present · Los Angeles, CA (On-site)',
-          body: [
-            'Observed hematology/oncology rounds (AML, stem cell transplantation, novel maintenance therapies).',
-            'Learned regimen selection (7+3, FLAG, CPX-351) and managed engraftment/transplant toxicities.',
-            'Coordinated multidisciplinary care across oncology, cardiology, and nephrology.',
-            'Discussed targeted inhibitors, immunotherapy, and evolving standards in hematologic malignancies.',
-            'Co-authored case reports (e.g., BPDCN in systemic mastocytosis).'
-          ]
-        },
-        nyas_student: {
-          title: 'Student',
-          meta: 'New York Academy of Sciences · Aug 2025 – Present · Remote',
-          body: [
-            'Selected for a global community of high-achieving students and STEM mentors.',
-            'Collaborating on sustainability, energy, and global health challenges.'
-          ]
-        },
-        ucla_intern: {
-          title: 'Intern',
-          meta: 'UCLA Computer Science (GLITCH) · May 2025 – Present · Los Angeles, CA (Hybrid)',
-          body: [
-            'Contributed to Hot Potato, a GPS-based multiplayer mobile game for real-world interaction.',
-            'Collaborated on design, development, debugging, and agile teamwork.',
-            'Refined gameplay logic, UX, and proximity detection.'
-          ]
-        },
-        southbay_board: {
-          title: 'Board Member & Lead Web Developer',
-          meta: 'South Bay STEM Association · Feb 2025 – Present · Rancho Palos Verdes, CA',
-          body: [
-            'Oversee STEM initiatives, mentor students, and build web platforms for education and outreach.',
-            'Skills: web dev, non-profit management, STEM, volunteering, WordPress/JS/CSS/HTML.'
-          ]
-        },
-        smi_student: {
-          title: 'Student',
-          meta: 'Science Mentorship Institute · Jun 2025 – Oct 2025 · Remote',
-          body: [
-            'Accepted into Biology Mentorship Program (10% acceptance rate).',
-            'Conducted independent research; earned presentation certificate for cancer research.'
-          ]
-        },
-        nontrivial_fellow: {
-          title: 'Research Fellow',
-          meta: 'Non-Trivial · Feb 2025 – May 2025 · Remote',
-          body: [
-            'Selective research training (<10% selection). Proposal on algae-based microrobots for precision tumor targeting.',
-            'Skills: student engagement, research, STEM, clinical research.'
-          ]
-        },
-        instructor_tkd: {
-          title: 'Instructor',
-          meta: 'Rolling Hills Taekwondo · Feb 2021 – Mar 2023 · Rolling Hills Estates, CA',
-          body: [
-            'Taught taekwondo fundamentals, discipline, and self-defense in a structured, fast-paced environment.',
-            'Managed classes and supported children in training.'
-          ]
-        },
-        elcamino_dual: {
-          title: 'Dual Enrollment',
-          meta: 'El Camino College · Jun 2024 – Aug 2025 · GPA 4.00/4.00',
-          body: [
-            'Coursework: HIST-102 (A), PSYC-101 (A), PHYS-2A.'
-          ]
-        },
-        laccd_dual: {
-          title: 'Dual Enrollment',
-          meta: 'Los Angeles Community College District · May 2025 – Jul 2025 · GPA 4.00/4.00',
-          body: [
-            'Coursework: STAT-001 (A).'
-          ]
-        },
-        hs_diploma: {
-          title: 'High School Diploma',
-          meta: 'Palos Verdes Peninsula High School · 2022 – 2026',
-          body: [
-            'Activities: SNHS, TSA, Philosophy Club Treasurer, Co-Founder Aerospace Club, CSF, Tennis, Science Olympiad.',
-            'Coursework: AP Bio, AP Chem, AP Lang, AP Psych, AP Euro, AP CSP, AP Lit, AP Calc AB, AP Gov, AP Macro, AP Spanish.'
-          ]
-        }
-      };
-
-      let activeKey = null;
-
-      const measureRects = () =>
-        items.map((el) => ({
-          el,
-          rect: el.getBoundingClientRect()
-        }));
-
-      const animateFlip = (before, after) => {
-        before.forEach(({ el, rect }) => {
-          const newRect = after.find((a) => a.el === el)?.rect;
-          if (!newRect) return;
-          const dx = rect.left - newRect.left;
-          const dy = rect.top - newRect.top;
-          if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
-            el.style.transform = `translate(${dx}px, ${dy}px)`;
-            // force reflow, then animate back to 0 for smoothness
-            requestAnimationFrame(() => {
-              el.getBoundingClientRect();
-              requestAnimationFrame(() => {
-                el.style.transform = '';
-              });
-            });
-          }
-        });
-      };
-
-      const closeDetail = () => {
-        const before = measureRects();
-        items.forEach((el) => {
-          el.style.order = '';
-          el.classList.remove('active');
-        });
-        if (detail.parentNode === timeline) {
-          timeline.parentNode.insertBefore(detail, timeline);
-        }
-        detail.classList.remove('show');
-        detailTitle.textContent = '';
-        detailMeta.textContent = '';
-        detailBody.textContent = '';
-        activeKey = null;
-        timeline.classList.remove('detail-open');
-        const after = measureRects();
-        animateFlip(before, after);
-      };
-
-      const openDetail = (li, key) => {
-        const data = expData[key];
-        if (!data) return;
-        const before = measureRects();
-        items.forEach((el) => {
-          el.style.order = '';
-          el.classList.remove('active');
-        });
-        li.style.order = -1;
-        li.classList.add('active');
-        timeline.classList.add('detail-open');
-        timeline.insertBefore(detail, li.nextSibling);
-        detailTitle.textContent = data.title;
-        detailMeta.textContent = data.meta;
-        const text = data.body.join('\n');
-        detail.classList.add('show');
-        const after = measureRects();
-        animateFlip(before, after);
-        detailBody.textContent = text;
-        activeKey = key;
-        detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      };
-
-      items.forEach((li) => {
-        const key = li.dataset.exp;
-        li.addEventListener('click', () => {
-          if (!key) return;
-          if (activeKey === key) {
-            closeDetail();
-          } else {
-            openDetail(li, key);
-          }
-        });
-      });
-
-      // tab switching
-      tabs.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const target = btn.dataset.target;
-          if (!target) return;
-          tabs.forEach(b => b.classList.remove('is-active'));
-          panes.forEach(p => p.classList.remove('is-active'));
-          btn.classList.add('is-active');
-          const pane = document.getElementById(target);
-          if (pane) pane.classList.add('is-active');
-          if (target !== 'exp-pane-work') {
-            closeDetail();
-          }
-        });
-      });
 
       const setCodingCategory = (cat) => {
         codingCatButtons.forEach((b) => b.classList.toggle('is-active', b.dataset.cat === cat));

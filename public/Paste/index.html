@@ -1,0 +1,59 @@
+<div class="paste-shell">
+  <div class="paste-card glassy">
+    <div class="paste-topbar">
+      <div class="paste-kicker">Paste</div>
+      <a class="paste-home-link" href="/">Home</a>
+    </div>
+
+    <div class="paste-header">
+      <div>
+        <h1 class="paste-title">Share Text Cleanly</h1>
+        <p class="paste-subtitle">Write, save, edit, and share a paste without leaving the site.</p>
+      </div>
+      <div class="paste-status" data-paste-status>Draft</div>
+    </div>
+
+    <div class="paste-controls">
+      <input class="paste-input paste-title-input" type="text" maxlength="120" placeholder="Untitled paste" data-paste-title />
+      <select class="paste-select" data-paste-expiry>
+        <option value="1h">Expires in 1 hour</option>
+        <option value="1d">Expires in 1 day</option>
+        <option value="1w" selected>Expires in 1 week</option>
+        <option value="1m">Expires in 1 month</option>
+        <option value="never">Never expires</option>
+      </select>
+      <button class="paste-button paste-button--primary" type="button" data-paste-save>Save Paste</button>
+      <button class="paste-button" type="button" data-paste-new>New</button>
+      <button class="paste-button" type="button" data-paste-copy disabled>Copy Link</button>
+    </div>
+
+    <div class="paste-editor glassy">
+      <textarea class="paste-textarea" data-paste-content placeholder="Paste whatever text you want here..."></textarea>
+    </div>
+
+    <div class="paste-meta glassy">
+      <div class="paste-meta-item">
+        <span class="paste-meta-label">Link</span>
+        <span class="paste-meta-value" data-paste-link>Not saved yet</span>
+      </div>
+      <div class="paste-meta-item">
+        <span class="paste-meta-label">Last updated</span>
+        <span class="paste-meta-value" data-paste-updated>Not saved yet</span>
+      </div>
+      <div class="paste-meta-item">
+        <span class="paste-meta-label">Expires</span>
+        <span class="paste-meta-value" data-paste-expires>Not saved yet</span>
+      </div>
+    </div>
+
+    <div class="paste-owned glassy">
+      <div class="paste-owned-head">
+        <h2>Your Pastes</h2>
+        <span class="paste-owned-note">Saved to your browser ownership cookie</span>
+      </div>
+      <div class="paste-owned-list" data-paste-owned-list>
+        <div class="paste-owned-empty">No saved pastes yet.</div>
+      </div>
+    </div>
+  </div>
+</div>
