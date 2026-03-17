@@ -158,7 +158,7 @@
     }
 
     console.log("[PasteApp] loading template...");
-    const response = await fetch("/Paste/index.html", { cache: "no-store" });
+    const response = await fetch("/paste/index.html", { cache: "no-store" });
     state.root.innerHTML = await response.text();
 
     state.els = {
