@@ -67,6 +67,7 @@
     els.content.value = paste?.content || '';
     els.content.readOnly = true;
     els.save.disabled = true;
+    els.save.style.display = 'none';
     els.copy.disabled = !currentId;
     if (els.expiry) els.expiry.style.display = 'none';
     const dateStr = paste?.createdAt ? formatDate(paste.createdAt) : '';
@@ -80,12 +81,21 @@
     els.content.value = '';
     els.content.readOnly = false;
     els.save.disabled = false;
+    els.save.style.display = '';
     els.copy.disabled = true;
     if (els.expiry) els.expiry.style.display = '';
     status('Draft');
   }
 
   async function load(id) {
+    if (!els) return;
+    // Lock UI immediately while loading
+    els.content.readOnly = true;
+    els.content.value = '';
+    els.save.disabled = true;
+    els.save.style.display = 'none';
+    els.copy.disabled = true;
+    if (els.expiry) els.expiry.style.display = 'none';
     status('Loading...');
     try {
       const data = await apiFetch(`/paste/${id}`);
