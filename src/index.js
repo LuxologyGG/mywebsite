@@ -266,6 +266,12 @@ export default {
     }
 
     // ✅ EVERYTHING ELSE → let Cloudflare serve static files
-    return fetch(request);
+    // SPA fallback for /paste routes
+if (url.pathname.startsWith("/paste")) {
+  return fetch(new Request(new URL("/index.html", request.url)));
+}
+
+// default
+return fetch(request);
   },
 };

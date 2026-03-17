@@ -1,11 +1,10 @@
 (function () {
   console.log("[PasteApp] script loaded");
 
-  const BACKEND_ORIGIN =
-    window.PASTE_BACKEND_URL ||
-    ((location.hostname === "localhost" || location.hostname === "127.0.0.1")
-      ? "http://localhost:3000"
-      : location.origin);
+const BACKEND_ORIGIN =
+  location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://camron-paste-api.onrender.com";
 
   console.log("[PasteApp] backend origin:", BACKEND_ORIGIN);
 
