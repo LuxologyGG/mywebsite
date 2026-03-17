@@ -265,13 +265,12 @@ export default {
       return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
-    // ✅ EVERYTHING ELSE → let Cloudflare serve static files
-    // SPA fallback for /paste routes
-if (url.pathname.startsWith("/paste")) {
-  return fetch(new Request(new URL("/index.html", request.url)));
-}
+    // ✅ SPA fallback for /paste routes → serve index.html from assets
+    if (url.pathname.startsWith("/paste")) {
+      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+    }
 
-// default
-return fetch(request);
+    // default — pass through to asset serving
+    return env.ASSETS.fetch(request);
   },
 };
