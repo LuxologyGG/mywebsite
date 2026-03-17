@@ -6,7 +6,7 @@
   <title>camr.one</title>
   <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="/Paste/style.css">
+  <link rel="stylesheet" href="/paste/style.css">
 </head>
 <body>
   <div class="site-preloader" id="site-preloader">
@@ -350,7 +350,20 @@
               <div class="search-results" id="search-results"></div>
             </div>
           </section>
-          <section id="work-paste" class="work-section" aria-live="polite"></section>
+          <section id="work-paste" class="work-section" aria-live="polite">
+            <h3>Paste</h3>
+            <p class="paste-status-text" data-paste-status>Draft</p>
+            <textarea
+              class="paste-textarea glassy"
+              data-paste-content
+              placeholder="Paste whatever text you want here..."
+              spellcheck="false"
+            ></textarea>
+            <div class="paste-actions">
+              <button class="glassy" type="button" data-paste-save>Save Paste</button>
+              <button class="glassy" type="button" data-paste-copy disabled>Copy Link</button>
+            </div>
+          </section>
         </div>
       </div>
     </div>

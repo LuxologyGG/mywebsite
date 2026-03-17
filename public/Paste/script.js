@@ -1,222 +1,134 @@
 (function () {
-  console.log("[PasteApp] script loaded");
+  const BACKEND = window.PASTE_BACKEND_URL ||
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://camron-paste-api.onrender.com');
 
-const BACKEND_ORIGIN =
-  window.PASTE_BACKEND_URL ||
-  (location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://camron-paste-api.onrender.com");
+  let root = null;
+  let els = null;
+  let currentId = null;
+  let bound = false;
 
-  console.log("[PasteApp] backend origin:", BACKEND_ORIGIN);
-
-  const state = {
-    root: null,
-    currentId: null,
-    initialized: false,
-    els: null,
-  };
-
-  function routeToPasteId(path) {
-    const match = /^\/paste\/([A-Fa-f0-9_-]+)$/.exec(path || "");
-    return match ? match[1] : null;
+  function parseId(path) {
+    const m = /^\/paste\/([A-Fa-f0-9]+)$/.exec(path || '');
+    return m ? m[1] : null;
   }
 
-  function backendUrl(path) {
-    return `${String(BACKEND_ORIGIN).replace(/\/$/, "")}${path}`;
-  }
-
-  function formatDate(value) {
-    if (!value) return "Not saved yet";
-    try {
-      return new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      }).format(new Date(value));
-    } catch {
-      return "Unknown";
-    }
-  }
-
-async function api(path, options = {}) {
-  console.log("[PasteApp] api call:", options.method || "GET", path);
-
-  const url = backendUrl(path);
-
-  for (let i = 0; i < 2; i++) {
-    try {
-      const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(options.headers || {}),
-        },
-        ...options,
-      });
-
-      const data = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(data?.error || "Request failed");
+  async function apiFetch(path, opts = {}) {
+    const url = BACKEND.replace(/\/$/, '') + path;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const res = await fetch(url, {
+          headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
+          ...opts,
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error || 'Request failed');
+        return data;
+      } catch (err) {
+        if (attempt === 1) throw err;
+        await new Promise(r => setTimeout(r, 1000));
       }
+    }
+  }
 
-      return data;
+  function formatDate(v) {
+    if (!v) return '';
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit',
+      }).format(new Date(v));
+    } catch { return ''; }
+  }
+
+  function status(text) {
+    if (els?.status) els.status.textContent = text;
+  }
+
+  function showView(paste) {
+    if (!els) return;
+    currentId = paste?.id || null;
+    els.content.value = paste?.content || '';
+    els.content.readOnly = true;
+    els.save.disabled = true;
+    els.copy.disabled = !currentId;
+    status(paste?.createdAt ? `Saved · ${formatDate(paste.createdAt)}` : 'Saved');
+  }
+
+  function showEditor() {
+    if (!els) return;
+    currentId = null;
+    els.content.value = '';
+    els.content.readOnly = false;
+    els.save.disabled = false;
+    els.copy.disabled = true;
+    status('Draft');
+  }
+
+  async function load(id) {
+    status('Loading...');
+    try {
+      const data = await apiFetch(`/paste/${id}`);
+      showView(data);
     } catch (err) {
-      if (i === 1) throw err;
-
-      console.log("[PasteApp] retrying...");
-      await new Promise(r => setTimeout(r, 800));
+      status(err.message || 'Could not load paste');
     }
   }
-}
 
-  function setStatus(text) {
-    if (state.els?.status) state.els.status.textContent = text;
-  }
+  async function save() {
+    if (!els) return;
+    const content = els.content.value;
+    if (!content.trim()) { status('Add some text first'); return; }
 
-  function applyPaste(paste, mode = "view") {
-    if (!state.els) return;
-    const id = paste?.id || paste?._id || null;
-    state.currentId = id;
-
-    state.els.content.value = paste?.content || "";
-    state.els.content.readOnly = mode === "view";
-    state.els.save.disabled = mode === "view";
-    state.els.copy.disabled = !id;
-
-    setStatus(
-      mode === "view"
-        ? `Saved paste · ${formatDate(paste?.createdAt)}`
-        : "Draft"
-    );
-  }
-
-  function resetEditor() {
-    if (!state.els) return;
-
-    state.currentId = null;
-    state.els.content.value = "";
-    state.els.content.readOnly = false;
-    state.els.save.disabled = false;
-    state.els.copy.disabled = true;
-
-    setStatus("Draft");
-  }
-
-  async function loadPaste(id) {
-    console.log("[PasteApp] loadPaste:", id);
-    setStatus("Loading...");
-
+    status('Saving...');
     try {
-      const data = await api(`/paste/${id}`, { method: "GET" });
-      applyPaste(data, "view");
-    } catch (error) {
-      console.error("[PasteApp] loadPaste error:", error);
-      resetEditor();
-      setStatus(error.message || "Could not load paste");
-    }
-  }
-
-  async function savePaste() {
-    if (!state.els) return;
-
-    const content = state.els.content.value;
-    if (!content.trim()) {
-      setStatus("Add some text first");
-      state.els.content.focus();
-      return;
-    }
-
-    setStatus("Saving...");
-
-    try {
-      const data = await api("/paste", {
-        method: "POST",
+      const data = await apiFetch('/paste', {
+        method: 'POST',
         body: JSON.stringify({ content }),
       });
-
-      const id = data?.id;
-      if (!id) throw new Error("No ID returned");
-
-      history.replaceState({}, "", `/paste/${id}`);
-      await loadPaste(id);
-
-      setStatus("Saved");
-    } catch (error) {
-      console.error("[PasteApp] savePaste error:", error);
-      setStatus(error.message || "Could not save paste");
+      if (!data?.id) throw new Error('No ID returned');
+      history.replaceState({}, '', `/paste/${data.id}`);
+      await load(data.id);
+    } catch (err) {
+      status(err.message || 'Could not save');
     }
   }
 
-  async function copyLink() {
-    if (!state.currentId) return;
-
-    const url = `${location.origin}/paste/${state.currentId}`;
+  async function copy() {
+    if (!currentId) return;
     try {
-      await navigator.clipboard.writeText(url);
-      setStatus("Link copied");
-    } catch {
-      setStatus("Copy failed");
-    }
+      await navigator.clipboard.writeText(`${location.origin}/paste/${currentId}`);
+      status('Link copied');
+      if (typeof window.showToast === 'function') window.showToast('Paste link copied');
+    } catch { status('Copy failed'); }
   }
 
-  function ensureTemplate() {
-    if (!state.root) return;
-
-    state.els = {
-      content: state.root.querySelector("[data-paste-content]"),
-      save: state.root.querySelector("[data-paste-save]"),
-      copy: state.root.querySelector("[data-paste-copy]"),
-      status: state.root.querySelector("[data-paste-status]"),
+  function bind() {
+    if (!root) return;
+    els = {
+      content: root.querySelector('[data-paste-content]'),
+      save: root.querySelector('[data-paste-save]'),
+      copy: root.querySelector('[data-paste-copy]'),
+      status: root.querySelector('[data-paste-status]'),
     };
-
-    if (!state.els.content || !state.els.save || !state.els.copy) {
-      console.error("[PasteApp] missing elements", state.els);
-      return;
-    }
-
-    if (!state.initialized) {
-      state.els.save.addEventListener("click", savePaste);
-      state.els.copy.addEventListener("click", copyLink);
-      state.initialized = true;
+    if (!els.content || !els.save) { els = null; return; }
+    if (!bound) {
+      els.save.addEventListener('click', save);
+      els.copy.addEventListener('click', copy);
+      bound = true;
     }
   }
 
   async function open(path) {
-    ensureTemplate();
-    if (!state.els) return;
-
-    const pasteId = routeToPasteId(path);
-
-    if (pasteId) {
-      await loadPaste(pasteId);
-    } else {
-      resetEditor();
-    }
+    bind();
+    if (!els) return;
+    const id = parseId(path);
+    if (id) { await load(id); } else { showEditor(); }
   }
 
   window.PasteApp = {
-    async init(root) {
-      state.root = root;
-      ensureTemplate();
-    },
-    async open(path) {
-      await open(path);
-    },
+    async init(el) { root = el; bind(); },
+    async open(path) { await open(path); },
   };
 })();
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const root = document.querySelector("#paste-root");
-  if (!root) return;
-
-  await window.PasteApp.init(root);
-  await window.PasteApp.open(location.pathname); // THIS LINE
-});
-
-window.addEventListener("popstate", () => {
-  if (window.PasteApp) {
-    window.PasteApp.open(location.pathname);
-  }
-});
