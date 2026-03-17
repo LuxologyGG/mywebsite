@@ -265,7 +265,12 @@ export default {
       return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
-    // Everything else → asset serving (SPA fallback configured in wrangler.toml)
+    // SPA fallback for /paste page routes (not static assets like .js/.css)
+    if (url.pathname.startsWith("/paste") && !url.pathname.includes(".")) {
+      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+    }
+
+    // Everything else → static asset serving
     return env.ASSETS.fetch(request);
   },
 };
