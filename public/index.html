@@ -98,10 +98,25 @@
       </div>
       <div class="work-content">
         <div class="work-tabs">
-          <button class="work-tab is-active" data-target="#work-about">About</button>
-      <button class="work-tab" data-target="#work-experience">Experience</button>
-      <button class="work-tab" data-target="#work-search">Explore</button>
-    </div>
+          <button class="work-tab is-active" data-target="#work-about">
+            <span class="work-tab__glass-filter"></span>
+            <span class="work-tab__glass-overlay"></span>
+            <span class="work-tab__glass-specular"></span>
+            <span class="work-tab__label">About</span>
+          </button>
+          <button class="work-tab" data-target="#work-experience">
+            <span class="work-tab__glass-filter"></span>
+            <span class="work-tab__glass-overlay"></span>
+            <span class="work-tab__glass-specular"></span>
+            <span class="work-tab__label">Experience</span>
+          </button>
+          <button class="work-tab" data-target="#work-search">
+            <span class="work-tab__glass-filter"></span>
+            <span class="work-tab__glass-overlay"></span>
+            <span class="work-tab__glass-specular"></span>
+            <span class="work-tab__label">Explore</span>
+          </button>
+        </div>
         <div class="work-sections">
           <section id="work-about" class="work-section is-active">
             <h3>About</h3>
@@ -345,7 +360,7 @@
             <div class="search-container">
               <div class="search-bar glassy">
                 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" class="search-input" id="search-input" placeholder="Where do you want to go?" autocomplete="off" spellcheck="false" />
+                <input type="text" class="search-input" id="search-input" placeholder="What do you want to see?" autocomplete="off" spellcheck="false" />
               </div>
               <div class="search-results" id="search-results"></div>
             </div>
@@ -1348,8 +1363,141 @@
         desc: 'Switch to dark theme',
         icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
         action: () => setTheme('dark')
+      },
+      {
+        title: "What's My IP",
+        path: '#ip',
+        desc: 'Show your public IP address and location info',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+        action: () => showIpInfo()
+      },
+      {
+        title: 'IP Lookup',
+        path: '#ip-lookup',
+        desc: 'Look up info about any IP address',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><circle cx="11" cy="11" r="3"/></svg>',
+        action: () => showIpLookup()
       }
     ];
+
+    function abuseScoreColor(score) {
+      if (score <= 10) return '#22c55e';
+      if (score <= 40) return '#eab308';
+      if (score <= 70) return '#f97316';
+      return '#ef4444';
+    }
+
+    function abuseScoreLabel(score) {
+      if (score <= 10) return 'Clean';
+      if (score <= 40) return 'Low Risk';
+      if (score <= 70) return 'Moderate Risk';
+      return 'High Risk';
+    }
+
+    function renderAbuseSection(abuse) {
+      if (!abuse) return '';
+      const score = abuse.abuseConfidenceScore ?? 0;
+      const color = abuseScoreColor(score);
+      const label = abuseScoreLabel(score);
+      return `
+        <div class="ip-abuse-section">
+          <div class="ip-info-row" style="border-bottom:none;padding-bottom:0">
+            <span class="ip-label">Safety Score</span>
+            <span class="ip-abuse-badge" style="--abuse-color:${color}">
+              <span class="ip-abuse-dot" style="background:${color}"></span>
+              ${label} (${score}% abuse confidence)
+            </span>
+          </div>
+          <div class="ip-abuse-bar-track">
+            <div class="ip-abuse-bar-fill" style="width:${score}%;background:${color}"></div>
+          </div>
+          ${abuse.totalReports ? `<div class="ip-info-row"><span class="ip-label">Reports</span><span class="ip-value">${abuse.totalReports} report${abuse.totalReports !== 1 ? 's' : ''}</span></div>` : ''}
+          ${abuse.isTor ? `<div class="ip-info-row"><span class="ip-label">Tor Exit Node</span><span class="ip-value" style="color:#f97316">Yes</span></div>` : ''}
+          ${abuse.usageType ? `<div class="ip-info-row"><span class="ip-label">Usage</span><span class="ip-value">${abuse.usageType}</span></div>` : ''}
+          ${abuse.isp ? `<div class="ip-info-row"><span class="ip-label">ISP</span><span class="ip-value">${abuse.isp}</span></div>` : ''}
+          ${abuse.domain ? `<div class="ip-info-row"><span class="ip-label">Domain</span><span class="ip-value">${abuse.domain}</span></div>` : ''}
+          ${abuse.lastReportedAt ? `<div class="ip-info-row"><span class="ip-label">Last Reported</span><span class="ip-value">${new Date(abuse.lastReportedAt).toLocaleDateString()}</span></div>` : ''}
+        </div>
+      `;
+    }
+
+    function renderIpDetails(data) {
+      return `
+        <div class="ip-info-details">
+          ${data.city || data.region ? `<div class="ip-info-row"><span class="ip-label">Location</span><span class="ip-value">${[data.city, data.region, data.country].filter(Boolean).join(', ')}</span></div>` : ''}
+          ${data.org ? `<div class="ip-info-row"><span class="ip-label">ISP</span><span class="ip-value">${data.org}</span></div>` : ''}
+          ${data.timezone ? `<div class="ip-info-row"><span class="ip-label">Timezone</span><span class="ip-value">${data.timezone}</span></div>` : ''}
+          ${data.loc ? `<div class="ip-info-row"><span class="ip-label">Coordinates</span><span class="ip-value">${data.loc}</span></div>` : ''}
+          ${renderAbuseSection(data.abuse)}
+        </div>
+      `;
+    }
+
+    function showIpInfo() {
+      searchResultsEl.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'ip-info-card glassy';
+      card.innerHTML = '<div class="ip-loading">Fetching your IP info...</div>';
+      searchResultsEl.appendChild(card);
+
+      fetch(`${location.origin}/api/ip`)
+        .then(r => r.json())
+        .then(data => {
+          card.innerHTML = `
+            <div class="ip-info-header">Your Public IP</div>
+            <div class="ip-info-address">${data.ip}</div>
+            ${renderIpDetails(data)}
+            <button class="ip-copy-btn glassy" onclick="navigator.clipboard.writeText('${data.ip}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy IP',1500)">Copy IP</button>
+          `;
+        })
+        .catch(() => {
+          card.innerHTML = '<div class="ip-loading">Could not fetch IP info</div>';
+        });
+    }
+
+    function showIpLookup() {
+      searchResultsEl.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'ip-info-card glassy';
+      wrapper.innerHTML = `
+        <div class="ip-info-header">IP Address Lookup</div>
+        <div class="ip-lookup-form">
+          <input type="text" class="ip-lookup-input glassy" placeholder="Enter an IP address (e.g. 8.8.8.8)" spellcheck="false" autocomplete="off" />
+          <button class="ip-lookup-btn glassy">Lookup</button>
+        </div>
+        <div class="ip-lookup-result"></div>
+      `;
+      searchResultsEl.appendChild(wrapper);
+
+      const input = wrapper.querySelector('.ip-lookup-input');
+      const btn = wrapper.querySelector('.ip-lookup-btn');
+      const result = wrapper.querySelector('.ip-lookup-result');
+
+      function doLookup() {
+        const ip = input.value.trim();
+        if (!ip) return;
+        result.innerHTML = '<div class="ip-loading">Looking up...</div>';
+        fetch(`${location.origin}/api/ip?ip=${encodeURIComponent(ip)}`)
+          .then(r => r.json())
+          .then(data => {
+            if (!data.city && !data.region && !data.org && !data.abuse) {
+              result.innerHTML = '<div class="ip-loading">No info found for this IP</div>';
+              return;
+            }
+            result.innerHTML = `
+              <div class="ip-info-address">${data.ip}</div>
+              ${renderIpDetails(data)}
+            `;
+          })
+          .catch(() => {
+            result.innerHTML = '<div class="ip-loading">Lookup failed</div>';
+          });
+      }
+
+      btn.addEventListener('click', doLookup);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLookup(); });
+      setTimeout(() => input.focus(), 100);
+    }
 
     function buildSearchUI() {
       if (searchBuilt) return;
@@ -1502,6 +1650,7 @@
       const isSearch = target === '#work-search';
       tabButtons.forEach((btn) => btn.classList.toggle('is-active', btn.getAttribute('data-target') === target));
       document.body.classList.toggle('experience-active', isExperience);
+      document.body.classList.toggle('search-active', isSearch);
       sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));
       if (isExperience) {
         buildHorizontalTimeline();
@@ -1567,6 +1716,23 @@
           setActiveWorkTab(target);
         });
       });
+
+      // Hide tabs when user scrolls content down, show when near top
+      const workSectionsEl = document.querySelector('.work-sections');
+      const workTabsEl = document.querySelector('.work-tabs');
+      if (workSectionsEl && workTabsEl) {
+        let tabsHidden = false;
+        workSectionsEl.addEventListener('scroll', () => {
+          const scrolled = workSectionsEl.scrollTop > 40;
+          if (scrolled && !tabsHidden) {
+            tabsHidden = true;
+            workTabsEl.classList.add('is-hidden');
+          } else if (!scrolled && tabsHidden) {
+            tabsHidden = false;
+            workTabsEl.classList.remove('is-hidden');
+          }
+        });
+      }
 
       if (emailChip && navigator.clipboard) {
         emailChip.addEventListener('click', async () => {

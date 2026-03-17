@@ -265,6 +265,89 @@ export default {
       return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
+    // ✅ IP INFO API
+    if (url.pathname.startsWith("/api/ip")) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: cors });
+      }
+
+      const headers = { ...cors, "content-type": "application/json" };
+
+      // Use query param ?ip=x.x.x.x for lookup, otherwise use requester's IP
+      const queryIp = url.searchParams.get("ip");
+      const clientIp = request.headers.get("CF-Connecting-IP") ||
+                       request.headers.get("X-Forwarded-For") ||
+                       "0.0.0.0";
+      const targetIp = queryIp || clientIp;
+
+      const info = {
+        ip: targetIp,
+        city: null,
+        region: null,
+        country: null,
+        loc: null,
+        org: null,
+        timezone: null,
+      };
+
+      // If it's the requester's own IP, we can use CF headers for geo data
+      if (!queryIp || queryIp === clientIp) {
+        info.city = request.cf?.city || null;
+        info.region = request.cf?.region || null;
+        info.country = request.cf?.country || null;
+        info.loc = (request.cf?.latitude && request.cf?.longitude)
+          ? `${request.cf.latitude},${request.cf.longitude}` : null;
+        info.org = request.cf?.asOrganization || null;
+        info.timezone = request.cf?.timezone || null;
+      } else {
+        // For arbitrary IP lookups, use ipinfo.io (no key needed for basic data)
+        try {
+          const res = await fetch(`https://ipinfo.io/${encodeURIComponent(targetIp)}/json`);
+          if (res.ok) {
+            const data = await res.json();
+            info.city = data.city || null;
+            info.region = data.region || null;
+            info.country = data.country || null;
+            info.loc = data.loc || null;
+            info.org = data.org || null;
+            info.timezone = data.timezone || null;
+          }
+        } catch {}
+      }
+
+      // AbuseIPDB safety check
+      info.abuse = null;
+      if (env.ABUSEIPDB_KEY) {
+        try {
+          const abuseRes = await fetch(
+            `https://api.abuseipdb.com/api/v2/check?ipAddress=${encodeURIComponent(targetIp)}&maxAgeInDays=90`,
+            {
+              headers: {
+                "Key": env.ABUSEIPDB_KEY,
+                "Accept": "application/json",
+              },
+            }
+          );
+          if (abuseRes.ok) {
+            const abuseJson = await abuseRes.json();
+            const d = abuseJson.data;
+            info.abuse = {
+              abuseConfidenceScore: d.abuseConfidenceScore ?? null,
+              totalReports: d.totalReports ?? 0,
+              isWhitelisted: d.isWhitelisted ?? null,
+              isTor: d.isTor ?? false,
+              usageType: d.usageType || null,
+              isp: d.isp || null,
+              domain: d.domain || null,
+              lastReportedAt: d.lastReportedAt || null,
+            };
+          }
+        } catch {}
+      }
+
+      return json(info, 200, cors);
+    }
+
     // SPA fallback for /paste page routes (not static assets like .js/.css)
     if (url.pathname.startsWith("/paste") && !url.pathname.includes(".")) {
       return env.ASSETS.fetch(new Request(new URL("/index.html", request.url)));
