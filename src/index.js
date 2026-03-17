@@ -189,25 +189,25 @@ async function mapLanyardPresence(payload, userId) {
 }
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
     const cors = corsHeaders(origin);
 
-    // 1) API route
+    // ✅ PRESENCE API (restore your real code)
     if (url.pathname.startsWith("/api/presence")) {
       if (request.method === "OPTIONS") {
-        return new Response(null, {
-          status: 204,
-          headers: cors,
-        });
+        return new Response(null, { status: 204, headers: cors });
       }
+
       const headers = {
         ...cors,
         "content-type": "application/json",
         "cache-control": "no-store",
       };
+
       const userId = env.DISCORD_USER_ID || "1042651808557977600";
+
       try {
         const lanyardRes = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(userId)}`);
         if (!lanyardRes.ok) {
@@ -220,13 +220,10 @@ export default {
       }
     }
 
+    // ✅ UNIQUE API (restore)
     if (url.pathname.startsWith("/api/unique")) {
-      // CORS preflight
       if (request.method === "OPTIONS") {
-        return new Response(null, {
-          status: 204,
-          headers: cors,
-        });
+        return new Response(null, { status: 204, headers: cors });
       }
 
       const headers = { ...cors, "content-type": "application/json" };
@@ -268,12 +265,7 @@ export default {
       return new Response(JSON.stringify({ page, uniqueToday, uniqueAllTime }), { status: 200, headers });
     }
 
-    if (url.pathname === "/paste" || /^\/paste\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
-      const indexUrl = new URL("/index.html", url);
-      return env.ASSETS.fetch(new Request(indexUrl.toString(), request));
-    }
-
-    // 2) Everything else: serve static assets from ./public
-    return env.ASSETS.fetch(request);
+    // ✅ EVERYTHING ELSE → let Cloudflare serve static files
+    return fetch(request);
   },
 };
