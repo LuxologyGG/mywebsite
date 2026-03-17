@@ -65,35 +65,33 @@
           </div>
         </div>
       <div class="blog-content-block">
-        <div class="blog-hero">
-          <div class="blog-avatar-circle">
-            <img src="/photos/pfp.png" alt="Profile photo" />
-          </div>
-          <div class="blog-chat glassy" id="blog-chat">
-            <div class="chat-typing" id="chat-typing">
-              <svg viewBox="0 0 140 48" aria-hidden="true">
-                <g class="typing-1">
-                  <rect x="14" y="6" width="90" height="36" rx="18" class="bubble" />
-                  <circle cx="19" cy="38" r="8" class="bubble" />
-                  <circle cx="9" cy="44" r="4" class="bubble" />
-                  <circle cx="35" cy="24" r="5" class="dot dot-1"></circle>
-                  <circle cx="55" cy="24" r="5" class="dot dot-2"></circle>
-                  <circle cx="75" cy="24" r="5" class="dot dot-3"></circle>
-                </g>
-              </svg>
+        <div class="blog-scroll-area">
+          <!-- Discord Status Banner -->
+          <div class="blog-status-banner glassy" id="blog-status-banner">
+            <div class="blog-status-avatar">
+              <img src="/photos/pfp.png" alt="Profile photo" />
+              <span class="blog-status-dot" id="blog-status-dot"></span>
             </div>
-            <div class="blog-chat-text" id="blog-chat-text"></div>
+            <div class="blog-status-info">
+              <div class="blog-status-name">Camron</div>
+              <div class="blog-status-label">Status of the day</div>
+              <div class="blog-status-custom" id="blog-status-custom">Loading status...</div>
+            </div>
           </div>
-        </div>
-        <div class="pub-container glassy">
-          <h3 class="blog-section-title">Publications</h3>
-          <div class="pub-grid" id="pub-grid">
-            <p class="blog-loading">Loading publications…</p>
+
+          <!-- Articles -->
+          <h3 class="blog-section-title">Articles</h3>
+          <div class="blog-grid" id="blog-grid">
+            <p class="blog-loading">Loading articles…</p>
           </div>
-        </div>
-        <h3 class="blog-section-title">Articles</h3>
-        <div class="blog-grid" id="blog-grid">
-          <p class="blog-loading">Loading blog…</p>
+
+          <!-- Publications -->
+          <div class="pub-container glassy">
+            <h3 class="blog-section-title">Publications</h3>
+            <div class="pub-grid" id="pub-grid">
+              <p class="blog-loading">Loading publications…</p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="work-content">
@@ -611,6 +609,134 @@
         ctx.globalAlpha = 1;
       }
 
+      /* ── Wavy mode for blog with crossfade ── */
+      let bgMode = 'grid'; // 'grid' or 'wavy'
+      let wavyTime = 0;
+      let wavyLines = [];
+      let blendTarget = 0; // 0 = grid, 1 = wavy
+      let blendValue = 0;
+      const BLEND_SPEED = 0.02; // ~50 frames = ~0.8s transition
+
+      let wavyDrawProgress = 0; // 0→1 how far each line has drawn across
+      const WAVY_DRAW_SPEED = 0.012; // ~80 frames = ~1.3s to fully draw
+
+      function generateWavyLines() {
+        const w = window.innerWidth, h = window.innerHeight;
+        wavyLines = [];
+        const count = Math.floor(h / 32) + 4;
+        for (let i = 0; i < count; i++) {
+          wavyLines.push({
+            y: (i / count) * h,
+            amp: 8 + Math.random() * 18,
+            freq: 0.003 + Math.random() * 0.006,
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.008 + Math.random() * 0.015,
+            alpha: 0.06 + Math.random() * 0.12,
+            delay: i * 0.04, // stagger each line slightly
+          });
+        }
+        wavyDrawProgress = 0;
+      }
+
+      function drawBlended() {
+        // Ease the blend value toward target
+        if (blendValue < blendTarget) blendValue = Math.min(blendTarget, blendValue + BLEND_SPEED);
+        else if (blendValue > blendTarget) blendValue = Math.max(blendTarget, blendValue - BLEND_SPEED);
+
+        const w = window.innerWidth, h = window.innerHeight;
+        const t = themes[theme] || themes.dark;
+        const gridAlpha = 1 - blendValue;
+        const wavyAlpha = blendValue;
+
+        // Background
+        ctx.fillStyle = t.bg;
+        ctx.fillRect(0, 0, w, h);
+
+        // Draw grid portion
+        if (gridAlpha > 0.01) {
+          // Grid dots
+          ctx.globalAlpha = gridAlpha;
+          ctx.fillStyle = t.dot;
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              ctx.beginPath();
+              ctx.arc(c * CELL, r * CELL, DOT_R, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // Grid lines
+          ctx.strokeStyle = t.line;
+          ctx.lineWidth = LINE_W;
+          ctx.lineCap = 'round';
+          for (const ei of drawOrder) {
+            const e = edges[ei];
+            const startT = e.startT;
+            if (progress <= startT) continue;
+            const localP = Math.min(1, (progress - startT) / 0.12);
+            const eased = localP * localP * (3 - 2 * localP);
+            const [x1, y1] = nodeXY(e[0]);
+            const [x2, y2] = nodeXY(e[1]);
+            const cx = x1 + (x2 - x1) * eased;
+            const cy = y1 + (y2 - y1) * eased;
+            ctx.globalAlpha = gridAlpha * (0.4 + 0.6 * eased);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(cx, cy);
+            ctx.stroke();
+          }
+        }
+
+        // Draw wavy portion
+        if (wavyAlpha > 0.01) {
+          wavyTime += 1;
+          wavyDrawProgress = Math.min(1, wavyDrawProgress + WAVY_DRAW_SPEED);
+
+          for (const line of wavyLines) {
+            // Per-line progress with stagger
+            const lineP = Math.max(0, Math.min(1, (wavyDrawProgress - line.delay) / (1 - line.delay)));
+            if (lineP <= 0) continue;
+            const eased = lineP * lineP * (3 - 2 * lineP); // smoothstep
+            const drawToX = eased * w;
+
+            ctx.beginPath();
+            ctx.strokeStyle = theme === 'light' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
+            ctx.globalAlpha = wavyAlpha * (line.alpha + 0.15);
+            ctx.lineWidth = 1.2;
+            for (let x = 0; x <= drawToX; x += 3) {
+              const y = line.y
+                + Math.sin(x * line.freq + wavyTime * line.speed + line.phase) * line.amp
+                + Math.sin(x * line.freq * 1.8 + wavyTime * line.speed * 0.7) * line.amp * 0.4;
+              if (x === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+          }
+        }
+
+        ctx.globalAlpha = 1;
+      }
+
+      function tickBlended() {
+        raf = requestAnimationFrame(tickBlended);
+        progress = Math.min(1, progress + DRAW_SPEED);
+        drawBlended();
+      }
+
+      window._graphPaperSetMode = function (mode) {
+        if (mode === 'wavy') {
+          if (wavyLines.length === 0) generateWavyLines();
+          blendTarget = 1;
+        } else {
+          blendTarget = 0;
+        }
+        bgMode = mode;
+        // Switch to blended tick if not already running it
+        if (raf) cancelAnimationFrame(raf);
+        raf = null;
+        tickBlended();
+      };
+
       /* Theme switching — called by existing setTheme/updatePalette */
       window._graphPaperSetTheme = function (mode) {
         theme = mode;
@@ -706,7 +832,7 @@
       if (push) history.pushState({}, '', path);
 
       if (isBlog) {
-        setActiveView('blog');
+        setActiveView('home');
         if (typeof enterBlogMode === 'function') enterBlogMode();
       } else if (isPaste) {
         setActiveView('home');
@@ -1681,18 +1807,20 @@
     }
 
     function enterBlogMode() {
-      exitOverlay();
+      exitOverlay(true);
       document.body.classList.add('blog-mode');
       loadBlogCards();
-      startBlogChat();
+      loadBlogDiscordStatus();
+      if (window._graphPaperSetMode) window._graphPaperSetMode('wavy');
     }
 
-    function exitOverlay() {
+    function exitOverlay(skipBgReset) {
       document.body.classList.remove('work-mode');
       document.body.classList.remove('blog-mode');
       document.body.classList.remove('paste-active');
       document.body.classList.remove('experience-active');
       stopDiscordPresence();
+      if (!skipBgReset && window._graphPaperSetMode) window._graphPaperSetMode('grid');
     }
 
     function initWorkCard() {
@@ -1700,7 +1828,7 @@
         backButton.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (document.body.classList.contains('paste-active')) {
+          if (document.body.classList.contains('paste-active') || document.body.classList.contains('blog-mode')) {
             navigateTo('/', true);
             return;
           }
@@ -1757,6 +1885,7 @@
     // Load blog cards into the glass card
     async function loadBlogCards() {
       if (blogLoaded) return;
+
       const publications = [
         {
           title: 'Living Machines: The Potential of ABBMs',
@@ -1769,6 +1898,30 @@
           image: '/photos/13000_2023_1301_Fig3_HTML.webp'
         }
       ];
+
+      const articles = [
+        { title: 'Article 1', desc: 'Placeholder article description', date: 'Mar 2026' },
+        { title: 'Article 2', desc: 'Placeholder article description', date: 'Feb 2026' },
+        { title: 'Article 3', desc: 'Placeholder article description', date: 'Jan 2026' },
+      ];
+
+      // Render articles
+      if (blogGrid) {
+        blogGrid.innerHTML = '';
+        articles.forEach((a, i) => {
+          const card = document.createElement('div');
+          card.className = 'article-card glassy';
+          card.style.animationDelay = (i * 80) + 'ms';
+          card.innerHTML = `
+            <div class="article-date">${a.date}</div>
+            <div class="article-title">${a.title}</div>
+            <div class="article-desc">${a.desc}</div>
+          `;
+          blogGrid.appendChild(card);
+        });
+      }
+
+      // Render publications
       if (pubGrid) {
         pubGrid.innerHTML = '';
         publications.forEach((pub) => {
@@ -1793,36 +1946,27 @@
         });
       }
 
-      if (blogGrid) {
-        blogGrid.innerHTML = '<p class="blog-loading">Articles coming soon.</p>';
-      }
       blogLoaded = true;
     }
 
-    function startBlogChat() {
-      if (blogChatRan) return;
-      const chat = document.getElementById('blog-chat');
-      const chatText = document.getElementById('blog-chat-text');
-      if (!chat || !chatText) return;
-      const message = "In my freetime I like to research, read, and sometimes write. Here are a couple things I'm interested in.";
-      chat.classList.add('show');
-      chatText.textContent = '';
-      if (chatTyping) {
-        chatTyping.classList.remove('hidden');
+    async function loadBlogDiscordStatus() {
+      const dot = document.getElementById('blog-status-dot');
+      const custom = document.getElementById('blog-status-custom');
+      if (!dot || !custom) return;
+
+      try {
+        const res = await fetch(`${location.origin}/api/presence`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const status = data.status || 'offline';
+        dot.className = 'blog-status-dot status-' + status;
+        const statusText = data.customStatus?.name
+          || (data.activities?.[0]?.title || discordStatusLabel[status] || status);
+        custom.textContent = statusText;
+      } catch {
+        dot.className = 'blog-status-dot status-offline';
+        custom.textContent = 'Offline';
       }
-      let i = 0;
-      const tick = () => {
-        if (i <= message.length) {
-          chatText.textContent = message.slice(0, i);
-          i++;
-          setTimeout(tick, 22);
-        }
-      };
-      setTimeout(() => {
-        if (chatTyping) chatTyping.classList.add('hidden');
-        tick();
-      }, 300);
-      blogChatRan = true;
     }
 
     function initExperienceDetails() {

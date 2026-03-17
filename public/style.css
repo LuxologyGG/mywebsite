@@ -3,6 +3,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+
+@font-face {
+  font-family: 'GeistPixelSquare';
+  src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 * {
   box-sizing: border-box;
@@ -1531,6 +1541,10 @@ body.light-mode .about-current-sub {
   display: none;
 }
 
+.blog-mode .toggle {
+  display: none;
+}
+
 .paste-active .center-image {
   opacity: 0;
   pointer-events: none;
@@ -1761,6 +1775,7 @@ body.light-mode .htl-detail {
 .blog-mode .blog-content-block {
   display: flex;
   pointer-events: auto;
+  overflow: hidden;
 }
 
 .blog-mode .back-button {
@@ -1786,111 +1801,141 @@ body.light-mode .htl-detail {
   display: none;
   flex: 1;
   min-height: 0;
+  width: 100%;
   position: relative;
   flex-direction: column;
   gap: 16px;
-  align-items: flex-start;
   pointer-events: auto;
   z-index: 2;
   font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
 }
 
-.blog-intro {
-  font-family: "PT Serif", serif;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.4;
-  max-width: 620px;
+/* Blog scroll area */
+.blog-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 4px 4px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) transparent;
 }
 
-.blog-chat {
+/* Discord status banner */
+.blog-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+}
+
+.blog-status-avatar {
   position: relative;
-  min-height: 64px;
-  min-width: 240px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 220ms ease;
-  pointer-events: none;
+  flex-shrink: 0;
 }
 
-/* iMessage-like nub tail from the TOP-LEFT */
-.blog-chat::before {
-  content: none;
-  width: 0;
-  height: 0;
-  border: 0;
-}
-
-.blog-chat::after {
-  content: none;
-}
-
-.blog-chat.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  animation: blogChatPop 520ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
-}
-
-@keyframes blogChatPop {
-  0% { opacity: 0; transform: translateY(12px) scale(1); }
-  60% { opacity: 1; transform: translateY(0) scale(1.06); }
-  80% { transform: translateY(0) scale(0.98); }
-  100% { transform: translateY(0) scale(1); }
-}
-
-.blog-chat-text {
-  font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.4;
-  letter-spacing: 0.1px;
-  min-height: 18px;
-}
-
-.chat-typing {
-  width: 120px;
+.blog-status-avatar img {
+  width: 48px;
   height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.chat-typing.hidden {
-  display: none;
+.blog-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(20, 20, 26, 0.9);
+  background: #747f8d;
 }
 
-.chat-typing svg {
-  width: 100%;
-  height: 100%;
+.blog-status-dot.status-online { background: #3ba55c; }
+.blog-status-dot.status-idle { background: #faa61a; }
+.blog-status-dot.status-dnd { background: #ed4245; }
+.blog-status-dot.status-offline { background: #747f8d; }
+
+body.light-mode .blog-status-dot {
+  border-color: rgba(240, 241, 248, 0.95);
 }
 
-.chat-typing .bubble {
-  fill: rgba(255, 255, 255, 0.1);
+.blog-status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.chat-typing .dot {
-  fill: rgba(255, 255, 255, 0.8);
-  animation: dotBlink 1.2s infinite;
+.blog-status-name {
+  font-weight: 600;
+  font-size: 15px;
 }
 
-.chat-typing .dot-2 { animation-delay: 0.15s; }
-.chat-typing .dot-3 { animation-delay: 0.3s; }
+.blog-status-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  opacity: 0.35;
+  margin-top: 2px;
+}
 
-@keyframes dotBlink {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+.blog-status-custom {
+  font-size: 13px;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Article cards */
+.article-card {
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+  animation: fadeUp 0.4s ease both;
+}
+
+.article-card:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+body.light-mode .article-card:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.article-date {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.45;
+  margin-bottom: 4px;
+}
+
+.article-title {
+  font-family: 'GeistPixelSquare', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.article-desc {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  opacity: 0.6;
+  line-height: 1.4;
 }
 
 .blog-section-title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  color: #c8ef80;
 }
 
 .blog-avatar-circle {
@@ -1951,15 +1996,26 @@ body.light-mode .glassy {
   height: 200px;
 }
 
+.pub-card .blog-overlay {
+  opacity: 1;
+  place-items: end center;
+  padding: 8px 6px;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7));
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
 .pub-card.disabled {
   pointer-events: none;
   opacity: 0.75;
 }
 
 .blog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   width: 100%;
   align-self: flex-start;
   pointer-events: auto;
@@ -2376,6 +2432,7 @@ body.light-mode .tech-sub {
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
+  font-family: "Noto Sans", sans-serif;
   font-size: 13px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

@@ -3,6 +3,7 @@
     "wrangler": "^4.68.0"
   },
   "dependencies": {
+    "geist": "^1.7.0",
     "mongodb": "^7.1.0"
   }
 }
