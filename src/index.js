@@ -267,7 +267,7 @@ export default {
 
     // SPA fallback for /paste page routes (not static assets like .js/.css)
     if (url.pathname.startsWith("/paste") && !url.pathname.includes(".")) {
-      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url)));
     }
 
     // Everything else → static asset serving
