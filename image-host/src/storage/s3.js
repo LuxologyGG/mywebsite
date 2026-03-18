@@ -87,6 +87,21 @@ const s3 = {
     } catch {}
   },
 
+  async getMeta(filename) {
+    try {
+      const head = await getClient().send(
+        new HeadObjectCommand({
+          Bucket: config.s3.bucket,
+          Key: `uploads/${filename}`,
+        })
+      );
+      const uploadedAt = parseInt(head.Metadata?.uploadedat, 10);
+      return uploadedAt ? { uploadedAt } : null;
+    } catch {
+      return null;
+    }
+  },
+
   async listExpired(ttlMs) {
     const now = Date.now();
     const expired = [];

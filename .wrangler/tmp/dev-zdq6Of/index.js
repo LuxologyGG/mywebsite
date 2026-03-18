@@ -25,6 +25,30 @@ function cleanPage(value) {
   return p;
 }
 __name(cleanPage, "cleanPage");
+function escapeAttr(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+__name(escapeAttr, "escapeAttr");
+function formatRelativeExpiry(v) {
+  if (!v) return "Never";
+  const diff = new Date(v) - Date.now();
+  if (diff <= 0) return "Expired";
+  const hours = Math.floor(diff / 36e5);
+  const days = Math.floor(hours / 24);
+  if (days > 0) return `Expires in ${days}d`;
+  if (hours > 0) return `Expires in ${hours}h`;
+  return "Expires soon";
+}
+__name(formatRelativeExpiry, "formatRelativeExpiry");
+function shortDate(v) {
+  if (!v) return "";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(v));
+}
+__name(shortDate, "shortDate");
 function corsHeaders(origin) {
   return {
     "access-control-allow-origin": origin || "*",
@@ -331,6 +355,30 @@ var src_default = {
       }
     }
     if ((url.pathname.startsWith("/paste") || url.pathname === "/upload") && !url.pathname.includes(".")) {
+      const pasteMatch = url.pathname.match(/^\/paste\/([A-Fa-f0-9]+)$/);
+      if (pasteMatch) {
+        try {
+          const pasteApiUrl = env.PASTE_API_URL || "https://camron-paste-api.onrender.com";
+          const pasteRes = await fetch(`${pasteApiUrl}/paste/${pasteMatch[1]}`);
+          if (pasteRes.ok) {
+            const paste = await pasteRes.json();
+            const baseResp = await env.ASSETS.fetch(new Request(new URL("/index.html", request.url)));
+            const html = await baseResp.text();
+            const created = shortDate(paste.createdAt);
+            const expiry = formatRelativeExpiry(paste.expiresAt);
+            const desc = created ? `Created ${created} \xB7 ${expiry}` : "A paste on camr.one";
+            const ogTags = `<meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="camr.one paste">
+  <meta property="og:description" content="${escapeAttr(desc)}">
+  <meta property="og:type" content="website">`;
+            return new Response(html.replace("</head>", `  ${ogTags}
+</head>`), {
+              headers: { "content-type": "text/html;charset=utf-8" }
+            });
+          }
+        } catch {
+        }
+      }
       return env.ASSETS.fetch(new Request(new URL("/index.html", request.url)));
     }
     return env.ASSETS.fetch(request);

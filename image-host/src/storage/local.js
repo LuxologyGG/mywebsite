@@ -60,6 +60,11 @@ const local = {
     saveMeta(meta);
   },
 
+  async getMeta(filename) {
+    const meta = loadMeta();
+    return meta[path.basename(filename)] || null;
+  },
+
   async listExpired(ttlMs) {
     const meta = loadMeta();
     const now = Date.now();

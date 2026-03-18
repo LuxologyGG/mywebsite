@@ -9,6 +9,18 @@ const { upload } = require("./middleware");
 
 const router = express.Router();
 
+function isCrawler(ua = "") {
+  const s = ua.toLowerCase();
+  return ["bot", "spider", "crawl", "slurp", "bingpreview", "headless",
+    "discordbot", "telegrambot", "twitterbot", "facebookexternalhit",
+    "whatsapp", "linkedinbot", "imessagebot"].some(k => s.includes(k));
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 // Generate a deletion token for a file
 const SECRET = config.deleteSecret || config.apiKey || crypto.randomBytes(32).toString("hex");
 
@@ -65,6 +77,40 @@ router.get("/i/:filename", (req, res) => {
     const ext = path.extname(filename).toLowerCase();
     if (!config.allowedExtensions.includes(ext)) {
       return res.status(400).json({ error: "Invalid file type" });
+    }
+
+    // Serve OG embed page for bot crawlers (unless ?raw=1)
+    const ua = req.headers["user-agent"] || "";
+    if (isCrawler(ua) && !req.query.raw) {
+      const meta = await storage.getMeta(filename);
+      const imageUrl = `${config.baseUrl}/i/${filename}?raw=1`;
+
+      let desc = "Image hosted on camr.one";
+      if (meta && meta.uploadedAt) {
+        const created = new Intl.DateTimeFormat("en-US", {
+          month: "short", day: "numeric", year: "numeric",
+        }).format(new Date(meta.uploadedAt));
+        const expiresAt = meta.uploadedAt + config.fileTtlMinutes * 60000;
+        const diff = expiresAt - Date.now();
+        let expiry;
+        if (diff <= 0) expiry = "Expired";
+        else if (diff > 86400000) expiry = `Expires in ${Math.floor(diff / 86400000)}d`;
+        else if (diff > 3600000) expiry = `Expires in ${Math.floor(diff / 3600000)}h`;
+        else expiry = `Expires in ${Math.floor(diff / 60000)}m`;
+        desc = `Uploaded ${created} · ${expiry}`;
+      }
+
+      const html = `<!doctype html>
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="camr.one image">
+  <meta property="og:description" content="${escapeHtml(desc)}">
+  <meta property="og:image" content="${escapeHtml(imageUrl)}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+</head><body></body></html>`;
+      return res.set("Content-Type", "text/html").send(html);
     }
 
     // Try streaming (local storage)
