@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/paste/style.css">
+  <link rel="stylesheet" href="/upload/style.css">
 </head>
 <body>
   <div class="site-preloader" id="site-preloader">
@@ -384,6 +385,41 @@
               <button class="glassy" type="button" data-paste-copy disabled>Copy Link</button>
             </div>
           </section>
+          <section id="work-upload" class="work-section" aria-live="polite">
+            <h3>Upload</h3>
+            <p class="upload-status-text" data-upload-status>Drop an image or click to select</p>
+            <div class="upload-dropzone glassy" data-upload-dropzone>
+              <svg class="upload-dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="upload-dropzone-text"><strong>Click to select</strong> or drag & drop</div>
+              <div class="upload-dropzone-sub">PNG, JPG, WEBP, GIF up to 10MB — expires in 1 hour</div>
+            </div>
+            <input type="file" class="upload-file-input" data-upload-input accept="image/png,image/jpeg,image/webp,image/gif" />
+            <div class="upload-preview" data-upload-preview>
+              <img class="upload-preview-img" data-upload-preview-img alt="Preview" />
+              <div class="upload-preview-info" data-upload-preview-info></div>
+            </div>
+            <div class="upload-progress" data-upload-progress>
+              <div class="upload-progress-track">
+                <div class="upload-progress-fill" data-upload-progress-fill></div>
+              </div>
+            </div>
+            <div class="upload-result" data-upload-result>
+              <div class="upload-result-row">
+                <span class="upload-result-label">Image</span>
+                <span class="upload-result-url" data-upload-image-url></span>
+                <button class="glassy upload-result-copy" data-upload-copy-image type="button">Copy</button>
+              </div>
+              <div class="upload-result-row">
+                <span class="upload-result-label">Delete</span>
+                <span class="upload-result-url" data-upload-delete-url></span>
+                <button class="glassy upload-result-copy" data-upload-copy-delete type="button">Copy</button>
+              </div>
+            </div>
+            <div class="upload-actions">
+              <button class="glassy" type="button" data-upload-submit disabled>Upload</button>
+              <button class="glassy" type="button" data-upload-reset>Reset</button>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -404,6 +440,13 @@
       : 'https://camron-paste-api.onrender.com';
 </script>
   <script src="/paste/script.js"></script>
+<script>
+  window.UPLOAD_BACKEND_URL =
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3001'
+      : 'https://camrone-image-host.onrender.com';
+</script>
+  <script src="/upload/script.js"></script>
   <script>
     /* ── Graph-paper background with animated connecting lines ── */
     (function () {
@@ -751,6 +794,7 @@
     const homeView = document.getElementById('home-view');
     const blogView = document.getElementById('blog-view');
     const pasteSection = document.getElementById('work-paste');
+    const uploadSection = document.getElementById('work-upload');
     const blogPanel = document.getElementById('blog-content');
     const blogGrid = document.getElementById('blog-grid');
     const pubGrid = document.getElementById('pub-grid');
@@ -820,6 +864,11 @@
       await window.PasteApp.init(pasteSection);
     }
 
+    function ensureUploadView() {
+      if (!uploadSection || !window.UploadApp) return;
+      window.UploadApp.init(uploadSection);
+    }
+
     function setActiveView(name = 'home') {
       if (!homeView) return;
       homeView.classList.toggle('active', name === 'home');
@@ -829,6 +878,7 @@
     async function navigateTo(path, push = true) {
       const isBlog = path === '/blog' || (typeof path === 'string' && path.startsWith('/blog/'));
       const isPaste = path === '/paste' || (typeof path === 'string' && path.startsWith('/paste/'));
+      const isUpload = path === '/upload';
       if (push) history.pushState({}, '', path);
 
       if (isBlog) {
@@ -836,7 +886,7 @@
         if (typeof enterBlogMode === 'function') enterBlogMode();
       } else if (isPaste) {
         setActiveView('home');
-        document.body.classList.remove('blog-mode', 'experience-active');
+        document.body.classList.remove('blog-mode', 'experience-active', 'upload-active');
         document.body.classList.add('work-mode', 'paste-active');
         setActiveWorkTab('#work-paste');
         try {
@@ -844,6 +894,17 @@
           if (window.PasteApp) await window.PasteApp.open(path);
         } catch (err) {
           console.error('Paste load error:', err);
+        }
+      } else if (isUpload) {
+        setActiveView('home');
+        document.body.classList.remove('blog-mode', 'experience-active', 'paste-active');
+        document.body.classList.add('work-mode', 'upload-active');
+        setActiveWorkTab('#work-upload');
+        try {
+          ensureUploadView();
+          if (window.UploadApp) window.UploadApp.open();
+        } catch (err) {
+          console.error('Upload load error:', err);
         }
       } else {
         setActiveView('home');
@@ -1463,6 +1524,13 @@
         action: () => navigateTo('/paste', true)
       },
       {
+        title: 'Upload',
+        path: '/upload',
+        desc: 'Upload an image — temporary hosting, expires in 1hr',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+        action: () => navigateTo('/upload', true)
+      },
+      {
         title: 'About',
         path: '#about',
         desc: 'Learn more about me and what I do',
@@ -1744,7 +1812,8 @@
         location.pathname === '/blog' ||
         location.pathname.startsWith('/blog/') ||
         location.pathname === '/paste' ||
-        location.pathname.startsWith('/paste/')
+        location.pathname.startsWith('/paste/') ||
+        location.pathname === '/upload'
       ) {
         await navigateTo(location.pathname, false);
       } else {
@@ -1818,6 +1887,7 @@
       document.body.classList.remove('work-mode');
       document.body.classList.remove('blog-mode');
       document.body.classList.remove('paste-active');
+      document.body.classList.remove('upload-active');
       document.body.classList.remove('experience-active');
       stopDiscordPresence();
       if (!skipBgReset && window._graphPaperSetMode) window._graphPaperSetMode('grid');
@@ -1828,7 +1898,7 @@
         backButton.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (document.body.classList.contains('paste-active') || document.body.classList.contains('blog-mode')) {
+          if (document.body.classList.contains('paste-active') || document.body.classList.contains('upload-active') || document.body.classList.contains('blog-mode')) {
             navigateTo('/', true);
             return;
           }

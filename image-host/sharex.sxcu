@@ -1,0 +1,14 @@
+{
+  "Version": "14.0.0",
+  "Name": "Image Host",
+  "DestinationType": "ImageUploader",
+  "RequestMethod": "POST",
+  "RequestURL": "https://yourdomain.com/files",
+  "Headers": {
+    "key": "YOUR_API_KEY"
+  },
+  "Body": "MultipartFormData",
+  "FileFormName": "file",
+  "URL": "{json:imageUrl}",
+  "DeletionURL": "{json:deletionUrl}"
+}

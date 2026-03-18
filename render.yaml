@@ -10,3 +10,19 @@ services:
         sync: false
       - key: NODE_ENV
         value: production
+
+  - type: web
+    name: camrone-image-host
+    runtime: node
+    rootDir: image-host
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: API_KEY
+        sync: false
+      - key: BASE_URL
+        value: https://camrone-image-host.onrender.com
+      - key: PORT
+        value: "3001"
+      - key: NODE_ENV
+        value: production
