@@ -10,7 +10,7 @@
   let root = null;
   let els = null;
   let bound = false;
-  let selectedFile = null;
+  let lastImageUrl = null;
 
   function status(text) {
     if (els?.status) els.status.textContent = text;
@@ -23,12 +23,12 @@
   }
 
   function reset() {
-    selectedFile = null;
+    lastImageUrl = null;
     if (els.dropzone) els.dropzone.style.display = '';
     if (els.preview) els.preview.classList.remove('has-file');
     if (els.result) els.result.classList.remove('has-result');
     if (els.progress) els.progress.classList.remove('active');
-    if (els.uploadBtn) els.uploadBtn.disabled = true;
+    if (els.copyBtn) { els.copyBtn.disabled = true; els.copyBtn.textContent = 'Copy Link'; }
     if (els.fileInput) els.fileInput.value = '';
     status('Drop an image or click to select');
   }
@@ -42,7 +42,7 @@
     els.dropzone.style.display = 'none';
   }
 
-  function selectFile(file) {
+  async function selectAndUpload(file) {
     if (!file) return;
 
     if (!ALLOWED.includes(file.type)) {
@@ -55,47 +55,22 @@
       return;
     }
 
-    selectedFile = file;
     showPreview(file);
-    els.uploadBtn.disabled = false;
-    status(`Ready to upload — ${formatSize(file.size)}`);
-  }
-
-  async function upload() {
-    if (!selectedFile) return;
-
-    const apiKey = localStorage.getItem('upload_api_key');
-    if (!apiKey) {
-      const key = prompt('Enter your API key:');
-      if (!key) return;
-      localStorage.setItem('upload_api_key', key);
-      return upload();
-    }
-
     status('Uploading...');
-    els.uploadBtn.disabled = true;
+    els.copyBtn.disabled = true;
     els.progress.classList.add('active');
     els.progressFill.style.width = '30%';
 
     try {
       const form = new FormData();
-      form.append('file', selectedFile);
+      form.append('file', file);
 
       const res = await fetch(`${BACKEND}/files`, {
         method: 'POST',
-        headers: { key: apiKey },
         body: form,
       });
 
       els.progressFill.style.width = '90%';
-
-      if (res.status === 401) {
-        localStorage.removeItem('upload_api_key');
-        status('Invalid API key — try again');
-        els.progress.classList.remove('active');
-        els.uploadBtn.disabled = false;
-        return;
-      }
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -104,6 +79,7 @@
 
       const data = await res.json();
       els.progressFill.style.width = '100%';
+      lastImageUrl = data.imageUrl;
 
       // Show result
       els.imageUrl.textContent = data.imageUrl;
@@ -111,19 +87,32 @@
       els.result.classList.add('has-result');
       els.progress.classList.remove('active');
 
+      // Enable copy button
+      els.copyBtn.disabled = false;
+
       status('Uploaded — expires in 1 hour');
 
-      // Auto-copy image URL
+      // Auto-copy
       try {
         await navigator.clipboard.writeText(data.imageUrl);
         status('Uploaded — link copied to clipboard');
+        els.copyBtn.textContent = 'Copied!';
+        setTimeout(() => { els.copyBtn.textContent = 'Copy Link'; }, 2000);
         if (typeof window.showToast === 'function') window.showToast('Image URL copied');
       } catch {}
     } catch (err) {
       status(err.message || 'Upload failed');
       els.progress.classList.remove('active');
-      els.uploadBtn.disabled = false;
     }
+  }
+
+  function copyLink() {
+    if (!lastImageUrl) return;
+    navigator.clipboard.writeText(lastImageUrl).then(() => {
+      els.copyBtn.textContent = 'Copied!';
+      setTimeout(() => { els.copyBtn.textContent = 'Copy Link'; }, 2000);
+      if (typeof window.showToast === 'function') window.showToast('Image URL copied');
+    }).catch(() => {});
   }
 
   function copyUrl(el) {
@@ -143,7 +132,7 @@
       preview: root.querySelector('[data-upload-preview]'),
       previewImg: root.querySelector('[data-upload-preview-img]'),
       previewInfo: root.querySelector('[data-upload-preview-info]'),
-      uploadBtn: root.querySelector('[data-upload-submit]'),
+      copyBtn: root.querySelector('[data-upload-copylink]'),
       resetBtn: root.querySelector('[data-upload-reset]'),
       result: root.querySelector('[data-upload-result]'),
       imageUrl: root.querySelector('[data-upload-image-url]'),
@@ -154,18 +143,15 @@
       progressFill: root.querySelector('[data-upload-progress-fill]'),
     };
 
-    if (!els.dropzone || !els.uploadBtn) { els = null; return; }
+    if (!els.dropzone || !els.copyBtn) { els = null; return; }
 
     if (!bound) {
-      // Click to select
       els.dropzone.addEventListener('click', () => els.fileInput.click());
 
-      // File input change
       els.fileInput.addEventListener('change', () => {
-        if (els.fileInput.files[0]) selectFile(els.fileInput.files[0]);
+        if (els.fileInput.files[0]) selectAndUpload(els.fileInput.files[0]);
       });
 
-      // Drag & drop
       els.dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
         els.dropzone.classList.add('drag-over');
@@ -176,24 +162,22 @@
       els.dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         els.dropzone.classList.remove('drag-over');
-        if (e.dataTransfer.files[0]) selectFile(e.dataTransfer.files[0]);
+        if (e.dataTransfer.files[0]) selectAndUpload(e.dataTransfer.files[0]);
       });
 
-      // Paste from clipboard
       document.addEventListener('paste', (e) => {
-        // Only handle if upload section is active
         if (!root.closest('.work-section.is-active')) return;
         const items = e.clipboardData?.items;
         if (!items) return;
         for (const item of items) {
           if (item.type.startsWith('image/')) {
-            selectFile(item.getAsFile());
+            selectAndUpload(item.getAsFile());
             break;
           }
         }
       });
 
-      els.uploadBtn.addEventListener('click', upload);
+      els.copyBtn.addEventListener('click', copyLink);
       els.resetBtn.addEventListener('click', reset);
       els.copyImageBtn.addEventListener('click', () => copyUrl(els.imageUrl));
       els.copyDeleteBtn.addEventListener('click', () => copyUrl(els.deleteUrl));

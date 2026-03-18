@@ -18,11 +18,11 @@ services:
     buildCommand: npm install
     startCommand: node server.js
     envVars:
-      - key: API_KEY
+      - key: DELETE_SECRET
         sync: false
       - key: BASE_URL
         value: https://camrone-image-host.onrender.com
       - key: PORT
-        value: "3001"
+        value: "10000"
       - key: NODE_ENV
         value: production

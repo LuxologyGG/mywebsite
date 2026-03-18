@@ -5,21 +5,23 @@ const express = require("express");
 const config = require("./config");
 const storage = require("./storage");
 const logger = require("./logger");
-const { auth, upload } = require("./middleware");
+const { upload } = require("./middleware");
 
 const router = express.Router();
 
 // Generate a deletion token for a file
+const SECRET = config.deleteSecret || config.apiKey || crypto.randomBytes(32).toString("hex");
+
 function deletionToken(filename) {
   return crypto
-    .createHmac("sha256", config.apiKey)
+    .createHmac("sha256", SECRET)
     .update(filename)
     .digest("hex")
     .slice(0, 32);
 }
 
 // --- POST /files ---
-router.post("/files", auth, upload.single("file"), (req, res) => {
+router.post("/files", upload.single("file"), (req, res) => {
   (async () => {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });

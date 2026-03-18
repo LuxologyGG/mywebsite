@@ -6,11 +6,6 @@ const { limiter } = require("./src/middleware");
 const routes = require("./src/routes");
 const cleanup = require("./src/cleanup");
 
-if (!config.apiKey) {
-  console.error("API_KEY environment variable is required");
-  process.exit(1);
-}
-
 const app = express();
 
 app.set("trust proxy", 1); // trust first proxy hop (Cloudflare/nginx)

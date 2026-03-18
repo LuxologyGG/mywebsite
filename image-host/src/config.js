@@ -2,6 +2,7 @@ const path = require("path");
 
 const config = {
   apiKey: process.env.API_KEY,
+  deleteSecret: process.env.DELETE_SECRET || process.env.API_KEY,
   port: parseInt(process.env.PORT, 10) || 3001,
   baseUrl: (process.env.BASE_URL || "http://localhost:3001").replace(/\/$/, ""),
   maxFileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10MB

@@ -304,7 +304,33 @@ var src_default = {
       }
       return json(info, 200, cors);
     }
-    if (url.pathname.startsWith("/paste") && !url.pathname.includes(".")) {
+    if (url.pathname === "/api/upload") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: cors });
+      }
+      if (request.method !== "POST") {
+        return json({ error: "Method not allowed" }, 405, cors);
+      }
+      if (!env.IMAGE_HOST_URL || !env.IMAGE_HOST_KEY) {
+        return json({ error: "Image host not configured" }, 500, cors);
+      }
+      try {
+        const body = await request.arrayBuffer();
+        const upstream = await fetch(`${env.IMAGE_HOST_URL}/files`, {
+          method: "POST",
+          headers: {
+            "key": env.IMAGE_HOST_KEY,
+            "content-type": request.headers.get("content-type") || "application/octet-stream"
+          },
+          body
+        });
+        const data = await upstream.json();
+        return json(data, upstream.status, cors);
+      } catch (err) {
+        return json({ error: "Upload proxy failed" }, 502, cors);
+      }
+    }
+    if ((url.pathname.startsWith("/paste") || url.pathname === "/upload") && !url.pathname.includes(".")) {
       return env.ASSETS.fetch(new Request(new URL("/index.html", request.url)));
     }
     return env.ASSETS.fetch(request);
