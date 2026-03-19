@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>camr.one</title>
-  <meta name="description" content="Camron's bio site">
+  <meta name="description" content="Camron's Bio Site">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="camr.one">
-  <meta property="og:description" content="Camron's bio site">
+  <meta property="og:description" content="I feel like the name is pretty self explanatory">
   <meta property="og:type" content="website">
   <meta property="og:image" content="/photos/pfp.png">
   <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
@@ -487,6 +487,10 @@
         canvas.height = window.innerHeight * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         generate();
+        if (mapReady) { mapReady = false; mapCanvas = null; mapRevealCanvas = null; if (bgMode === 'map') { buildMapCanvas(); } }
+        gridCacheDirty = true;
+        topoCacheCvs = null;
+        if (bgMode === 'topo') generateTopoLines();
       }
 
       /* Build the random edge set using a spanning-tree so every dot is connected */
@@ -659,8 +663,8 @@
         ctx.globalAlpha = 1;
       }
 
-      /* ── Wavy mode for blog with crossfade ── */
-      let bgMode = 'grid'; // 'grid' or 'wavy'
+      /* ── Overlay modes for blog and Explore ── */
+      let bgMode = 'grid'; // 'grid', 'wavy', or 'map'
       let wavyTime = 0;
       let wavyLines = [];
       let blendTarget = 0; // 0 = grid, 1 = wavy
@@ -669,6 +673,350 @@
 
       let wavyDrawProgress = 0; // 0→1 how far each line has drawn across
       const WAVY_DRAW_SPEED = 0.012; // ~80 frames = ~1.3s to fully draw
+
+      /* ── Topography lines for Experience tab ── */
+      const TOPO_BLEND_SPEED = 0.02;
+      let topoBlendTarget = 0;
+      let topoBlendValue = 0;
+      let topoLines = [];
+      let topoTime = 0;
+      let topoDrawProgress = 0;
+      const TOPO_DRAW_SPEED = 0.006;
+      const TOPO_LINE_COUNT = 25;
+
+      /* ── Offscreen caches to avoid per-frame redraws ── */
+      let gridCacheCvs = null;
+      let gridCacheDirty = true;
+      let topoCacheCvs = null;
+      let topoCacheFrame = 0;
+
+      function topoNoise(x, y, t) {
+        const l1 = Math.sin(x * 0.008 + t) * Math.cos(y * 0.008 + t * 0.7);
+        const l2 = Math.sin(x * 0.02 + t * 0.5) * Math.cos(y * 0.02 + t * 0.3) * 0.5;
+        const l3 = Math.sin(x * 0.05 + t * 0.2) * Math.cos(y * 0.05 + t * 0.1) * 0.25;
+        return l1 + l2 + l3;
+      }
+
+      function generateTopoLines() {
+        const h = window.innerHeight;
+        topoLines = [];
+        for (let i = 0; i < TOPO_LINE_COUNT; i++) {
+          const baseY = (i / (TOPO_LINE_COUNT - 1)) * h;
+          const pos = i / TOPO_LINE_COUNT;
+          const brightness = Math.floor(30 + pos * 170);
+          topoLines.push({
+            baseY,
+            brightness,
+            terrainFreq: 0.3 + pos * 0.7,
+            delay: i * 0.025
+          });
+        }
+        topoDrawProgress = 0;
+        topoCacheCvs = null;
+        topoCacheFrame = 0;
+      }
+
+      function drawTopoLines(alpha) {
+        if (alpha < 0.01) return;
+        const w = window.innerWidth;
+
+        for (const line of topoLines) {
+          const lineP = Math.max(0, Math.min(1, (topoDrawProgress - line.delay) / (1 - line.delay)));
+          if (lineP <= 0) continue;
+          const eased = lineP * lineP * (3 - 2 * lineP);
+          const drawToX = eased * w;
+
+          ctx.beginPath();
+          const b = line.brightness;
+          ctx.strokeStyle = `rgb(${b},${b},${b})`;
+          ctx.globalAlpha = alpha * (0.25 + 0.45 * (line.brightness / 200));
+          ctx.lineWidth = 1.5;
+
+          for (let x = 0; x <= drawToX; x += 5) {
+            const y = line.baseY + topoNoise(x * line.terrainFreq, line.baseY * line.terrainFreq, topoTime) * 50;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+      }
+
+      function buildGridCache() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = window.innerWidth, h = window.innerHeight;
+        if (!gridCacheCvs) gridCacheCvs = document.createElement('canvas');
+        gridCacheCvs.width = w * dpr;
+        gridCacheCvs.height = h * dpr;
+        const gc = gridCacheCvs.getContext('2d');
+        gc.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const t = themes[theme] || themes.dark;
+        gc.fillStyle = t.dot;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            gc.beginPath();
+            gc.arc(c * CELL, r * CELL, DOT_R, 0, Math.PI * 2);
+            gc.fill();
+          }
+        }
+        gc.strokeStyle = t.line;
+        gc.lineWidth = LINE_W;
+        gc.lineCap = 'round';
+        for (const ei of drawOrder) {
+          const e = edges[ei];
+          const [x1, y1] = nodeXY(e[0]);
+          const [x2, y2] = nodeXY(e[1]);
+          gc.beginPath();
+          gc.moveTo(x1, y1);
+          gc.lineTo(x2, y2);
+          gc.stroke();
+        }
+        gridCacheDirty = false;
+      }
+
+      function buildTopoCache() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = window.innerWidth, h = window.innerHeight;
+        if (!topoCacheCvs) topoCacheCvs = document.createElement('canvas');
+        topoCacheCvs.width = w * dpr;
+        topoCacheCvs.height = h * dpr;
+        const tc = topoCacheCvs.getContext('2d');
+        tc.setTransform(dpr, 0, 0, dpr, 0, 0);
+        tc.clearRect(0, 0, w, h);
+        for (const line of topoLines) {
+          tc.beginPath();
+          const b = line.brightness;
+          tc.strokeStyle = `rgb(${b},${b},${b})`;
+          tc.globalAlpha = 0.25 + 0.45 * (line.brightness / 200);
+          tc.lineWidth = 1.5;
+          for (let x = 0; x <= w; x += 5) {
+            const y = line.baseY + topoNoise(x * line.terrainFreq, line.baseY * line.terrainFreq, topoTime) * 50;
+            if (x === 0) tc.moveTo(x, y);
+            else tc.lineTo(x, y);
+          }
+          tc.stroke();
+        }
+      }
+
+      /* ── Map tile system for Explore tab ── */
+      const MAP_ZOOM = 12;
+      const TILE_DRAW = 512;
+      const MAP_BLEND_SPEED = 0.028;
+      let mapBlendTarget = 0;
+      let mapBlendValue = 0;
+      let mapLocation = null;
+      let mapLocationPromise = null;
+      let mapCanvas = null;
+      let mapCanvasTheme = null;
+      let mapReady = false;
+      let mapBuilding = false;
+      let mapRevealCanvas = null;
+      let mapRevealCtx = null;
+      let mapRevealProgress = 0;
+
+      function parseLocData(data) {
+        if (!data) return null;
+        let lat, lng;
+        if (typeof data.loc === 'string') {
+          [lat, lng] = data.loc.split(',').map(Number);
+        } else {
+          lat = Number(data.latitude ?? data.lat);
+          lng = Number(data.longitude ?? data.lng ?? data.lon);
+        }
+        return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+      }
+
+      function loadMapLocation() {
+        if (mapLocation) return Promise.resolve(mapLocation);
+        try {
+          const c = sessionStorage.getItem('map-loc');
+          if (c) {
+            const p = JSON.parse(c);
+            if (Number.isFinite(p.lat) && Number.isFinite(p.lng)) {
+              mapLocation = p;
+              return Promise.resolve(p);
+            }
+          }
+        } catch {}
+        if (mapLocationPromise) return mapLocationPromise;
+        mapLocationPromise = fetch('/api/ip')
+          .then(r => { if (!r.ok) throw 0; return r.json(); })
+          .then(d => {
+            const loc = parseLocData(d);
+            if (!loc) throw 0;
+            mapLocation = loc;
+            try { sessionStorage.setItem('map-loc', JSON.stringify(loc)); } catch {}
+            return loc;
+          })
+          .catch(() => null)
+          .finally(() => { mapLocationPromise = null; });
+        return mapLocationPromise;
+      }
+
+      function latLonToTile(lat, lon, z) {
+        const n = 1 << z;
+        const x = ((lon + 180) / 360) * n;
+        const r = lat * Math.PI / 180;
+        const y = (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n;
+        return { x, y };
+      }
+
+      async function buildMapCanvas() {
+        if (mapBuilding || (mapReady && mapCanvasTheme === theme)) return;
+        if (!mapLocation) return;
+        mapBuilding = true;
+
+        const z = MAP_ZOOM;
+        const { x: txf, y: tyf } = latLonToTile(mapLocation.lat, mapLocation.lng, z);
+        const cTX = Math.floor(txf), cTY = Math.floor(tyf);
+        const fracX = txf - cTX, fracY = tyf - cTY;
+        const w = window.innerWidth, h = window.innerHeight;
+        const spanX = Math.ceil(w / TILE_DRAW / 2) + 2;
+        const spanY = Math.ceil(h / TILE_DRAW / 2) + 2;
+        const maxT = 1 << z;
+        const reqs = [];
+
+        for (let dy = -spanY; dy <= spanY; dy++) {
+          for (let dx = -spanX; dx <= spanX; dx++) {
+            let tx = cTX + dx, ty = cTY + dy;
+            if (ty < 0 || ty >= maxT) continue;
+            tx = ((tx % maxT) + maxT) % maxT;
+            const sx = w / 2 + (dx - fracX) * TILE_DRAW;
+            const sy = h / 2 + (dy - fracY) * TILE_DRAW;
+            if (sx + TILE_DRAW < -50 || sx > w + 50 || sy + TILE_DRAW < -50 || sy > h + 50) continue;
+            reqs.push({ url: `https://basemaps.cartocdn.com/light_nolabels/${z}/${tx}/${ty}@2x.png`, x: sx, y: sy });
+          }
+        }
+
+        const loaded = await Promise.all(reqs.map(t => new Promise(res => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => res({ img, x: t.x, y: t.y });
+          img.onerror = () => res(null);
+          img.src = t.url;
+        })));
+
+        const valid = loaded.filter(Boolean);
+        if (!valid.length) { mapBuilding = false; return; }
+
+        const off = document.createElement('canvas');
+        off.width = w; off.height = h;
+        const oc = off.getContext('2d');
+
+        // Fill base so uncovered areas match
+        oc.fillStyle = theme === 'dark' ? '#ffffff' : '#f5f6fb';
+        oc.fillRect(0, 0, w, h);
+        for (const t of valid) oc.drawImage(t.img, t.x, t.y, TILE_DRAW, TILE_DRAW);
+
+        // Dark mode: invert light tiles → black bg with white roads (toner look)
+        if (theme === 'dark') {
+          oc.globalCompositeOperation = 'difference';
+          oc.fillStyle = '#ffffff';
+          oc.fillRect(0, 0, w, h);
+          oc.globalCompositeOperation = 'source-over';
+        }
+
+        mapCanvas = off;
+        mapCanvasTheme = theme;
+        mapReady = true;
+        mapBuilding = false;
+        if (bgMode === 'map') {
+          mapBlendTarget = 1;
+          if (!raf) tickBlended();
+        }
+      }
+
+      function drawMapLayer(alpha, reveal) {
+        if (!mapReady || !mapCanvas || reveal < 0.01) return;
+        const w = window.innerWidth, h = window.innerHeight;
+        const t = themes[theme] || themes.dark;
+
+        // Ensure offscreen canvas for masked progressive reveal
+        if (!mapRevealCanvas || mapRevealCanvas.width !== w || mapRevealCanvas.height !== h) {
+          mapRevealCanvas = document.createElement('canvas');
+          mapRevealCanvas.width = w;
+          mapRevealCanvas.height = h;
+          mapRevealCtx = mapRevealCanvas.getContext('2d');
+        }
+
+        const rc = mapRevealCtx;
+        rc.clearRect(0, 0, w, h);
+
+        // Top/bottom wipe mask: two rectangles growing from top and bottom edges
+        const ease = reveal * reveal * (3 - 2 * reveal);
+        const halfH = ease * h * 0.52;
+        if (halfH < 1) return;
+
+        const feather = 24;
+        rc.globalCompositeOperation = 'source-over';
+        rc.globalAlpha = 1;
+
+        // Top strip: gradient fading at its bottom edge
+        const topGrad = rc.createLinearGradient(0, 0, 0, halfH);
+        topGrad.addColorStop(0, 'rgba(255,255,255,1)');
+        topGrad.addColorStop(Math.max(0, 1 - feather / halfH), 'rgba(255,255,255,1)');
+        topGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        rc.fillStyle = topGrad;
+        rc.fillRect(0, 0, w, halfH);
+
+        // Bottom strip: gradient fading at its top edge
+        const botY = h - halfH;
+        const botGrad = rc.createLinearGradient(0, h, 0, botY);
+        botGrad.addColorStop(0, 'rgba(255,255,255,1)');
+        botGrad.addColorStop(Math.max(0, 1 - feather / halfH), 'rgba(255,255,255,1)');
+        botGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        rc.fillStyle = botGrad;
+        rc.fillRect(0, botY, w, halfH);
+
+        // Stamp map tiles through the mask
+        rc.globalCompositeOperation = 'source-in';
+        rc.drawImage(mapCanvas, 0, 0);
+
+        // Draw masked map to main canvas
+        ctx.globalAlpha = alpha * (theme === 'dark' ? 0.95 : 0.9);
+        ctx.drawImage(mapRevealCanvas, 0, 0);
+
+        // Subtle vignette only at far edges
+        const vigR = Math.max(w, h) * 0.6;
+        const vg = ctx.createRadialGradient(w / 2, h / 2, vigR * 0.4, w / 2, h / 2, vigR);
+        vg.addColorStop(0, 'rgba(0,0,0,0)');
+        vg.addColorStop(1, t.bg);
+        ctx.globalAlpha = alpha * 0.35;
+        ctx.fillStyle = vg;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function drawMapPin(alpha) {
+        if (alpha < 0.4) return;
+        const pa = Math.min(1, (alpha - 0.4) / 0.6);
+        const w = window.innerWidth, h = window.innerHeight;
+        const px = w / 2, py = h / 2;
+        const c = theme === 'light' ? '0,0,0' : '255,255,255';
+
+        // Pulse ring
+        const pulse = (Math.sin(performance.now() * 0.003) + 1) * 0.5;
+        ctx.globalAlpha = pa * (0.25 - pulse * 0.15);
+        ctx.strokeStyle = `rgba(${c},0.5)`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(px, py, 14 + pulse * 18, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Static ring
+        ctx.globalAlpha = pa * 0.45;
+        ctx.strokeStyle = `rgba(${c},0.6)`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(px, py, 8, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Core dot
+        ctx.globalAlpha = pa * 0.9;
+        ctx.fillStyle = `rgba(${c},1)`;
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
 
       function generateWavyLines() {
         const w = window.innerWidth, h = window.innerHeight;
@@ -682,73 +1030,93 @@
             phase: Math.random() * Math.PI * 2,
             speed: 0.008 + Math.random() * 0.015,
             alpha: 0.06 + Math.random() * 0.12,
-            delay: i * 0.04, // stagger each line slightly
+            delay: i * 0.04
           });
         }
         wavyDrawProgress = 0;
       }
 
       function drawBlended() {
-        // Ease the blend value toward target
         if (blendValue < blendTarget) blendValue = Math.min(blendTarget, blendValue + BLEND_SPEED);
         else if (blendValue > blendTarget) blendValue = Math.max(blendTarget, blendValue - BLEND_SPEED);
+        if (mapBlendValue < mapBlendTarget) mapBlendValue = Math.min(mapBlendTarget, mapBlendValue + MAP_BLEND_SPEED);
+        else if (mapBlendValue > mapBlendTarget) mapBlendValue = Math.max(mapBlendTarget, mapBlendValue - MAP_BLEND_SPEED);
+        if (topoBlendValue < topoBlendTarget) topoBlendValue = Math.min(topoBlendTarget, topoBlendValue + TOPO_BLEND_SPEED);
+        else if (topoBlendValue > topoBlendTarget) topoBlendValue = Math.max(topoBlendTarget, topoBlendValue - TOPO_BLEND_SPEED);
+
+        // Map reveal progress: slow sweep from corners (~2s), independent of blend
+        if (mapBlendTarget > 0 && mapReady) {
+          mapRevealProgress = Math.min(1, mapRevealProgress + 0.008);
+        } else if (mapBlendTarget === 0) {
+          mapRevealProgress = Math.max(0, mapRevealProgress - 0.025);
+        }
 
         const w = window.innerWidth, h = window.innerHeight;
         const t = themes[theme] || themes.dark;
-        const gridAlpha = 1 - blendValue;
         const wavyAlpha = blendValue;
+        const mapAlpha = mapBlendValue;
+        const topoAlpha = topoBlendValue;
+        const gridAlpha = (1 - wavyAlpha) * (1 - mapAlpha) * (1 - topoAlpha);
 
         // Background
         ctx.fillStyle = t.bg;
         ctx.fillRect(0, 0, w, h);
 
-        // Draw grid portion
-        if (gridAlpha > 0.01) {
-          // Grid dots
-          ctx.globalAlpha = gridAlpha;
-          ctx.fillStyle = t.dot;
-          for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-              ctx.beginPath();
-              ctx.arc(c * CELL, r * CELL, DOT_R, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
+        // Map layer with progressive corner reveal
+        if (mapAlpha > 0.01 && mapRevealProgress > 0.01) drawMapLayer(mapAlpha, mapRevealProgress);
 
-          // Grid lines
-          ctx.strokeStyle = t.line;
-          ctx.lineWidth = LINE_W;
-          ctx.lineCap = 'round';
-          for (const ei of drawOrder) {
-            const e = edges[ei];
-            const startT = e.startT;
-            if (progress <= startT) continue;
-            const localP = Math.min(1, (progress - startT) / 0.12);
-            const eased = localP * localP * (3 - 2 * localP);
-            const [x1, y1] = nodeXY(e[0]);
-            const [x2, y2] = nodeXY(e[1]);
-            const cx = x1 + (x2 - x1) * eased;
-            const cy = y1 + (y2 - y1) * eased;
-            ctx.globalAlpha = gridAlpha * (0.4 + 0.6 * eased);
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(cx, cy);
-            ctx.stroke();
+        // Grid dots and lines (overlay on map)
+        if (gridAlpha > 0.01) {
+          if (progress >= 1) {
+            // Fully drawn — use cached offscreen canvas
+            if (gridCacheDirty || !gridCacheCvs) buildGridCache();
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.globalAlpha = gridAlpha;
+            ctx.drawImage(gridCacheCvs, 0, 0);
+            ctx.restore();
+          } else {
+            // Still animating initial draw-in
+            ctx.globalAlpha = gridAlpha;
+            ctx.fillStyle = t.dot;
+            for (let r = 0; r < rows; r++) {
+              for (let c = 0; c < cols; c++) {
+                ctx.beginPath();
+                ctx.arc(c * CELL, r * CELL, DOT_R, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            ctx.strokeStyle = t.line;
+            ctx.lineWidth = LINE_W;
+            ctx.lineCap = 'round';
+            for (const ei of drawOrder) {
+              const e = edges[ei];
+              if (progress <= e.startT) continue;
+              const localP = Math.min(1, (progress - e.startT) / 0.12);
+              const eased = localP * localP * (3 - 2 * localP);
+              const [x1, y1] = nodeXY(e[0]);
+              const [x2, y2] = nodeXY(e[1]);
+              ctx.globalAlpha = gridAlpha * (0.4 + 0.6 * eased);
+              ctx.beginPath();
+              ctx.moveTo(x1, y1);
+              ctx.lineTo(x1 + (x2 - x1) * eased, y1 + (y2 - y1) * eased);
+              ctx.stroke();
+            }
           }
         }
 
-        // Draw wavy portion
+        // Map pin (appears after reveal is halfway done)
+        if (mapAlpha > 0.01 && mapRevealProgress > 0.5) drawMapPin(mapAlpha);
+
+        // Wavy lines (blog mode)
         if (wavyAlpha > 0.01) {
           wavyTime += 1;
           wavyDrawProgress = Math.min(1, wavyDrawProgress + WAVY_DRAW_SPEED);
-
           for (const line of wavyLines) {
-            // Per-line progress with stagger
             const lineP = Math.max(0, Math.min(1, (wavyDrawProgress - line.delay) / (1 - line.delay)));
             if (lineP <= 0) continue;
-            const eased = lineP * lineP * (3 - 2 * lineP); // smoothstep
+            const eased = lineP * lineP * (3 - 2 * lineP);
             const drawToX = eased * w;
-
             ctx.beginPath();
             ctx.strokeStyle = theme === 'light' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
             ctx.globalAlpha = wavyAlpha * (line.alpha + 0.15);
@@ -764,35 +1132,102 @@
           }
         }
 
+        // Topography lines (experience mode)
+        if (topoAlpha > 0.01) {
+          topoTime += 0.003;
+          if (topoDrawProgress < 1) {
+            // During draw-in: render live
+            topoDrawProgress = Math.min(1, topoDrawProgress + TOPO_DRAW_SPEED);
+            drawTopoLines(topoAlpha);
+          } else if (topoLines.length) {
+            // After draw-in: cache to offscreen, refresh every 8 frames
+            topoCacheFrame = (topoCacheFrame + 1) % 8;
+            if (topoCacheFrame === 0 || !topoCacheCvs) buildTopoCache();
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.globalAlpha = topoAlpha;
+            ctx.drawImage(topoCacheCvs, 0, 0);
+            ctx.restore();
+          }
+        }
+
         ctx.globalAlpha = 1;
       }
 
       function tickBlended() {
-        raf = requestAnimationFrame(tickBlended);
         progress = Math.min(1, progress + DRAW_SPEED);
         drawBlended();
+
+        // Stop RAF when everything is settled (no transitions in progress)
+        // Keep running if wavy or map are active (they need continuous animation)
+        const settled = progress >= 1
+          && blendTarget === 0 && blendValue < 0.001
+          && mapBlendTarget === 0 && mapBlendValue < 0.001
+          && Math.abs(topoBlendValue - topoBlendTarget) < 0.001
+          && (topoBlendTarget === 0 || topoDrawProgress >= 1);
+
+        if (settled) {
+          // One final render to snap blend values, then stop
+          blendValue = blendTarget;
+          mapBlendValue = mapBlendTarget;
+          topoBlendValue = topoBlendTarget;
+          drawBlended();
+          raf = null;
+        } else {
+          raf = requestAnimationFrame(tickBlended);
+        }
+      }
+
+      function activateMapMode() {
+        if (mapReady && mapCanvasTheme === theme) {
+          mapBlendTarget = 1;
+          return;
+        }
+        loadMapLocation().then(loc => {
+          if (!loc) return;
+          buildMapCanvas();
+        });
       }
 
       window._graphPaperSetMode = function (mode) {
+        bgMode = mode;
         if (mode === 'wavy') {
-          if (wavyLines.length === 0) generateWavyLines();
+          if (!wavyLines.length) generateWavyLines();
           blendTarget = 1;
+          mapBlendTarget = 0;
+          topoBlendTarget = 0;
+        } else if (mode === 'map') {
+          blendTarget = 0;
+          mapBlendTarget = 0;
+          topoBlendTarget = 0;
+          mapRevealProgress = 0;
+          activateMapMode();
+        } else if (mode === 'topo') {
+          generateTopoLines();
+          blendTarget = 0;
+          mapBlendTarget = 0;
+          topoBlendTarget = 1;
         } else {
           blendTarget = 0;
+          mapBlendTarget = 0;
+          topoBlendTarget = 0;
         }
-        bgMode = mode;
-        // Switch to blended tick if not already running it
         if (raf) cancelAnimationFrame(raf);
         raf = null;
         tickBlended();
       };
 
-      /* Theme switching — called by existing setTheme/updatePalette */
       window._graphPaperSetTheme = function (mode) {
         theme = mode;
+        gridCacheDirty = true;
+        if (mapReady && mapCanvasTheme !== mode) {
+          mapReady = false;
+          mapCanvas = null;
+          if (bgMode === 'map') buildMapCanvas();
+        }
       };
 
-      document.addEventListener('DOMContentLoaded', init);
+      document.addEventListener('DOMContentLoaded', () => { init(); loadMapLocation(); });
     })();
   </script>
 
@@ -886,9 +1321,16 @@
       const isBlog = path === '/blog' || (typeof path === 'string' && path.startsWith('/blog/'));
       const isPaste = path === '/paste' || (typeof path === 'string' && path.startsWith('/paste/'));
       const isUpload = path === '/upload';
+      const isProjects = path === '/projects';
       if (push) history.pushState({}, '', path);
 
-      if (isBlog) {
+      if (isProjects) {
+        setActiveView('home');
+        document.body.classList.remove('blog-mode', 'experience-active', 'paste-active', 'upload-active');
+        document.body.classList.add('work-mode', 'search-active');
+        setActiveWorkTab('#work-search');
+        showProjects();
+      } else if (isBlog) {
         setActiveView('home');
         if (typeof enterBlogMode === 'function') enterBlogMode();
       } else if (isPaste) {
@@ -1564,6 +2006,13 @@
         action: () => setActiveWorkTab('#work-experience')
       },
       {
+        title: 'Projects',
+        path: '/projects',
+        desc: 'GitHub repos, research, and things I\'ve built',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+        action: () => navigateTo('/projects', true)
+      },
+      {
         title: 'Light Mode',
         path: '#theme',
         desc: 'Switch to light theme',
@@ -1763,6 +2212,257 @@
       }
     }
 
+    // ---- GitHub Activity & Projects (inline expand) ----
+    const RESEARCH_PROJECTS = [
+      {
+        title: 'Algae-Based Biohybrid Microrobots for Precision Oncology',
+        desc: 'Investigating algae-powered microrobots for targeted chemo delivery in hypoxic tumor environments. Non-Trivial Research Fellowship.',
+        tags: ['Cancer Research', 'Bioengineering', 'Meta-Analysis'],
+        type: 'research',
+        url: 'https://www.linkedin.com/in/camron-farjami-608822359/'
+      },
+      {
+        title: 'Fluoxetine\'s Influence on Sexual Preferences',
+        desc: 'Meta-analysis examining whether SSRIs impact sexual orientation through serotonin, testosterone, and neuroanatomical pathways.',
+        tags: ['Neuropharmacology', 'Meta-Analysis', 'SSRI'],
+        type: 'research',
+        url: 'https://www.linkedin.com/in/camron-farjami-608822359/'
+      },
+      {
+        title: 'BPDCN Case Report — USC Norris',
+        desc: 'Blastic Plasmacytoid Dendritic Cell Neoplasm arising in a patient with Systemic Mastocytosis. Published case report with genomic analysis.',
+        tags: ['Oncology', 'Case Report', 'Genomics'],
+        type: 'research',
+        url: 'https://www.linkedin.com/in/camron-farjami-608822359/'
+      },
+      {
+        title: 'Manganese Deficiency & Chronic Anemia',
+        desc: 'Case report on under-recognized manganese deficiency as cause of chronic anemia. Published in Journal of Investigative Medicine.',
+        tags: ['Hematology', 'Case Report', 'Published'],
+        type: 'research',
+        url: 'https://www.linkedin.com/in/camron-farjami-608822359/'
+      }
+    ];
+
+    function showProjects() {
+      searchResultsEl.innerHTML = '';
+
+      // GitHub Activity card with contribution graph
+      const ghCard = document.createElement('div');
+      ghCard.className = 'ip-info-card glassy';
+      ghCard.innerHTML = `
+        <div class="github-header">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub Activity</span>
+          <a class="github-profile-link" href="https://github.com/LuxologyGG" target="_blank" rel="noreferrer">@LuxologyGG</a>
+        </div>
+        <div class="contrib-graph">
+          <div class="github-loading">Loading contributions...</div>
+        </div>
+      `;
+      searchResultsEl.appendChild(ghCard);
+
+      // Projects list card
+      const projCard = document.createElement('div');
+      projCard.className = 'ip-info-card glassy';
+      projCard.style.marginTop = '12px';
+      projCard.innerHTML = `
+        <div class="projects-header">Projects</div>
+        <div class="projects-grid">
+          <div class="github-loading">Loading...</div>
+        </div>
+      `;
+      searchResultsEl.appendChild(projCard);
+
+      const username = 'LuxologyGG';
+
+      // Fetch contribution graph from our worker proxy
+      fetch('/api/github-contributions')
+        .then(r => r.json())
+        .then(data => {
+          buildContribGraph(ghCard.querySelector('.contrib-graph'), data);
+        })
+        .catch(() => {
+          ghCard.querySelector('.contrib-graph').innerHTML = '<div class="github-loading">Could not load contributions</div>';
+        });
+
+      // Fetch repos for project cards
+      fetch('https://api.github.com/users/' + username + '/repos?sort=updated&per_page=30')
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(repos => {
+          buildProjectCards(projCard.querySelector('.projects-grid'), repos);
+        })
+        .catch(() => {
+          buildProjectCards(projCard.querySelector('.projects-grid'), []);
+        });
+    }
+
+    function buildContribGraph(container, data) {
+      const { total, contributions } = data;
+
+      const dateMap = {};
+      contributions.forEach(c => {
+        dateMap[c.date] = { level: c.level, count: c.count || 0 };
+      });
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const dayOfWeek = today.getDay();
+
+      // Start from Sunday, ~52 weeks ago
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - 52 * 7 - dayOfWeek);
+
+      // Build day-by-day array
+      const days = [];
+      const d = new Date(startDate);
+      while (d <= today) {
+        const ds = d.getFullYear() + '-' +
+          String(d.getMonth() + 1).padStart(2, '0') + '-' +
+          String(d.getDate()).padStart(2, '0');
+        const entry = dateMap[ds] || { level: 0, count: 0 };
+        days.push({ date: ds, level: entry.level, count: entry.count });
+        d.setDate(d.getDate() + 1);
+      }
+
+      // Pad remaining days in last week
+      while (days.length % 7 !== 0) {
+        days.push(null);
+      }
+
+      const numWeeks = days.length / 7;
+
+      // Month labels
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      let monthLabels = '';
+      let lastMonth = -1;
+      for (let w = 0; w < numWeeks; w++) {
+        for (let di = 0; di < 7; di++) {
+          const day = days[w * 7 + di];
+          if (day) {
+            const m = parseInt(day.date.slice(5, 7)) - 1;
+            if (m !== lastMonth) {
+              monthLabels += `<span class="contrib-month-label" style="left:${w * 13}px">${monthNames[m]}</span>`;
+              lastMonth = m;
+            }
+            break;
+          }
+        }
+      }
+
+      // Build grid cells (column-first: each column = 1 week)
+      let cells = '';
+      for (let w = 0; w < numWeeks; w++) {
+        for (let di = 0; di < 7; di++) {
+          const day = days[w * 7 + di];
+          if (!day) {
+            cells += '<div class="contrib-cell contrib-empty"></div>';
+          } else {
+            const dateObj = new Date(day.date + 'T12:00:00');
+            const formatted = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+            const countText = day.count === 0 ? 'No' : day.count;
+            const plural = day.count === 1 ? 'contribution' : 'contributions';
+            cells += `<div class="contrib-cell" data-level="${day.level}" data-tooltip="${countText} ${plural} on ${formatted}"></div>`;
+          }
+        }
+      }
+
+      const gridWidth = numWeeks * 13 - 3;
+
+      container.innerHTML = `
+        <div class="contrib-count">${total} contributions in the last year</div>
+        <div class="contrib-scroll">
+          <div class="contrib-grid-wrap">
+            <div class="contrib-days">
+              <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+            </div>
+            <div class="contrib-col">
+              <div class="contrib-months" style="width:${gridWidth}px">${monthLabels}</div>
+              <div class="contrib-grid">${cells}</div>
+            </div>
+          </div>
+        </div>
+        <div class="contrib-footer">
+          <span class="contrib-hint">Hover a day to inspect activity.</span>
+          <div class="contrib-legend">
+            <span>Less</span>
+            <div class="contrib-cell" data-level="0"></div>
+            <div class="contrib-cell" data-level="1"></div>
+            <div class="contrib-cell" data-level="2"></div>
+            <div class="contrib-cell" data-level="3"></div>
+            <div class="contrib-cell" data-level="4"></div>
+            <span>More</span>
+          </div>
+        </div>
+      `;
+
+      // Tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'contrib-tooltip';
+      container.style.position = 'relative';
+      container.appendChild(tooltip);
+
+      container.addEventListener('mouseover', e => {
+        const cell = e.target.closest('.contrib-cell[data-tooltip]');
+        if (cell) {
+          tooltip.textContent = cell.dataset.tooltip;
+          tooltip.style.display = 'block';
+          const rect = cell.getBoundingClientRect();
+          const cRect = container.getBoundingClientRect();
+          tooltip.style.left = (rect.left - cRect.left + rect.width / 2) + 'px';
+          tooltip.style.top = (rect.top - cRect.top - 28) + 'px';
+        }
+      });
+
+      container.addEventListener('mouseout', e => {
+        if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.contrib-tooltip')) {
+          tooltip.style.display = 'none';
+        }
+      });
+    }
+
+    function buildProjectCards(gridEl, repos) {
+      const repoCards = repos
+        .filter(r => !r.fork)
+        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+        .slice(0, 6)
+        .map((r, i) => {
+          const tags = [r.language, ...(r.topics || [])].filter(Boolean).slice(0, 3);
+          return `<a class="project-card" href="${r.html_url}" target="_blank" rel="noreferrer" style="animation-delay:${i * 60 + 40}ms">
+            <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+            <div class="project-card-body">
+              <div class="project-card-title">${escHtml(r.name)}</div>
+              <div class="project-card-desc">${escHtml(r.description || 'No description')}</div>
+              ${tags.length ? `<div class="project-card-tags">${tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
+            </div>
+            <span class="project-type-badge repo">repo</span>
+            <svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>`;
+        });
+
+      const researchCards = RESEARCH_PROJECTS.map((p, i) => {
+        const delay = (repoCards.length + i) * 60 + 40;
+        return `<a class="project-card" href="${p.url}" target="_blank" rel="noreferrer" style="animation-delay:${delay}ms">
+          <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+          <div class="project-card-body">
+            <div class="project-card-title">${escHtml(p.title)}</div>
+            <div class="project-card-desc">${escHtml(p.desc)}</div>
+            <div class="project-card-tags">${p.tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>
+          </div>
+          <span class="project-type-badge research">research</span>
+          <svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>`;
+      });
+
+      gridEl.innerHTML = repoCards.join('') + researchCards.join('');
+    }
+
+    function escHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
     function isoDay() {
       return new Date().toISOString().slice(0, 10);
     }
@@ -1832,7 +2532,8 @@
         location.pathname.startsWith('/blog/') ||
         location.pathname === '/paste' ||
         location.pathname.startsWith('/paste/') ||
-        location.pathname === '/upload'
+        location.pathname === '/upload' ||
+        location.pathname === '/projects'
       ) {
         await navigateTo(location.pathname, false);
       } else {
@@ -1866,6 +2567,9 @@
       document.body.classList.toggle('experience-active', isExperience);
       document.body.classList.toggle('search-active', isSearch);
       sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));
+      if (window._graphPaperSetMode) {
+        window._graphPaperSetMode(isSearch ? 'map' : isExperience ? 'topo' : 'grid');
+      }
       if (isExperience) {
         buildHorizontalTimeline();
       }
@@ -1908,6 +2612,7 @@
       document.body.classList.remove('paste-active');
       document.body.classList.remove('upload-active');
       document.body.classList.remove('experience-active');
+      document.body.classList.remove('search-active');
       stopDiscordPresence();
       if (!skipBgReset && window._graphPaperSetMode) window._graphPaperSetMode('grid');
     }
@@ -1918,6 +2623,10 @@
           e.preventDefault();
           e.stopPropagation();
           if (document.body.classList.contains('paste-active') || document.body.classList.contains('upload-active') || document.body.classList.contains('blog-mode')) {
+            navigateTo('/', true);
+            return;
+          }
+          if (location.pathname === '/projects') {
             navigateTo('/', true);
             return;
           }
@@ -1993,7 +2702,7 @@
       ];
 
       const articles = [
-        { title: 'Article 1', desc: 'Placeholder article description', date: 'Mar 2026' },
+        { title: 'A Heideggerian Reading of Clavicular', desc: 'An interpretation revealing the tension between authentic self-creation and conformity to shared aesthetic norms.', date: 'Mar 2026' },
         { title: 'Article 2', desc: 'Placeholder article description', date: 'Feb 2026' },
         { title: 'Article 3', desc: 'Placeholder article description', date: 'Jan 2026' },
       ];

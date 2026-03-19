@@ -398,8 +398,58 @@ export default {
       }
     }
 
-    // SPA fallback for /paste and /upload page routes (not static assets like .js/.css)
-    if ((url.pathname.startsWith("/paste") || url.pathname === "/upload") && !url.pathname.includes(".")) {
+    // ✅ GITHUB CONTRIBUTIONS PROXY
+    if (url.pathname === "/api/github-contributions") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: cors });
+      }
+
+      const headers = { ...cors, "content-type": "application/json", "cache-control": "public, max-age=3600" };
+      const username = "LuxologyGG";
+
+      try {
+        const ghRes = await fetch(`https://github.com/users/${username}/contributions`, {
+          headers: { "User-Agent": "camrone-site/1.0", "Accept": "text/html" },
+        });
+        if (!ghRes.ok) throw new Error("GitHub fetch failed");
+        const html = await ghRes.text();
+
+        // Parse total contributions
+        const totalMatch = html.match(/([\d,]+)\s+contributions?\s+in the last year/i);
+        const total = totalMatch ? parseInt(totalMatch[1].replace(/,/g, "")) : 0;
+
+        // Parse cells: extract td tags with data-date
+        const cells = {};
+        const tdTags = html.match(/<td[^>]+data-date[^>]+>/gi) || [];
+        for (const tag of tdTags) {
+          const idMatch = tag.match(/id="(contribution-day-component-[\d]+-[\d]+)"/);
+          const dateMatch = tag.match(/data-date="(\d{4}-\d{2}-\d{2})"/);
+          const levelMatch = tag.match(/data-level="(\d)"/);
+          if (dateMatch) {
+            const id = idMatch ? idMatch[1] : dateMatch[1];
+            cells[id] = { date: dateMatch[1], level: levelMatch ? parseInt(levelMatch[1]) : 0, count: 0 };
+          }
+        }
+
+        // Parse tooltip counts
+        const tipRegex = /<tool-tip[^>]+for="(contribution-day-component-[\d]+-[\d]+)"[^>]*>([^<]+)<\/tool-tip>/gi;
+        let m;
+        while ((m = tipRegex.exec(html)) !== null) {
+          const countMatch = m[2].match(/^(\d+)\s+contribution/);
+          if (countMatch && cells[m[1]]) {
+            cells[m[1]].count = parseInt(countMatch[1]);
+          }
+        }
+
+        const contributions = Object.values(cells).sort((a, b) => a.date.localeCompare(b.date));
+        return json({ total, contributions }, 200, headers);
+      } catch {
+        return json({ total: 0, contributions: [] }, 200, cors);
+      }
+    }
+
+    // SPA fallback for /paste, /upload, and /projects page routes (not static assets like .js/.css)
+    if ((url.pathname.startsWith("/paste") || url.pathname === "/upload" || url.pathname === "/projects") && !url.pathname.includes(".")) {
       // Inject OG meta tags for individual paste pages
       const pasteMatch = url.pathname.match(/^\/paste\/([A-Fa-f0-9]+)$/);
       if (pasteMatch) {
