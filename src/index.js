@@ -236,9 +236,62 @@ export default {
           return new Response(JSON.stringify(offlinePresence(userId)), { status: 200, headers });
         }
         const payload = await lanyardRes.json();
-        return new Response(JSON.stringify(await mapLanyardPresence(payload, userId)), { status: 200, headers });
+        const presence = await mapLanyardPresence(payload, userId);
+        
+        let hasRealActivity = false;
+        if (presence && presence.activities) {
+          presence.activities = presence.activities.filter(a => 
+             !(a.name && a.name.toLowerCase().includes("not currently doing anything")) &&
+             !(a.title && a.title.toLowerCase().includes("not currently doing anything"))
+          );
+          if (presence.activities.length > 0) {
+            hasRealActivity = true;
+            if (env.UNIQUE_KV) {
+              env.UNIQUE_KV.put("last_real_activity", JSON.stringify(presence.activities[0])).catch(() => {});
+            }
+          }
+        }
+
+        if (!hasRealActivity && env.UNIQUE_KV) {
+          try {
+            const lastStr = await env.UNIQUE_KV.get("last_real_activity");
+            if (lastStr) {
+              const lastAct = JSON.parse(lastStr);
+              if (presence) {
+                presence.activities = [lastAct];
+              }
+            }
+          } catch (e) {}
+        }
+        
+        return new Response(JSON.stringify(presence), { status: 200, headers });
       } catch {
         return new Response(JSON.stringify(offlinePresence(userId)), { status: 200, headers });
+      }
+    }
+
+    // ✅ LAST.FM API
+    if (url.pathname.startsWith("/api/lastfm")) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: cors });
+      }
+      const headers = { ...cors, "content-type": "application/json", "cache-control": "no-store" };
+      
+      if (!env.LASTFM_API_KEY) {
+        return new Response(JSON.stringify({ error: "Missing LASTFM_API_KEY" }), { status: 500, headers });
+      }
+
+      try {
+        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Camronia&api_key=${env.LASTFM_API_KEY}&format=json&limit=1`);
+        if (!res.ok) throw new Error("last.fm fetch failed");
+        const data = await res.json();
+        
+        const tracks = data.recenttracks?.track;
+        const track = Array.isArray(tracks) ? tracks[0] : tracks;
+        
+        return new Response(JSON.stringify({ track }), { status: 200, headers });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: "Failed to fetch track" }), { status: 500, headers });
       }
     }
 
@@ -449,7 +502,7 @@ export default {
     }
 
     // SPA fallback for /paste, /upload, and /projects page routes (not static assets like .js/.css)
-    if ((url.pathname.startsWith("/paste") || url.pathname === "/upload" || url.pathname === "/projects") && !url.pathname.includes(".")) {
+    if ((url.pathname.startsWith("/paste") || url.pathname === "/upload" || url.pathname === "/projects" || url.pathname === "/contact") && !url.pathname.includes(".")) {
       // Inject OG meta tags for individual paste pages
       const pasteMatch = url.pathname.match(/^\/paste\/([A-Fa-f0-9]+)$/);
       if (pasteMatch) {
