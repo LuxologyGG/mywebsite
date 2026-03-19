@@ -2631,6 +2631,10 @@
           tooltip.style.display = 'none';
         }
       });
+
+      // Scroll to the right (most recent) end
+      const scrollEl = container.querySelector('.contrib-scroll');
+      if (scrollEl) requestAnimationFrame(() => { scrollEl.scrollLeft = scrollEl.scrollWidth; });
     }
 
     function buildProjectCards(gridEl, repos) {
