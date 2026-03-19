@@ -20,9 +20,20 @@
   <div class="site-preloader" id="site-preloader">
     <span class="loader"></span>
   </div>
-  <div class="world"></div>
+  <div class="nav-preloader" id="nav-preloader">
+    <span class="loader"></span>
+  </div>
+  <div class="world">
+  </div>
+
 
   <div id="home-view" class="view active">
+    <div id="map-whats-this" class="map-whats-this glassy">
+      <span class="map-whats-this__btn">?</span>
+      <div class="map-whats-this__body" id="map-whats-this-body">
+        <p id="map-whats-this-text"><span id="map-whats-this-desc">The background is a grayscale map of your approximate geolocation based on your IP. This current background is based in</span> <strong id="map-whats-this-area">...</strong></p>
+      </div>
+    </div>
     <img
       class="center-image"
       src="/photos/pfp.png"
@@ -487,7 +498,8 @@
         canvas.height = window.innerHeight * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         generate();
-        if (mapReady) { mapReady = false; mapCanvas = null; mapRevealCanvas = null; if (bgMode === 'map') { buildMapCanvas(); } }
+        if (mapReady) { mapReady = false; mapCanvas = null; if (bgMode === 'map') { buildMapCanvas(); } }
+        if (topoMapReady) { topoMapReady = false; topoMapCanvas = null; if (bgMode === 'topomap') { buildTopoMapCanvas(); } }
         gridCacheDirty = true;
         topoCacheCvs = null;
         if (bgMode === 'topo') generateTopoLines();
@@ -809,9 +821,17 @@
       let mapCanvasTheme = null;
       let mapReady = false;
       let mapBuilding = false;
-      let mapRevealCanvas = null;
-      let mapRevealCtx = null;
-      let mapRevealProgress = 0;
+
+      /* ── Topo map tile system for Projects page ── */
+      const TOPOMAP_ZOOM = 12;
+      const TOPOMAP_TILE = 512;
+      const TOPOMAP_BLEND_SPEED = 0.028;
+      let topoMapBlendTarget = 0;
+      let topoMapBlendValue = 0;
+      let topoMapCanvas = null;
+      let topoMapCanvasTheme = null;
+      let topoMapReady = false;
+      let topoMapBuilding = false;
 
       function parseLocData(data) {
         if (!data) return null;
@@ -844,6 +864,10 @@
             const loc = parseLocData(d);
             if (!loc) throw 0;
             mapLocation = loc;
+            const area = [d.city, d.region, d.country].filter(Boolean).join(', ');
+            if (area) {
+              try { sessionStorage.setItem('map-area', area); } catch {}
+            }
             try { sessionStorage.setItem('map-loc', JSON.stringify(loc)); } catch {}
             return loc;
           })
@@ -861,8 +885,8 @@
       }
 
       async function buildMapCanvas() {
-        if (mapBuilding || (mapReady && mapCanvasTheme === theme)) return;
-        if (!mapLocation) return;
+        if (mapBuilding || (mapReady && mapCanvasTheme === theme)) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
+        if (!mapLocation) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
         mapBuilding = true;
 
         const z = MAP_ZOOM;
@@ -896,7 +920,7 @@
         })));
 
         const valid = loaded.filter(Boolean);
-        if (!valid.length) { mapBuilding = false; return; }
+        if (!valid.length) { mapBuilding = false; if (window.hideNavPreloader) window.hideNavPreloader(); return; }
 
         const off = document.createElement('canvas');
         off.width = w; off.height = h;
@@ -923,57 +947,17 @@
           mapBlendTarget = 1;
           if (!raf) tickBlended();
         }
+        if (window.hideNavPreloader) window.hideNavPreloader();
       }
 
-      function drawMapLayer(alpha, reveal) {
-        if (!mapReady || !mapCanvas || reveal < 0.01) return;
+      function drawMapLayer(alpha) {
+        if (!mapReady || !mapCanvas) return;
         const w = window.innerWidth, h = window.innerHeight;
         const t = themes[theme] || themes.dark;
 
-        // Ensure offscreen canvas for masked progressive reveal
-        if (!mapRevealCanvas || mapRevealCanvas.width !== w || mapRevealCanvas.height !== h) {
-          mapRevealCanvas = document.createElement('canvas');
-          mapRevealCanvas.width = w;
-          mapRevealCanvas.height = h;
-          mapRevealCtx = mapRevealCanvas.getContext('2d');
-        }
-
-        const rc = mapRevealCtx;
-        rc.clearRect(0, 0, w, h);
-
-        // Top/bottom wipe mask: two rectangles growing from top and bottom edges
-        const ease = reveal * reveal * (3 - 2 * reveal);
-        const halfH = ease * h * 0.52;
-        if (halfH < 1) return;
-
-        const feather = 24;
-        rc.globalCompositeOperation = 'source-over';
-        rc.globalAlpha = 1;
-
-        // Top strip: gradient fading at its bottom edge
-        const topGrad = rc.createLinearGradient(0, 0, 0, halfH);
-        topGrad.addColorStop(0, 'rgba(255,255,255,1)');
-        topGrad.addColorStop(Math.max(0, 1 - feather / halfH), 'rgba(255,255,255,1)');
-        topGrad.addColorStop(1, 'rgba(255,255,255,0)');
-        rc.fillStyle = topGrad;
-        rc.fillRect(0, 0, w, halfH);
-
-        // Bottom strip: gradient fading at its top edge
-        const botY = h - halfH;
-        const botGrad = rc.createLinearGradient(0, h, 0, botY);
-        botGrad.addColorStop(0, 'rgba(255,255,255,1)');
-        botGrad.addColorStop(Math.max(0, 1 - feather / halfH), 'rgba(255,255,255,1)');
-        botGrad.addColorStop(1, 'rgba(255,255,255,0)');
-        rc.fillStyle = botGrad;
-        rc.fillRect(0, botY, w, halfH);
-
-        // Stamp map tiles through the mask
-        rc.globalCompositeOperation = 'source-in';
-        rc.drawImage(mapCanvas, 0, 0);
-
-        // Draw masked map to main canvas
+        // Draw map directly with fade alpha
         ctx.globalAlpha = alpha * (theme === 'dark' ? 0.95 : 0.9);
-        ctx.drawImage(mapRevealCanvas, 0, 0);
+        ctx.drawImage(mapCanvas, 0, 0);
 
         // Subtle vignette only at far edges
         const vigR = Math.max(w, h) * 0.6;
@@ -1018,6 +1002,194 @@
         ctx.globalAlpha = 1;
       }
 
+      /* ── DEM contour line system for Projects page ── */
+      async function buildTopoMapCanvas() {
+        if (topoMapBuilding || (topoMapReady && topoMapCanvasTheme === theme)) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
+        if (!mapLocation) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
+        topoMapBuilding = true;
+
+        const z = TOPOMAP_ZOOM;
+        const { x: txf, y: tyf } = latLonToTile(mapLocation.lat, mapLocation.lng, z);
+        const cTX = Math.floor(txf), cTY = Math.floor(tyf);
+        const fracX = txf - cTX, fracY = tyf - cTY;
+        const w = window.innerWidth, h = window.innerHeight;
+        const DEM_SZ = 256;
+        const spanX = Math.ceil(w / TOPOMAP_TILE / 2) + 1;
+        const spanY = Math.ceil(h / TOPOMAP_TILE / 2) + 1;
+        const maxT = 1 << z;
+        const gridCols = spanX * 2 + 1;
+        const gridRows = spanY * 2 + 1;
+        const reqs = [];
+
+        for (let gy = 0; gy < gridRows; gy++) {
+          for (let gx = 0; gx < gridCols; gx++) {
+            const dy = gy - spanY, dx = gx - spanX;
+            let tx = cTX + dx, ty = cTY + dy;
+            if (ty < 0 || ty >= maxT) continue;
+            tx = ((tx % maxT) + maxT) % maxT;
+            reqs.push({ url: `https://tiles.mapterhorn.com/${z}/${tx}/${ty}.webp`, gx, gy });
+          }
+        }
+
+        const loaded = await Promise.all(reqs.map(t => new Promise(res => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => res({ img, gx: t.gx, gy: t.gy });
+          img.onerror = () => res(null);
+          img.src = t.url;
+        })));
+
+        const valid = loaded.filter(Boolean);
+        if (!valid.length) { topoMapBuilding = false; if (window.hideNavPreloader) window.hideNavPreloader(); return; }
+
+        // Composite DEM tiles at native resolution
+        const demW = gridCols * DEM_SZ, demH = gridRows * DEM_SZ;
+        const demCvs = document.createElement('canvas');
+        demCvs.width = demW; demCvs.height = demH;
+        const demCtx = demCvs.getContext('2d');
+        for (const t of valid) demCtx.drawImage(t.img, t.gx * DEM_SZ, t.gy * DEM_SZ, DEM_SZ, DEM_SZ);
+
+        // Decode Terrarium elevation: height = (R*256 + G + B/256) - 32768
+        const demData = demCtx.getImageData(0, 0, demW, demH);
+        const px = demData.data;
+        const elev = new Float32Array(demW * demH);
+        for (let i = 0; i < demW * demH; i++) {
+          elev[i] = (px[i * 4] * 256 + px[i * 4 + 1] + px[i * 4 + 2] / 256) - 32768;
+        }
+
+        // DEM pixel → screen coordinate transform
+        const scale = TOPOMAP_TILE / DEM_SZ;
+        const ox = w / 2 - (spanX + fracX) * TOPOMAP_TILE;
+        const oy = h / 2 - (spanY + fracY) * TOPOMAP_TILE;
+        const d2sx = (dx) => ox + dx * scale;
+        const d2sy = (dy) => oy + dy * scale;
+
+        // Viewport bounds in DEM pixels
+        const vl = Math.max(0, Math.floor(-ox / scale));
+        const vt = Math.max(0, Math.floor(-oy / scale));
+        const vr = Math.min(demW - 2, Math.ceil((w - ox) / scale));
+        const vb = Math.min(demH - 2, Math.ceil((h - oy) / scale));
+
+        // Elevation range in viewport
+        let minE = Infinity, maxE = -Infinity;
+        for (let y = vt; y <= vb; y += 3) {
+          for (let x = vl; x <= vr; x += 3) {
+            const e = elev[y * demW + x];
+            if (e > -100 && e < 9000) { minE = Math.min(minE, e); maxE = Math.max(maxE, e); }
+          }
+        }
+        const range = maxE - minE;
+        let interval;
+        if (range > 3000) interval = 200;
+        else if (range > 1500) interval = 100;
+        else if (range > 500) interval = 50;
+        else if (range > 200) interval = 25;
+        else if (range > 50) interval = 10;
+        else interval = 5;
+        const majorEvery = interval * 5;
+
+        // Output canvas
+        const off = document.createElement('canvas');
+        off.width = w; off.height = h;
+        const oc = off.getContext('2d');
+        oc.fillStyle = theme === 'dark' ? '#0a0a0a' : '#f5f5f0';
+        oc.fillRect(0, 0, w, h);
+
+        // Marching squares lookup: bit3=TL bit2=TR bit1=BR bit0=BL
+        // edges: 0=top 1=right 2=bottom 3=left
+        const MS = [
+          null,[[3,2]],[[2,1]],[[3,1]],[[0,1]],'S',[[0,2]],[[0,3]],
+          [[0,3]],[[0,2]],'S',[[0,1]],[[3,1]],[[2,1]],[[3,2]],null
+        ];
+
+        const lc = theme === 'dark' ? '255,255,255' : '0,0,0';
+        const step = 2;
+        const startLvl = Math.ceil(minE / interval) * interval;
+        const endLvl = Math.floor(maxE / interval) * interval;
+
+        for (let lvl = startLvl; lvl <= endLvl; lvl += interval) {
+          const isMajor = lvl % majorEvery === 0;
+          oc.strokeStyle = `rgba(${lc},${isMajor ? 0.22 : 0.08})`;
+          oc.lineWidth = isMajor ? 1.4 : 0.7;
+          oc.beginPath();
+
+          for (let y = vt; y < vb; y += step) {
+            for (let x = vl; x < vr; x += step) {
+              const tl = elev[y * demW + x];
+              const tr = elev[y * demW + x + step];
+              const bl = elev[(y + step) * demW + x];
+              const br = elev[(y + step) * demW + x + step];
+              const sq = (tl >= lvl ? 8 : 0) | (tr >= lvl ? 4 : 0) | (br >= lvl ? 2 : 0) | (bl >= lvl ? 1 : 0);
+              if (sq === 0 || sq === 15) continue;
+
+              let segs = MS[sq];
+              if (segs === 'S') {
+                const c = (tl + tr + br + bl) * 0.25;
+                segs = sq === 5
+                  ? (c >= lvl ? [[0,3],[1,2]] : [[0,1],[3,2]])
+                  : (c >= lvl ? [[0,1],[3,2]] : [[0,3],[1,2]]);
+              }
+
+              for (const [e1, e2] of segs) {
+                const ep = (edge) => {
+                  switch (edge) {
+                    case 0: { const t = (lvl - tl) / (tr - tl); return [d2sx(x + t * step), d2sy(y)]; }
+                    case 1: { const t = (lvl - tr) / (br - tr); return [d2sx(x + step), d2sy(y + t * step)]; }
+                    case 2: { const t = (lvl - bl) / (br - bl); return [d2sx(x + t * step), d2sy(y + step)]; }
+                    case 3: { const t = (lvl - tl) / (bl - tl); return [d2sx(x), d2sy(y + t * step)]; }
+                  }
+                };
+                const [x1, y1] = ep(e1);
+                const [x2, y2] = ep(e2);
+                oc.moveTo(x1, y1);
+                oc.lineTo(x2, y2);
+              }
+            }
+          }
+          oc.stroke();
+        }
+
+        topoMapCanvas = off;
+        topoMapCanvasTheme = theme;
+        topoMapReady = true;
+        topoMapBuilding = false;
+        if (bgMode === 'topomap') {
+          topoMapBlendTarget = 1;
+          if (!raf) tickBlended();
+        }
+        if (window.hideNavPreloader) window.hideNavPreloader();
+      }
+
+      function drawTopoMapLayer(alpha) {
+        if (!topoMapReady || !topoMapCanvas) return;
+        const w = window.innerWidth, h = window.innerHeight;
+        const t = themes[theme] || themes.dark;
+
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(topoMapCanvas, 0, 0);
+
+        // Subtle vignette
+        const vigR = Math.max(w, h) * 0.6;
+        const vg = ctx.createRadialGradient(w / 2, h / 2, vigR * 0.4, w / 2, h / 2, vigR);
+        vg.addColorStop(0, 'rgba(0,0,0,0)');
+        vg.addColorStop(1, t.bg);
+        ctx.globalAlpha = alpha * 0.4;
+        ctx.fillStyle = vg;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function activateTopoMapMode() {
+        if (topoMapReady && topoMapCanvasTheme === theme) {
+          topoMapBlendTarget = 1;
+          return;
+        }
+        if (window.showNavPreloader) window.showNavPreloader();
+        loadMapLocation().then(loc => {
+          if (!loc) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
+          buildTopoMapCanvas();
+        });
+      }
+
       function generateWavyLines() {
         const w = window.innerWidth, h = window.innerHeight;
         wavyLines = [];
@@ -1043,27 +1215,23 @@
         else if (mapBlendValue > mapBlendTarget) mapBlendValue = Math.max(mapBlendTarget, mapBlendValue - MAP_BLEND_SPEED);
         if (topoBlendValue < topoBlendTarget) topoBlendValue = Math.min(topoBlendTarget, topoBlendValue + TOPO_BLEND_SPEED);
         else if (topoBlendValue > topoBlendTarget) topoBlendValue = Math.max(topoBlendTarget, topoBlendValue - TOPO_BLEND_SPEED);
-
-        // Map reveal progress: slow sweep from corners (~2s), independent of blend
-        if (mapBlendTarget > 0 && mapReady) {
-          mapRevealProgress = Math.min(1, mapRevealProgress + 0.008);
-        } else if (mapBlendTarget === 0) {
-          mapRevealProgress = Math.max(0, mapRevealProgress - 0.025);
-        }
+        if (topoMapBlendValue < topoMapBlendTarget) topoMapBlendValue = Math.min(topoMapBlendTarget, topoMapBlendValue + TOPOMAP_BLEND_SPEED);
+        else if (topoMapBlendValue > topoMapBlendTarget) topoMapBlendValue = Math.max(topoMapBlendTarget, topoMapBlendValue - TOPOMAP_BLEND_SPEED);
 
         const w = window.innerWidth, h = window.innerHeight;
         const t = themes[theme] || themes.dark;
         const wavyAlpha = blendValue;
         const mapAlpha = mapBlendValue;
         const topoAlpha = topoBlendValue;
-        const gridAlpha = (1 - wavyAlpha) * (1 - mapAlpha) * (1 - topoAlpha);
+        const topoMapAlpha = topoMapBlendValue;
+        const gridAlpha = (1 - wavyAlpha) * (1 - mapAlpha) * (1 - topoAlpha) * (1 - topoMapAlpha);
 
         // Background
         ctx.fillStyle = t.bg;
         ctx.fillRect(0, 0, w, h);
 
-        // Map layer with progressive corner reveal
-        if (mapAlpha > 0.01 && mapRevealProgress > 0.01) drawMapLayer(mapAlpha, mapRevealProgress);
+        // Map layer (fades in with blend)
+        if (mapAlpha > 0.01) drawMapLayer(mapAlpha);
 
         // Grid dots and lines (overlay on map)
         if (gridAlpha > 0.01) {
@@ -1105,8 +1273,11 @@
           }
         }
 
-        // Map pin (appears after reveal is halfway done)
-        if (mapAlpha > 0.01 && mapRevealProgress > 0.5) drawMapPin(mapAlpha);
+        // Map pin
+        if (mapAlpha > 0.01) drawMapPin(mapAlpha);
+
+        // Topo map layer (projects page)
+        if (topoMapAlpha > 0.01) drawTopoMapLayer(topoMapAlpha);
 
         // Wavy lines (blog mode)
         if (wavyAlpha > 0.01) {
@@ -1159,18 +1330,19 @@
         drawBlended();
 
         // Stop RAF when everything is settled (no transitions in progress)
-        // Keep running if wavy or map are active (they need continuous animation)
+        // Keep running if wavy, map, or topo are active (they need continuous animation)
         const settled = progress >= 1
           && blendTarget === 0 && blendValue < 0.001
           && mapBlendTarget === 0 && mapBlendValue < 0.001
-          && Math.abs(topoBlendValue - topoBlendTarget) < 0.001
-          && (topoBlendTarget === 0 || topoDrawProgress >= 1);
+          && topoBlendTarget === 0 && topoBlendValue < 0.001
+          && topoMapBlendTarget === 0 && topoMapBlendValue < 0.001;
 
         if (settled) {
           // One final render to snap blend values, then stop
           blendValue = blendTarget;
           mapBlendValue = mapBlendTarget;
           topoBlendValue = topoBlendTarget;
+          topoMapBlendValue = topoMapBlendTarget;
           drawBlended();
           raf = null;
         } else {
@@ -1183,34 +1355,58 @@
           mapBlendTarget = 1;
           return;
         }
+        if (window.showNavPreloader) window.showNavPreloader();
         loadMapLocation().then(loc => {
-          if (!loc) return;
+          if (!loc) { if (window.hideNavPreloader) window.hideNavPreloader(); return; }
           buildMapCanvas();
         });
       }
 
       window._graphPaperSetMode = function (mode) {
         bgMode = mode;
+        // Update "What's this?" tooltip text
+        const desc = document.getElementById('map-whats-this-desc');
+        const areaEl = document.getElementById('map-whats-this-area');
+        if (desc) {
+          if (mode === 'topomap') desc.textContent = 'The background is a topographic map of your area based on your IP. Contour lines show the elevation around';
+          else if (mode === 'map') desc.textContent = 'The background is a grayscale map of your approximate geolocation based on your IP. This current background is based in';
+        }
+        if (areaEl && areaEl.textContent === '...') {
+          try { const a = sessionStorage.getItem('map-area'); if (a) areaEl.textContent = a; } catch {}
+        }
+        // Hide nav preloader if switching away from a loading mode
+        if (mode !== 'map' && mode !== 'topomap') {
+          if (window.hideNavPreloader) window.hideNavPreloader();
+        }
         if (mode === 'wavy') {
           if (!wavyLines.length) generateWavyLines();
           blendTarget = 1;
           mapBlendTarget = 0;
           topoBlendTarget = 0;
+          topoMapBlendTarget = 0;
         } else if (mode === 'map') {
           blendTarget = 0;
           mapBlendTarget = 0;
           topoBlendTarget = 0;
-          mapRevealProgress = 0;
+          topoMapBlendTarget = 0;
           activateMapMode();
         } else if (mode === 'topo') {
           generateTopoLines();
           blendTarget = 0;
           mapBlendTarget = 0;
           topoBlendTarget = 1;
+          topoMapBlendTarget = 0;
+        } else if (mode === 'topomap') {
+          blendTarget = 0;
+          mapBlendTarget = 0;
+          topoBlendTarget = 0;
+          topoMapBlendTarget = 0;
+          activateTopoMapMode();
         } else {
           blendTarget = 0;
           mapBlendTarget = 0;
           topoBlendTarget = 0;
+          topoMapBlendTarget = 0;
         }
         if (raf) cancelAnimationFrame(raf);
         raf = null;
@@ -1225,14 +1421,23 @@
           mapCanvas = null;
           if (bgMode === 'map') buildMapCanvas();
         }
+        if (topoMapReady && topoMapCanvasTheme !== mode) {
+          topoMapReady = false;
+          topoMapCanvas = null;
+          if (bgMode === 'topomap') buildTopoMapCanvas();
+        }
       };
 
       document.addEventListener('DOMContentLoaded', () => { init(); loadMapLocation(); });
     })();
   </script>
 
+
   <script>
     const ownerTimeZone = 'America/Los_Angeles';
+    const navPreloader = document.getElementById('nav-preloader');
+    function showNavPreloader() { if (navPreloader) navPreloader.classList.add('is-visible'); }
+    function hideNavPreloader() { if (navPreloader) navPreloader.classList.remove('is-visible'); }
     const homeView = document.getElementById('home-view');
     const blogView = document.getElementById('blog-view');
     const pasteSection = document.getElementById('work-paste');
@@ -1296,6 +1501,7 @@
     let discordHadMessage = false;
     let htlBuilt = false;
     let searchBuilt = false;
+    let exploreSubView = null; // null = search list, 'projects' | 'ip' | 'ip-lookup'
     let aboutTypewriterRan = false;
     let discordProgressTimer = null;
 
@@ -1330,6 +1536,7 @@
         document.body.classList.add('work-mode', 'search-active');
         setActiveWorkTab('#work-search');
         showProjects();
+        if (window._graphPaperSetMode) window._graphPaperSetMode('topomap');
       } else if (isBlog) {
         setActiveView('home');
         if (typeof enterBlogMode === 'function') enterBlogMode();
@@ -2096,6 +2303,7 @@
     }
 
     function showIpInfo() {
+      exploreSubView = 'ip';
       searchResultsEl.innerHTML = '';
       const card = document.createElement('div');
       card.className = 'ip-info-card glassy';
@@ -2118,6 +2326,7 @@
     }
 
     function showIpLookup() {
+      exploreSubView = 'ip-lookup';
       searchResultsEl.innerHTML = '';
       const wrapper = document.createElement('div');
       wrapper.className = 'ip-info-card glassy';
@@ -2162,20 +2371,22 @@
     }
 
     function buildSearchUI() {
-      if (searchBuilt) return;
-      searchBuilt = true;
-      renderSearchResults('');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          renderSearchResults(searchInput.value.trim().toLowerCase());
-        });
-        searchInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            const firstVisible = searchResultsEl.querySelector('.search-result-item:not(.is-hidden)');
-            if (firstVisible) firstVisible.click();
-          }
-        });
+      if (!searchBuilt) {
+        searchBuilt = true;
+        if (searchInput) {
+          searchInput.addEventListener('input', () => {
+            renderSearchResults(searchInput.value.trim().toLowerCase());
+          });
+          searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              const firstVisible = searchResultsEl.querySelector('.search-result-item:not(.is-hidden)');
+              if (firstVisible) firstVisible.click();
+            }
+          });
+        }
       }
+      exploreSubView = null;
+      renderSearchResults(searchInput ? searchInput.value.trim().toLowerCase() : '');
     }
 
     function renderSearchResults(query) {
@@ -2245,6 +2456,7 @@
     ];
 
     function showProjects() {
+      exploreSubView = 'projects';
       searchResultsEl.innerHTML = '';
 
       // GitHub Activity card with contribution graph
@@ -2626,8 +2838,15 @@
             navigateTo('/', true);
             return;
           }
-          if (location.pathname === '/projects') {
-            navigateTo('/', true);
+          // If in an explore sub-view (IP, projects, etc.), go back to explore list
+          if (document.body.classList.contains('search-active') && exploreSubView) {
+            const wasProjects = exploreSubView === 'projects';
+            if (location.pathname === '/projects') {
+              history.pushState({}, '', '/');
+            }
+            buildSearchUI();
+            if (wasProjects && window._graphPaperSetMode) window._graphPaperSetMode('map');
+            if (searchInput) setTimeout(() => searchInput.focus(), 100);
             return;
           }
           if (document.body.classList.contains('experience-active') || document.body.classList.contains('search-active')) {
@@ -2675,6 +2894,34 @@
         });
       }
     }
+
+    // ── "What's this?" map info hover ──
+    (function initMapWhatsThis() {
+      const container = document.getElementById('map-whats-this');
+      const areaEl = document.getElementById('map-whats-this-area');
+      if (!container || !areaEl) return;
+      let populated = false;
+
+      function populateArea() {
+        if (populated) return;
+        populated = true;
+        try {
+          const stored = sessionStorage.getItem('map-area');
+          if (stored) { areaEl.textContent = stored; return; }
+        } catch {}
+        fetch('/api/ip')
+          .then(r => r.ok ? r.json() : null)
+          .then(d => {
+            if (!d) return;
+            const area = [d.city, d.region, d.country].filter(Boolean).join(', ');
+            areaEl.textContent = area || 'your area';
+            try { sessionStorage.setItem('map-area', area); } catch {}
+          })
+          .catch(() => { areaEl.textContent = 'your area'; });
+      }
+
+      container.addEventListener('mouseenter', populateArea);
+    })();
 
     window.showToast = showToast;
     function showToast(message = 'Copied to clipboard') {
