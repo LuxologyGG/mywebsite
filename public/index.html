@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/paste/style.css">
   <link rel="stylesheet" href="/upload/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
   <div class="site-preloader" id="site-preloader">
@@ -26,16 +27,7 @@
   <div class="world">
   </div>
 
-  <div class="contact-signals" id="contact-signals">
-    <span class="signal-1"></span>
-    <span class="signal-2"></span>
-    <span class="signal-3"></span>
-    <span class="signal-4"></span>
-    <span class="signal-5"></span>
-    <span class="signal-6"></span>
-    <span class="signal-7"></span>
-    <span class="signal-8"></span>
-  </div>
+  <canvas class="contact-signals" id="contact-signals"></canvas>
 
 
   <div id="home-view" class="view active">
@@ -1473,7 +1465,6 @@
         exitOverlay(true);
         document.body.classList.add('contact-mode');
         showContact();
-        if (window._graphPaperSetMode) window._graphPaperSetMode('topomap');
       } else if (isProjects) {
         setActiveView('home');
         document.body.classList.remove('blog-mode', 'experience-active', 'paste-active', 'upload-active');
@@ -2366,9 +2357,12 @@
       const artistEl = document.getElementById('lastfm-artist');
       const artEl = document.getElementById('lastfm-art');
       const fallbackEl = document.getElementById('lastfm-icon-fallback');
+      const cardEl = document.getElementById('lastfm-card');
+
       if (songEl && track) {
+        if (cardEl && track.url) cardEl.href = track.url;
         songEl.textContent = track.name || 'Unknown Song';
-        artistEl.textContent = track.artist?.['#text'] || '';
+        artistEl.textContent = track.artist?.name || track.artist?.['#text'] || '';
         
         let cover = null;
         if (Array.isArray(track.image)) {
@@ -2593,8 +2587,7 @@
           </div>
         </div>
         <div class="contact-cal-section glassy">
-          <h4 class="contact-cal-title">Schedule a Chat</h4>
-          <div class="contact-cal-embed" id="my-cal-inline-quick-chat"></div>
+          <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-quick-chat"></div>
         </div>
       `;
 
@@ -2627,22 +2620,14 @@
       })(window, "https://app.cal.com/embed/embed.js", "init");
 
       Cal("init", "quick-chat", { origin: "https://app.cal.com" });
+
       Cal.ns["quick-chat"]("inline", {
         elementOrSelector: "#my-cal-inline-quick-chat",
         config: { "layout": "month_view", "useSlotsViewOnSmallScreen": "true" },
         calLink: "camronf/quick-chat",
       });
-      
-      const isLight = document.body.dataset.theme === 'light' || document.body.classList.contains('light-mode');
-      Cal.ns["quick-chat"]("ui", { 
-        "hideEventTypeDetails": true, 
-        "layout": "month_view",
-        "theme": isLight ? "light" : "dark",
-        "cssVarsPerTheme": {
-          "light": { "cal-font-family": "Inter, ui-sans-serif, system-ui, sans-serif" },
-          "dark": { "cal-font-family": "Inter, ui-sans-serif, system-ui, sans-serif" }
-        }
-      });
+
+      Cal.ns["quick-chat"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
     }
 
     function updateContactDynamic() {
@@ -3234,6 +3219,149 @@
     function initExperienceDetails() {
       // No-op: tech stack logos are now static, no category toggles needed
     }
+  </script>
+  <script>
+    const particleVertex = `
+      attribute float scale;
+      uniform float uTime;
+
+      void main() {
+        vec3 p = position;
+        float s = scale;
+
+        p.y += (sin(p.x + uTime) * 0.5) + (cos(p.y + uTime) * 0.1) * 2.0;
+        p.x += (sin(p.y + uTime) * 0.5);
+        s += (sin(p.x + uTime) * 0.5) + (cos(p.y + uTime) * 0.1) * 2.0;
+
+        vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
+        gl_PointSize = s * 15.0 * (1.0 / -mvPosition.z);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const particleFragment = `
+      void main() {
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);
+      }
+    `;
+
+    class ContactCanvas {
+      constructor() {
+        this.config = {
+          canvas: document.getElementById('contact-signals'),
+          winWidth: window.innerWidth,
+          winHeight: window.innerHeight,
+          aspectRatio: window.innerWidth / window.innerHeight,
+          mouse: new THREE.Vector2(-10, -10)
+        };
+
+        if (!this.config.canvas) return;
+
+        this.onResize = this.onResize.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.animate = this.animate.bind(this);
+
+        this.initCamera();
+        this.initScene();
+        this.initRenderer();
+
+        this.initParticles();
+
+        this.bindEvents();
+        this.animate();
+      }
+
+      bindEvents() {
+        window.addEventListener('resize', this.onResize);
+        window.addEventListener('mousemove', this.onMouseMove, false);
+      }
+
+      initCamera() {
+        this.camera = new THREE.PerspectiveCamera(75, this.config.aspectRatio, 0.01, 1000);
+        this.camera.position.set(0, 6, 5);
+      }
+
+      initScene() {
+        this.scene = new THREE.Scene();
+      }
+
+      initRenderer() {
+        this.renderer = new THREE.WebGLRenderer({
+          canvas: this.config.canvas,
+          antialias: true,
+          alpha: true
+        });
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setSize(this.config.winWidth, this.config.winHeight);
+      }
+
+      initParticles() {
+        const gap = 0.3;
+        const amountX = 200;
+        const amountY = 200;
+        const particleNum = amountX * amountY;
+        const particlePositions = new Float32Array(particleNum * 3);
+        const particleScales = new Float32Array(particleNum);
+        let i = 0;
+        let j = 0;
+
+        for (let ix = 0; ix < amountX; ix++) {
+          for (let iy = 0; iy < amountY; iy++) {
+            particlePositions[i] = ix * gap - ((amountX * gap) / 2);
+            particlePositions[i + 1] = 0;
+            particlePositions[i + 2] = iy * gap - ((amountX * gap) / 2);
+            particleScales[j] = 1;
+            i += 3;
+            j++;
+          }
+        }
+
+        this.particleGeometry = new THREE.BufferGeometry();
+        this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        this.particleGeometry.setAttribute('scale', new THREE.BufferAttribute(particleScales, 1));
+
+        this.particleMaterial = new THREE.ShaderMaterial({
+          transparent: true,
+          vertexShader: particleVertex,
+          fragmentShader: particleFragment,
+          uniforms: {
+            uTime: { type: 'f', value: 0 }
+          }
+        });
+        this.particles = new THREE.Points(this.particleGeometry, this.particleMaterial);
+        this.scene.add(this.particles);
+      }
+
+      render() {
+        this.camera.lookAt(this.scene.position);
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      animate() {
+        requestAnimationFrame(this.animate);
+        this.particleMaterial.uniforms.uTime.value += 0.015;
+        this.render();
+      }
+
+      onMouseMove(e) {
+        if (!document.body.classList.contains('contact-mode')) return;
+        this.config.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+        this.config.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+      }
+
+      onResize() {
+        this.config.winWidth = window.innerWidth;
+        this.config.winHeight = window.innerHeight;
+        this.camera.aspect = this.config.winWidth / this.config.winHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.config.winWidth, this.config.winHeight);
+      }
+    }
+
+    // Initialize contact waves
+    window.addEventListener('load', () => {
+      new ContactCanvas();
+    });
   </script>
 </body>
 </html>

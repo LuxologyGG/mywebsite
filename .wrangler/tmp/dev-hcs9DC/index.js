@@ -263,10 +263,10 @@ var src_default = {
         return new Response(JSON.stringify({ error: "Missing LASTFM_API_KEY" }), { status: 500, headers });
       }
       try {
-        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Camronia&api_key=${env.LASTFM_API_KEY}&format=json&limit=1`);
+        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&period=7day&user=Camronia&api_key=${env.LASTFM_API_KEY}&format=json&limit=1`);
         if (!res.ok) throw new Error("last.fm fetch failed");
         const data = await res.json();
-        const tracks = data.recenttracks?.track;
+        const tracks = data.toptracks?.track;
         const track = Array.isArray(tracks) ? tracks[0] : tracks;
         return new Response(JSON.stringify({ track }), { status: 200, headers });
       } catch (err) {
