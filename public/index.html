@@ -1434,6 +1434,34 @@
     let lastDiscordPresenceData = null;
     let lastFmData = null;
 
+    // Persist last activity for "Last seen" display
+    function saveLastActivity(activity, art) {
+      try {
+        localStorage.setItem('lastActivity', JSON.stringify({
+          title: activity.title || activity.name || 'Activity',
+          details: activity.details || '',
+          state: activity.state || '',
+          art: art || '',
+          type: activity.type,
+          time: Date.now()
+        }));
+      } catch (_) {}
+    }
+    function getLastActivity() {
+      try { return JSON.parse(localStorage.getItem('lastActivity')); } catch (_) { return null; }
+    }
+    function formatLastSeenTime(ts) {
+      const d = new Date(ts);
+      const now = new Date();
+      const diffMs = now - d;
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHrs = Math.floor(diffMins / 60);
+      if (diffHrs < 24) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    }
+
     // —–– Navigation helpers (fix missing functions) —––
     // Site renders inside the glass card. Keep /blog in the URL for sharing and back-button support.
     async function ensurePasteView() {
@@ -2341,10 +2369,15 @@
         return;
       }
       fetch('/api/lastfm')
-        .then(r => r.json())
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(data => {
-          lastFmData = data.track;
-          applyLastFmData(lastFmData);
+          if (data.track) {
+            lastFmData = data.track;
+            applyLastFmData(lastFmData);
+          } else {
+            const songEl = document.getElementById('lastfm-song');
+            if (songEl) songEl.textContent = 'Unavailable';
+          }
         })
         .catch(() => {
           const songEl = document.getElementById('lastfm-song');
@@ -2363,15 +2396,24 @@
         if (cardEl && track.url) cardEl.href = track.url;
         songEl.textContent = track.name || 'Unknown Song';
         artistEl.textContent = track.artist?.name || track.artist?.['#text'] || '';
-        
+
         let cover = null;
         if (Array.isArray(track.image)) {
-          const med = track.image.find(i => i.size === 'large' || i.size === 'medium' || i.size === 'extralarge');
-          if (med && med['#text']) cover = med['#text'];
+          // Prefer highest quality image, skip last.fm generic placeholder
+          for (const size of ['extralarge', 'large', 'medium', 'small']) {
+            const img = track.image.find(i => i.size === size);
+            if (img?.['#text'] && !img['#text'].includes('2a96cbd8b46e442fc41c2b86b821562f')) {
+              cover = img['#text']; break;
+            }
+          }
         }
         if (cover && artEl) {
           artEl.src = cover;
           artEl.style.display = 'block';
+          artEl.style.width = '40px';
+          artEl.style.height = '40px';
+          artEl.style.borderRadius = '6px';
+          artEl.style.objectFit = 'cover';
           if (fallbackEl) fallbackEl.style.display = 'none';
         }
       }
@@ -2381,30 +2423,44 @@
       const titleEl = document.getElementById('discord-interest-title');
       const subEl = document.getElementById('discord-interest-sub');
       const artEl = document.getElementById('discord-interest-art');
+      const labelEl = document.getElementById('discord-interest-label');
       if (!titleEl) return;
 
-      if (!lastDiscordPresenceData || !lastDiscordPresenceData.activities || lastDiscordPresenceData.activities.length === 0) {
-        titleEl.textContent = 'Not currently active';
-        subEl.textContent = lastDiscordPresenceData?.status ? discordStatusLabel[lastDiscordPresenceData.status] : 'Offline';
-        if (artEl) artEl.src = discordIdleArt;
-        return;
-      }
+      const hasActivities = lastDiscordPresenceData?.activities?.length > 0;
+      const status = lastDiscordPresenceData?.status || 'offline';
 
-      const primary = lastDiscordPresenceData.activities[0];
-      const title = primary.title || primary.name || 'Activity';
-      const detail = [primary.details, primary.state].filter(Boolean).join(' · ');
-      const isMusic = primary.type === '2' || (primary.title || '').toLowerCase().startsWith('listening to') || (primary.name || '').toLowerCase() === 'spotify';
+      if (hasActivities) {
+        // Currently active — save this activity and show "Active Now"
+        const primary = lastDiscordPresenceData.activities[0];
+        const art = primary.assets?.largeImage || primary.assets?.smallImage || discordIdleArt;
+        const isMusic = primary.type === '2' || (primary.title || '').toLowerCase().startsWith('listening to') || (primary.name || '').toLowerCase() === 'spotify';
 
-      if (isMusic) {
-        titleEl.textContent = primary.details || primary.name || title;
-        subEl.textContent = [primary.state, primary.assets?.largeText].filter(Boolean).join(' · ');
+        saveLastActivity(primary, art);
+
+        if (labelEl) labelEl.textContent = 'Active Now';
+        if (isMusic) {
+          titleEl.textContent = primary.details || primary.name || primary.title || 'Activity';
+          subEl.textContent = [primary.state, primary.assets?.largeText].filter(Boolean).join(' · ');
+        } else {
+          titleEl.textContent = primary.title || primary.name || 'Activity';
+          subEl.textContent = [primary.details, primary.state].filter(Boolean).join(' · ') || (lastDiscordPresenceData.customStatus ? lastDiscordPresenceData.customStatus.name : '');
+        }
+        if (artEl) artEl.src = art;
       } else {
-        titleEl.textContent = title;
-        subEl.textContent = detail || (lastDiscordPresenceData.customStatus ? `Custom: ${lastDiscordPresenceData.customStatus.name}` : '');
+        // Offline / no activities — show last known activity
+        const saved = getLastActivity();
+        if (saved) {
+          if (labelEl) labelEl.textContent = 'Last seen ' + formatLastSeenTime(saved.time);
+          titleEl.textContent = saved.title;
+          subEl.textContent = [saved.details, saved.state].filter(Boolean).join(' · ');
+          if (artEl) artEl.src = saved.art || discordIdleArt;
+        } else {
+          if (labelEl) labelEl.textContent = 'Last Activity';
+          titleEl.textContent = 'No recent activity';
+          subEl.textContent = '';
+          if (artEl) artEl.src = discordIdleArt;
+        }
       }
-
-      const art = primary.assets?.largeImage || primary.assets?.smallImage || discordIdleArt;
-      if (artEl) artEl.src = art;
     }
 
     function renderRecentInterests(container) {
@@ -2429,7 +2485,7 @@
               <img src="/photos/discord-idle.png" id="discord-interest-art" alt="Activity" />
             </div>
             <div class="interest-info">
-              <div class="interest-label">Last Activity</div>
+              <div class="interest-label" id="discord-interest-label">Last Activity</div>
               <div class="interest-title" id="discord-interest-title">Loading...</div>
               <div class="interest-sub" id="discord-interest-sub"></div>
             </div>

@@ -263,11 +263,30 @@ var src_default = {
         return new Response(JSON.stringify({ error: "Missing LASTFM_API_KEY" }), { status: 500, headers });
       }
       try {
-        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&period=7day&user=Camronia&api_key=${env.LASTFM_API_KEY}&format=json&limit=1`);
-        if (!res.ok) throw new Error("last.fm fetch failed");
-        const data = await res.json();
-        const tracks = data.toptracks?.track;
-        const track = Array.isArray(tracks) ? tracks[0] : tracks;
+        const apiBase = `https://ws.audioscrobbler.com/2.0/?api_key=${env.LASTFM_API_KEY}&format=json&user=Camronia`;
+        let track = null;
+        for (const period of ["7day", "overall"]) {
+          const res = await fetch(`${apiBase}&method=user.gettoptracks&period=${period}&limit=1`);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const tracks = data.toptracks?.track;
+          track = Array.isArray(tracks) ? tracks[0] : tracks;
+          if (track?.name) break;
+        }
+        if (!track?.name) {
+          return new Response(JSON.stringify({ error: "No top track found" }), { status: 404, headers });
+        }
+        try {
+          const infoRes = await fetch(`${apiBase}&method=track.getInfo&track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(track.artist?.name || "")}`);
+          if (infoRes.ok) {
+            const infoData = await infoRes.json();
+            const albumImages = infoData.track?.album?.image;
+            if (Array.isArray(albumImages) && albumImages.length > 0) {
+              track.image = albumImages;
+            }
+          }
+        } catch (_) {
+        }
         return new Response(JSON.stringify({ track }), { status: 200, headers });
       } catch (err) {
         return new Response(JSON.stringify({ error: "Failed to fetch track" }), { status: 500, headers });
@@ -469,7 +488,7 @@ var src_default = {
   }
 };
 
-// node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+// ../../../../../opt/homebrew/lib/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
 var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -487,7 +506,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
 
-// node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+// ../../../../../opt/homebrew/lib/node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
 function reduceError(e) {
   return {
     name: e?.name,
@@ -510,14 +529,14 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-s0p6eQ/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-gqROkH/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = src_default;
 
-// node_modules/wrangler/templates/middleware/common.ts
+// ../../../../../opt/homebrew/lib/node_modules/wrangler/templates/middleware/common.ts
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -542,7 +561,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-s0p6eQ/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-gqROkH/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
