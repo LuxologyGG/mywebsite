@@ -240,26 +240,29 @@ export default {
         
         let hasRealActivity = false;
         if (presence && presence.activities) {
-          presence.activities = presence.activities.filter(a => 
+          presence.activities = presence.activities.filter(a =>
              !(a.name && a.name.toLowerCase().includes("not currently doing anything")) &&
              !(a.title && a.title.toLowerCase().includes("not currently doing anything"))
           );
           if (presence.activities.length > 0) {
             hasRealActivity = true;
             if (env.UNIQUE_KV) {
-              env.UNIQUE_KV.put("last_real_activity", JSON.stringify(presence.activities[0])).catch(() => {});
+              env.UNIQUE_KV.put("last_real_activity", JSON.stringify({
+                activity: presence.activities[0],
+                time: Date.now()
+              })).catch(() => {});
             }
           }
         }
 
-        if (!hasRealActivity && env.UNIQUE_KV) {
+        // When offline, return last activity as a separate field (not injected into activities)
+        if (!hasRealActivity && env.UNIQUE_KV && presence) {
           try {
             const lastStr = await env.UNIQUE_KV.get("last_real_activity");
             if (lastStr) {
-              const lastAct = JSON.parse(lastStr);
-              if (presence) {
-                presence.activities = [lastAct];
-              }
+              const saved = JSON.parse(lastStr);
+              presence.lastActivity = saved.activity || saved;
+              presence.lastActivityTime = saved.time || null;
             }
           } catch (e) {}
         }
