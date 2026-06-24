@@ -2859,6 +2859,33 @@
         </a>`
       ).join('');
 
+      // Everyday carry — drop transparent product PNG/WebPs into /photos/edc/
+      // (named below) and they'll replace the emoji glyph automatically.
+      const EDC_ITEMS = [
+        { name: 'iPhone 15 Pro', glyph: '📱', note: 'Titanium, always-on, and somehow always at 38%.', img: '/photos/edc/iphone-15-pro.webp', link: 'https://www.apple.com/iphone-15-pro/' },
+        { name: 'AirPods Pro 2', glyph: '🎧', note: 'My off-switch for the rest of the world.', img: '/photos/edc/airpods-pro.webp', link: 'https://www.apple.com/airpods-pro/' },
+        { name: 'Owala FreeSip', glyph: '🧴', note: 'Black on black. Hydration with a dress code.', img: '/photos/edc/owala.webp', link: 'https://owalalife.com/products/owala-freesip-24-oz' },
+        { name: 'Ember Mug²', glyph: '☕', note: 'Coffee that refuses to go cold. Worth it.', img: '/photos/edc/ember.webp', link: 'https://ember.com/products/ember-mug-2' },
+        { name: 'Chrome Hearts Evangelist', glyph: '🕶️', note: 'The one splurge I will not be justifying.', img: '/photos/edc/chrome-hearts.webp', link: 'https://www.chromehearts.com/' },
+        { name: 'iPad Pro 13″ (M2)', glyph: '📝', note: 'Notes, papers, and the occasional 2am sketch.', img: '/photos/edc/ipad-pro.webp', link: 'https://www.apple.com/ipad-pro/' },
+        { name: 'MacBook Air M4', glyph: '💻', note: 'Where this whole site got (re)built.', img: '/photos/edc/macbook-air.webp', link: 'https://www.apple.com/macbook-air/' },
+        { name: 'Omega Seamaster 300M', glyph: '⌚', note: '42mm Master Chronometer. Bond would approve.', img: '/photos/edc/omega-seamaster.webp', link: 'https://www.omegawatches.com/en-us/watch-omega-seamaster-diver-300m-co-axial-master-chronometer-42-mm-21030422001018' },
+        { name: 'Casio AE-1200WHD', glyph: '⏱️', note: 'The $25 "Casio Royale." Function over flex.', img: '/photos/edc/casio-ae1200.webp', link: 'https://www.casio.com/us/watches/casio/product.AE-1200WHD-7AV/' },
+      ];
+      const edcCards = EDC_ITEMS.map(it =>
+        `<a class="edc-card" href="${it.link}" target="_blank" rel="noopener" title="${it.name}">
+          <div class="edc-thumb">
+            <img src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.remove();" />
+            <span class="edc-glyph" aria-hidden="true">${it.glyph}</span>
+          </div>
+          <div class="edc-meta">
+            <span class="edc-name">${it.name}</span>
+            <span class="edc-note">${it.note}</span>
+          </div>
+          <span class="edc-arrow" aria-hidden="true">→</span>
+        </a>`
+      ).join('');
+
       container.innerHTML = `
         <div class="ov-inner">
           <div class="ov-header">
@@ -2914,16 +2941,25 @@
             </div>
           </div>
 
+          <div class="ov-section">
+            <div class="ov-section-label">EVERYDAY CARRY</div>
+            <div class="edc-grid">${edcCards}</div>
+          </div>
+
           <div class="ov-section ov-links-section">
             <div class="ov-section-label">LINKS</div>
             <div class="ov-links">
               <a href="/photos/Resume.pdf" target="_blank" rel="noopener">resume</a>
               <span class="ov-link-sep">|</span>
+              <a href="/photos/CV.pdf" target="_blank" rel="noopener">cv</a>
+              <span class="ov-link-sep">|</span>
               <a href="mailto:camron@camr.one">email</a>
               <span class="ov-link-sep">|</span>
               <a href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noopener">linkedin</a>
               <span class="ov-link-sep">|</span>
-              <a href="https://github.com/camronjones" target="_blank" rel="noopener">github</a>
+              <a href="https://github.com/LuxologyGG" target="_blank" rel="noopener">github</a>
+              <span class="ov-link-sep">|</span>
+              <a href="https://letterboxd.com/camrone/" target="_blank" rel="noopener">letterboxd</a>
             </div>
           </div>
         </div>
