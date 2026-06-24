@@ -56,7 +56,7 @@
         </div>
         <div class="profile-text">
             <div class="profile-name">Hey, I'm Camron <span class="wave-emoji" id="wave-emoji" aria-hidden="true">👋</span></div>
-            <div class="profile-title">Student · Researcher <a href="/overview" class="overview-btn" title="Quick overview of everything">Overview</a></div>
+            <div class="profile-title">Student · Researcher <a href="/overview" class="overview-btn" aria-label="Quick overview of me"><span class="overview-btn__label">Overview</span><span class="overview-btn__arrow" aria-hidden="true">→</span><span class="overview-btn__tip" role="tooltip">Just want a quick overview of me? Click here</span></a></div>
             <div class="social-chips">
               <a class="social-chip" href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noreferrer" title="My LinkedIn profile">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1-.001 5.001A2.5 2.5 0 0 1 4.98 3.5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31c-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg>
@@ -3370,23 +3370,35 @@
       // Last: capture new rect
       const last = card.getBoundingClientRect();
 
-      // Invert: set the card to where it WAS
+      // Read the new mode's base transform (e.g. translate(-50%,-50%) resolved to px)
+      // so we can compose the FLIP on top of it instead of clobbering the centering.
+      let baseTx = 0, baseTy = 0;
+      try {
+        const ct = getComputedStyle(card).transform;
+        if (ct && ct !== 'none') {
+          const m = new DOMMatrixReadOnly(ct);
+          baseTx = m.m41; baseTy = m.m42;
+        }
+      } catch (_) {}
+
+      // Invert: place the card visually where it WAS, keeping its base centering.
       const dx = first.left - last.left;
       const dy = first.top - last.top;
       const sw = first.width / last.width;
       const sh = first.height / last.height;
 
       card.style.transformOrigin = 'top left';
-      card.style.transform = `translate(${dx}px, ${dy}px) scale(${sw}, ${sh})`;
+      card.style.transform = `translate(${baseTx + dx}px, ${baseTy + dy}px) scale(${sw}, ${sh})`;
 
-      // Play: animate to final position
+      // Play: animate to final position (faster + smoother than before)
       requestAnimationFrame(() => {
-        card.style.transition = 'transform 650ms cubic-bezier(0.25, 0.8, 0.25, 1)';
-        card.style.transform = '';
+        card.style.transition = 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)';
+        card.style.transform = `translate(${baseTx}px, ${baseTy}px)`;
         card.addEventListener('transitionend', function cleanup(e) {
           if (e.propertyName !== 'transform') return;
           card.removeEventListener('transitionend', cleanup);
           card.style.transition = '';
+          card.style.transform = '';
           card.style.transformOrigin = '';
         }, { once: false });
       });

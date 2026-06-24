@@ -516,7 +516,13 @@ body.light-mode .map-whats-this__body strong {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: all 780ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              height 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              max-width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              max-height 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              top 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              padding 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              background 300ms ease, border-color 300ms ease;
 }
 
 /* Search / Explore UI */
@@ -1286,23 +1292,34 @@ body.light-mode .ip-abuse-bar-track {
 
 .back-button {
   position: absolute;
-  top: 12px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  top: 15px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #fff;
-  border-radius: 8px;
-  width: 28px;
-  height: 28px;
+  border-radius: 9px;
+  width: 30px;
+  height: 30px;
   display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
-  transition: background 200ms ease, border 200ms ease;
-  z-index: 10;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 16;
   pointer-events: auto;
+}
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateX(-2px);
+}
+.back-button:active {
+  transform: translateX(-2px) scale(0.92);
 }
 
 body.light-mode .back-button {
@@ -1421,22 +1438,27 @@ body.light-mode .profile-title {
   overflow: hidden;
   background: transparent;
   border: none;
-  color: #fff;
-  padding: 10px 10px;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 11px 10px;
   border-radius: 14px;
   cursor: pointer;
   font-family: "Noto Sans", sans-serif;
-  font-size: 12px;
+  font-size: 12.5px;
   pointer-events: auto;
-  transition: transform 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 240ms ease;
+  will-change: transform;
 }
 
 .work-tab:hover {
-  transform: scale(1.03);
+  transform: translateY(-2px);
+  color: #fff;
 }
 
 .work-tab:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.97);
+  transition-duration: 120ms;
 }
 
 .work-tab__glass-filter,
@@ -1456,7 +1478,27 @@ body.light-mode .profile-title {
 
 .work-tab__glass-overlay {
   z-index: 1;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 280ms ease;
+}
+
+/* Sweep-in glow that follows the cursor in on hover */
+.work-tab__glass-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 140% at 50% 120%, rgba(146, 243, 208, 0.28), rgba(146, 243, 208, 0) 70%);
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.work-tab:hover .work-tab__glass-overlay {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.work-tab:hover .work-tab__glass-overlay::after {
+  opacity: 1;
 }
 
 .work-tab__glass-specular {
@@ -1464,11 +1506,43 @@ body.light-mode .profile-title {
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.4),
     inset 0 0 6px rgba(255, 255, 255, 0.15);
+  transition: box-shadow 280ms ease;
 }
 
 .work-tab__label {
   position: relative;
   z-index: 3;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: letter-spacing 280ms ease;
+}
+
+.work-tab:hover .work-tab__label {
+  letter-spacing: 0.04em;
+}
+
+/* Animated accent underline for the active tab */
+.work-tab::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(146, 243, 208, 0), #92f3d0 50%, rgba(146, 243, 208, 0));
+  transform: translateX(-50%);
+  transition: width 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.work-tab.is-active {
+  color: #fff;
+}
+
+.work-tab.is-active::before {
+  width: 56%;
 }
 
 .work-tab.is-active .work-tab__glass-overlay {
@@ -1478,7 +1552,8 @@ body.light-mode .profile-title {
 .work-tab.is-active .work-tab__glass-specular {
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 8px rgba(255, 255, 255, 0.2);
+    inset 0 0 8px rgba(255, 255, 255, 0.2),
+    0 4px 14px rgba(146, 243, 208, 0.12);
 }
 
 /* Light mode glass tabs */
@@ -1500,21 +1575,22 @@ body.light-mode .work-tab.is-active .work-tab__glass-overlay {
   background: rgba(255, 255, 255, 0.6);
 }
 
-/* Solid tabs on explore tab so content behind is hidden */
+/* Explore tabs keep the same glassy look as the other sections — the blurred
+   scrim behind the bar handles hiding the scrolling content underneath. */
 .search-active .work-tab__glass-overlay {
-  background: rgba(30, 30, 36, 0.95);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .search-active .work-tab.is-active .work-tab__glass-overlay {
-  background: rgba(50, 50, 58, 0.95);
+  background: rgba(255, 255, 255, 0.24);
 }
 
 body.light-mode.search-active .work-tab__glass-overlay {
-  background: rgba(235, 236, 242, 0.95);
+  background: rgba(255, 255, 255, 0.45);
 }
 
 body.light-mode.search-active .work-tab.is-active .work-tab__glass-overlay {
-  background: rgba(220, 222, 230, 0.95);
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .work-sections {
@@ -1993,6 +2069,51 @@ body.light-mode .about-current-sub {
   overflow: visible;
 }
 
+/* Soft blurred scrim behind the bottom tab bar — a YouTube-style fade so
+   scrolling content dissolves under the tabs instead of hitting a hard black
+   edge. Consistent across About / Experience / Explore. */
+.work-mode .glass-card::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  height: 84px;
+  border-radius: 0 0 15px 15px;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(to top,
+    rgba(10, 12, 18, 0.78) 0%,
+    rgba(10, 12, 18, 0.55) 42%,
+    rgba(10, 12, 18, 0) 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 52%, transparent 100%);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+/* faint teal glow riding the top edge of the scrim */
+.work-mode .glass-card::before {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 62px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(60% 100% at 50% 100%, rgba(146, 243, 208, 0.12), rgba(146, 243, 208, 0) 72%);
+  filter: blur(2px);
+}
+body.light-mode.work-mode .glass-card::after {
+  background: linear-gradient(to top,
+    rgba(244, 246, 252, 0.86) 0%,
+    rgba(244, 246, 252, 0.6) 42%,
+    rgba(244, 246, 252, 0) 100%);
+}
+/* The experience/explore views expand the card; keep the scrim subtle there */
+.work-mode.experience-active .glass-card::before,
+.search-active .glass-card::before { bottom: 64px; }
+
 .work-content,
 .work-content h3,
 .work-content p,
@@ -2337,7 +2458,12 @@ body.light-mode .htl-detail {
   max-height: 90vh;
   padding-top: 44px;
   z-index: 20;
-  transition: all 780ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              height 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              max-width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              max-height 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              top 480ms cubic-bezier(0.22, 1, 0.36, 1),
+              padding 480ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .blog-mode .work-content {
@@ -3431,35 +3557,101 @@ body.contact-mode .contact-signals {
 
 /* ── Overview button ── */
 .overview-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-family: 'GeistPixelSquare', monospace;
   font-size: 9px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 3px 8px;
+  padding: 3px 9px;
   margin-left: 8px;
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 4px;
-  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 700;
   text-decoration: none;
   vertical-align: middle;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.25s ease;
   position: relative;
   top: -1px;
+  background: rgba(255,255,255,0.06);
+}
+.overview-btn__arrow {
+  color: #fff;
+  font-weight: 700;
+  font-family: "Noto Sans", sans-serif;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .overview-btn:hover {
+  border-color: rgba(146,243,208,0.7);
+  background: rgba(146,243,208,0.1);
+  box-shadow: 0 0 14px rgba(146,243,208,0.18);
+}
+.overview-btn:hover .overview-btn__arrow {
+  transform: translateX(3px);
+}
+/* Tooltip that pops out on hover */
+.overview-btn__tip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 9px);
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  text-transform: none;
   color: #fff;
-  border-color: rgba(255,255,255,0.5);
-  background: rgba(255,255,255,0.08);
+  background: rgba(20, 22, 30, 0.92);
+  border: 1px solid rgba(146,243,208,0.35);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 40;
+}
+.overview-btn__tip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  background: rgba(20, 22, 30, 0.92);
+  border-left: 1px solid rgba(146,243,208,0.35);
+  border-top: 1px solid rgba(146,243,208,0.35);
+  transform: translateX(-50%) rotate(45deg);
+}
+.overview-btn:hover .overview-btn__tip,
+.overview-btn:focus-visible .overview-btn__tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 body.light-mode .overview-btn {
-  color: rgba(0,0,0,0.5);
-  border-color: rgba(0,0,0,0.2);
-}
-body.light-mode .overview-btn:hover {
   color: #000;
-  border-color: rgba(0,0,0,0.4);
-  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.04);
+}
+body.light-mode .overview-btn__arrow { color: #000; }
+body.light-mode .overview-btn:hover {
+  border-color: rgba(26,138,94,0.6);
+  background: rgba(26,138,94,0.08);
+  box-shadow: 0 0 14px rgba(26,138,94,0.15);
+}
+body.light-mode .overview-btn__tip {
+  background: rgba(255,255,255,0.96);
+  color: #111;
+  border-color: rgba(26,138,94,0.35);
+}
+body.light-mode .overview-btn__tip::before {
+  background: rgba(255,255,255,0.96);
+  border-color: rgba(26,138,94,0.35);
 }
 
 /* ── Overview background ── */
