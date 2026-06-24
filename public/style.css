@@ -1433,6 +1433,14 @@ body.light-mode .profile-title {
   pointer-events: none;
 }
 
+/* Explore: tabs fade while the user is actively scrolling, return when idle */
+.work-tabs.is-scroll-fade {
+  opacity: 0.12;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
 .work-tab {
   position: relative;
   overflow: hidden;
@@ -2980,6 +2988,12 @@ body.light-mode .social-chip:hover {
 }
 
 /* Tech Stack & Experience Cards */
+.resume-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 4px;
+}
 .resume-banner {
   display: inline-flex;
   align-items: center;

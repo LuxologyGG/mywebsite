@@ -1,0 +1,248 @@
+%-------------------------
+% Resume in LaTeX
+% Camron Farjami
+% Based on Jake Gutierrez's template (https://github.com/sb2nov/resume) -- MIT License
+%-------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins (tightened to fit one page)
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.6in}
+\addtolength{\textwidth}{1.2in}
+\addtolength{\topmargin}{-.7in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generated pdf is machine readable / ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Camron Farjami} \\ \vspace{2pt}
+    \small Rancho Palos Verdes, CA $|$ (310) 974-0174 $|$
+    \href{mailto:farjamicamron@gmail.com}{\underline{farjamicamron@gmail.com}} $|$
+    \href{https://camr.one}{\underline{camr.one}} $|$
+    \href{https://www.linkedin.com/in/camron-farjami-608822359/}{\underline{linkedin.com/in/camron-farjami}} $|$
+    \href{https://github.com/LuxologyGG}{\underline{github.com/LuxologyGG}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Michigan}{Ann Arbor, MI}
+      {Bachelor of Science in Biology, Minor in Business (Pre-Medicine)}{Aug. 2026 -- May 2030}
+    \resumeSubheading
+      {Palos Verdes Peninsula High School}{Rancho Palos Verdes, CA}
+      {High School Diploma $\cdot$ GPA: 3.8 UW / 4.5 W $\cdot$ SAT: 1530}{2022 -- 2026}
+      \resumeItemListStart
+        \resumeItem{\textbf{Coursework:} 11 APs (Biology, Chemistry, Calculus AB, etc.) \& Dual Enrollment (Statistics, Physics 2, Psychology, U.S. History)}
+        \resumeItem{\textbf{Activities:} Peninsula Debate (T50), Science NHS, TSA (4th in CA), Philosophy Club Treasurer, Aerospace Club Co-Founder, Science Olympiad}
+      \resumeItemListEnd
+    \resumeSubheading
+      {HarvardX \& Dual Enrollment}{Online / CA}
+      {Statistics and R; El Camino College, LACCD}{2024 -- 2025}
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Cancer and Blood Specialty Clinic (CBSC)}{Long Beach, CA}
+      {Research Intern}{Jun. 2026 -- Present}
+      \resumeItemListStart
+        \resumeItem{Support hematology/oncology research, contributing to clinical case reports and manuscript preparation in an outpatient oncology setting.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Loma Linda University Medical Center}{Hybrid -- CA}
+      {Researcher}{Feb. 2025 -- Present}
+      \resumeItemListStart
+        \resumeItem{Work under Dr. Mojtaba Akhtari on hematology/oncology projects, contributing to case reports and clinical papers on multiple myeloma and complex malignancies.}
+        \resumeItem{Presented onstage at the MOASC 2026 Oncology Leadership \& Research Summit as one of three high school students in attendance.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {USC Norris Comprehensive Cancer Center}{Los Angeles, CA}
+      {Assistant Researcher}{Sep. 2025 -- Jun. 2026}
+      \resumeItemListStart
+        \resumeItem{Researched under Dr. George Yaghmour, MD, gaining clinical exposure to AML regimens, stem cell transplantation, and multidisciplinary care coordination.}
+        \resumeItem{Co-authored 4 published case reports, including a novel presentation of Blastic Plasmacytoid Dendritic Cell Neoplasm arising with systemic mastocytosis.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {South Bay STEM Association}{Rancho Palos Verdes, CA}
+      {Board Member \& Lead Web Developer}{Feb. 2025 -- May 2026}
+      \resumeItemListStart
+        \resumeItem{Oversaw STEM initiatives, mentored students, and built web platforms supporting education and community outreach.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {The New York Academy of Sciences}{Remote}
+      {Student}{Aug. 2025 -- Mar. 2026}
+      \resumeItemListStart
+        \resumeItem{Collaborated on international innovation challenges addressing sustainability, energy, and global health through interdisciplinary teamwork.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {UCLA Computer Science}{Los Angeles, CA}
+      {Intern}{May 2025 -- Feb. 2026}
+      \resumeItemListStart
+        \resumeItem{Contributed to ``Hot Potato,'' a GPS-based multiplayer mobile game focused on real-world interaction and gameplay logic.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Non-Trivial}{Remote}
+      {Research Fellow}{Feb. 2025 -- May 2025}
+      \resumeItemListStart
+        \resumeItem{Selected for a competitive research training program ($<$10\% acceptance); authored an algae-based biohybrid microrobot proposal awarded the Inflection Grant.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Rolling Hills Taekwondo}{Rolling Hills Estates, CA}
+      {Instructor}{Feb. 2021 -- Mar. 2023}
+      \resumeItemListStart
+        \resumeItem{Taught taekwondo fundamentals, discipline, and self-defense while managing classes in a structured, fast-paced environment.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------RESEARCH PROJECTS-----------
+\section{Research Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Living Machines: Algae-Based Biohybrid Microrobots for Precision Oncology} $|$ \emph{\href{https://figshare.com/articles/preprint/Living_Machines_Algae-Based_Biohybrid_Microrobots_for_Precision_Oncology/29896883}{\underline{Figshare}}}}{Apr. 2025 -- Present}
+          \resumeItemListStart
+            \resumeItem{Investigated targeted cancer therapy combining microalgae with synthetic drug-delivery systems to navigate hypoxic tumor environments.}
+            \resumeItem{Outlined a scalable, biocompatible framework for future research and potential clinical application in minimally invasive oncology.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Exploring Fluoxetine's Influence on Behavioral Neuropharmacology}}{Oct. 2024 -- Present}
+          \resumeItemListStart
+            \resumeItem{Conducted a meta-analysis synthesizing studies on serotonin, testosterone, and neuroanatomy to assess the neuropharmacological effects of SSRIs.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS-----------
+\section{Publications}
+  \resumeSubHeadingListStart
+  \resumeItemListStart
+    \resumeItem{\textit{\href{https://figshare.com/articles/preprint/Living_Machines_Algae-Based_Biohybrid_Microrobots_for_Precision_Oncology/29896883}{\underline{Living Machines: The Potential of Algae-Based Biohybrid Microrobots for Precision Oncology}}}, Figshare, Aug. 2025.}
+    \resumeItem{\textit{Blastic Plasmacytoid Dendritic Cell Neoplasm Arising in a Patient with Systemic Mastocytosis and Associated Hematologic Neoplasm: A Case Report}, 2025.}
+    \resumeItem{\textit{More than a Trace: Manganese Deficiency as an Under-Recognized Cause of Chronic Anemia}, 2025.}
+    \resumeItem{\textit{\href{https://www.preprints.org/manuscript/202606.0210}{\underline{A Comprehensive Review of Zinc Deficiency-Associated Anemia}}}, Preprints.org, 2026.}
+    \resumeItem{Co-authored 4 additional case reports in hematology/oncology (USC Norris, 2025--2026).}
+  \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------HONORS & AWARDS-----------
+\section{Honors \& Awards}
+  \resumeSubHeadingListStart
+  \resumeItemListStart
+    \resumeItem{\textbf{Inflection Grant Recipient:} 1 of 5 selected from 350+ applicants for biohybrid microrobot research (Jun. 2025)}
+    \resumeItem{\textbf{U.S. Medicine \& Disease Olympiad:} Silver Medalist (Top 15\% of 1,318 participants, 150/160) (Aug. 2025)}
+    \resumeItem{\textbf{MOASC 2026:} Certificate of Presentation, Oncology Leadership \& Research Summit (Mar. 2026)}
+    \resumeItem{\textbf{TSA:} 4th in California, 1st at PVPHS (Feb. 2025)}
+  \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------CERTIFICATIONS-----------
+\section{Certifications}
+  \resumeSubHeadingListStart
+  \resumeItemListStart
+    \resumeItem{Certificate Member, American Federation for Medical Research (2026)}
+    \resumeItem{\href{https://credsverse.com/credentials/2fb3b952-2741-46f3-8659-fef7872c36ff}{\underline{Non-Trivial Research Foundations Program}} (2025)}
+    \resumeItem{\href{https://courses.edx.org/certificates/8b2736ee4f9c4323bb64f5355342e3a9}{\underline{HarvardX Verified Certificate in Statistics and R}} (2025)}
+    \resumeItem{1st Poom Black Belt in Taekwondo}
+    \resumeItem{Adult, Child \& Baby First Aid/CPR/AED, American Red Cross (2025 -- 2027)}
+  \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Research}{: Clinical Research, Quantitative/Qualitative Analysis, Data Analysis, Manuscript Preparation} \\
+     \textbf{Programming}{: R, Python, JavaScript, HTML/CSS, WordPress} \\
+     \textbf{Tools}{: RStudio, Adobe Creative Suite, Microsoft Office} \\
+     \textbf{Languages}{: English (Native), Spanish (Professional Working)}
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}
