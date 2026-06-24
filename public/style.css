@@ -3459,15 +3459,78 @@ body.contact-mode #map-whats-this {
   pointer-events: none;
 }
 
+/* Contact mode = full-bleed Cal embed. The glass card becomes a transparent
+   full-viewport frame (no glassy holder) so the calendar fills the page. */
 .contact-mode .glass-card {
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  max-width: 1040px;
-  height: 80vh;
-  max-height: 80vh;
-  padding-top: 44px;
+  top: 0;
+  left: 0;
+  transform: none;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  min-width: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 20;
+  gap: 0;
+}
+.contact-mode .glass-card::before,
+.contact-mode .glass-card::after { display: none; }
+
+.contact-mode .contact-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+}
+
+/* Floating top bar holding locale + availability + actions, over the calendar */
+.contact-mode .contact-top-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  padding: 14px 18px 18px 60px;
+  background: linear-gradient(to bottom, rgba(8,10,15,0.82) 0%, rgba(8,10,15,0.5) 55%, rgba(8,10,15,0) 100%);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+.contact-mode .contact-top-row a,
+.contact-mode .contact-top-row .contact-availability-wrap { pointer-events: auto; }
+body.light-mode.contact-mode .contact-top-row {
+  background: linear-gradient(to bottom, rgba(244,246,252,0.9) 0%, rgba(244,246,252,0.55) 55%, rgba(244,246,252,0) 100%);
+}
+
+/* Cal section fills the page; the bottom few px are clipped to hide the
+   "Cal.com" branding badge that sits at the very bottom of the embed. */
+.contact-mode .contact-cal-section {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.contact-mode .cal-inline-wrap {
+  width: 100%;
+  height: calc(100% + 44px);
+  overflow: hidden;
+}
+.contact-mode .cal-inline-wrap iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
 }
 
 .contact-mode .work-content,
@@ -3503,15 +3566,7 @@ body.contact-mode #map-whats-this {
 }
 
 .contact-mode .profile-badge {
-  display: flex;
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  z-index: 8;
-}
-
-.contact-mode .profile-glass img {
-  opacity: 1;
+  display: none;
 }
 
 /* Contact content block (hidden by default) */
