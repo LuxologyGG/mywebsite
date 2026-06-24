@@ -43,6 +43,44 @@ const EXPIRY_MAP = {
   "30d": 2592000,
 };
 
+// Friendly word-slugs for paste URLs (e.g. awesome-boss-cost-lost) instead of
+// opaque hex IDs. Kept short, lowercase, and unambiguous.
+const SLUG_WORDS = [
+  "amber","apple","arc","arrow","ash","aspen","atlas","aurora","autumn","azure",
+  "bagel","balsa","bamboo","basil","beacon","berry","birch","bishop","bloom","blue",
+  "boss","bramble","brave","breeze","bright","brisk","bronze","brook","cabin","cactus",
+  "calm","candle","canyon","cedar","chai","cherry","chill","cider","clay","clever",
+  "cloud","clover","cobalt","comet","coral","cosmic","cost","cove","crane","crisp",
+  "crystal","dawn","daisy","delta","denim","dewy","diamond","dingo","dove","dune",
+  "eager","early","ember","emerald","epic","fable","falcon","fern","flint","forest",
+  "fox","frost","garnet","ginger","glade","glow","grove","hale","harbor","haven",
+  "hazel","heron","honey","ivory","jade","jasper","jetty","jolly","juniper","keen",
+  "kelp","kite","koi","lagoon","lake","lark","lemon","lily","linen","lost",
+  "lotus","lucky","lumen","lunar","lush","mango","maple","marble","meadow","mellow",
+  "merry","mesa","mint","misty","moss","nimbus","noble","nova","oak","ocean",
+  "olive","onyx","opal","orbit","otter","parsley","peach","pearl","pebble","pine",
+  "plum","pond","prairie","quartz","quill","quiet","rapid","raven","reed","ridge",
+  "river","robin","rose","ruby","rustic","sage","sandy","sea","sienna","silver",
+  "sky","slate","snowy","solar","sorrel","spark","spring","spruce","stone","storm",
+  "summit","sunny","swift","teal","thistle","tide","timber","topaz","trail","tulip",
+  "umber","valley","velvet","verde","vivid","wave","willow","windy","winter","wren",
+];
+
+function randomSlug() {
+  const pick = () => SLUG_WORDS[Math.floor(Math.random() * SLUG_WORDS.length)];
+  return `${pick()}-${pick()}-${pick()}-${pick()}`;
+}
+
+async function uniqueSlug() {
+  for (let i = 0; i < 8; i++) {
+    const slug = randomSlug();
+    const existing = await collection.findOne({ slug }, { projection: { _id: 1 } });
+    if (!existing) return slug;
+  }
+  // Extremely unlikely fallback: append a short random suffix
+  return `${randomSlug()}-${Math.random().toString(36).slice(2, 6)}`;
+}
+
 async function start() {
   await client.connect();
   const db = client.db("pastes");
@@ -50,6 +88,8 @@ async function start() {
 
   // TTL index — MongoDB auto-deletes docs when expiresAt passes
   await collection.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }).catch(() => {});
+  // Unique index on the human-friendly slug
+  await collection.createIndex({ slug: 1 }, { unique: true, sparse: true }).catch(() => {});
 
   console.log("Connected to MongoDB");
 
@@ -72,8 +112,11 @@ app.post("/paste", async (req, res) => {
       return res.status(400).json({ error: "Content is required" });
     }
 
+    const slug = await uniqueSlug();
+
     const doc = {
       content,
+      slug,
       createdAt: new Date(),
     };
 
@@ -83,10 +126,10 @@ app.post("/paste", async (req, res) => {
       doc.expiresAt = new Date(Date.now() + seconds * 1000);
     }
 
-    const result = await collection.insertOne(doc);
+    await collection.insertOne(doc);
 
     res.json({
-      id: result.insertedId.toString(),
+      id: slug,
       expiresAt: doc.expiresAt || null,
     });
 
@@ -99,15 +142,13 @@ app.post("/paste", async (req, res) => {
 // GET paste
 app.get("/paste/:id", async (req, res) => {
   try {
-    let oid;
+    const id = req.params.id;
 
-    try {
-      oid = new ObjectId(req.params.id);
-    } catch {
-      return res.status(400).json({ error: "Invalid paste ID" });
+    // Look up by friendly slug first; fall back to legacy ObjectId links.
+    let paste = await collection.findOne({ slug: id });
+    if (!paste && /^[A-Fa-f0-9]{24}$/.test(id)) {
+      paste = await collection.findOne({ _id: new ObjectId(id) });
     }
-
-    const paste = await collection.findOne({ _id: oid });
 
     if (!paste) {
       return res.status(404).json({ error: "Paste not found" });
@@ -119,7 +160,7 @@ app.get("/paste/:id", async (req, res) => {
     }
 
     res.json({
-      id: paste._id.toString(),
+      id: paste.slug || paste._id.toString(),
       content: paste.content,
       createdAt: paste.createdAt,
       expiresAt: paste.expiresAt || null,

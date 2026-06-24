@@ -10,7 +10,7 @@
   let bound = false;
 
   function parseId(path) {
-    const m = /^\/paste\/([A-Fa-f0-9]+)$/.exec(path || '');
+    const m = /^\/paste\/([A-Za-z0-9-]+)$/.exec(path || '');
     return m ? m[1] : null;
   }
 

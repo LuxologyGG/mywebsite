@@ -529,7 +529,7 @@ export default {
     // SPA fallback for /paste, /upload, and /projects page routes (not static assets like .js/.css)
     if ((url.pathname.startsWith("/paste") || url.pathname === "/upload" || url.pathname === "/projects" || url.pathname === "/contact") && !url.pathname.includes(".")) {
       // Inject OG meta tags for individual paste pages
-      const pasteMatch = url.pathname.match(/^\/paste\/([A-Fa-f0-9]+)$/);
+      const pasteMatch = url.pathname.match(/^\/paste\/([A-Za-z0-9-]+)$/);
       if (pasteMatch) {
         try {
           const pasteApiUrl = env.PASTE_API_URL || "https://camron-paste-api.onrender.com";
