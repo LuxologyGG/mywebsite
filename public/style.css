@@ -46,6 +46,46 @@ body{
   font-family: "PT Serif", serif;
 }
 
+/* ── Dithering: a faint tiled fractal-noise overlay that sits over the
+   gradient/shader backgrounds to break up visible colour banding. Lives
+   below the glass card (z-index 20) and never intercepts pointer events. ── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+body.light-mode::after { opacity: 0.045; mix-blend-mode: multiply; }
+
+/* ── Accessibility: visible keyboard focus ring ── */
+a:focus-visible,
+button:focus-visible,
+.work-tab:focus-visible,
+.social-chip:focus-visible,
+.htl-node:focus-visible,
+input:focus-visible {
+  outline: 2px solid #92f3d0;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Respect users who prefer reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .toggle {
   position: absolute;
   top: 17px;
