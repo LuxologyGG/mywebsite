@@ -2,19 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>camr.one</title>
-  <meta name="description" content="Camron's Bio Site">
-  <meta name="theme-color" content="#ffffff">
-  <meta property="og:title" content="camr.one">
-  <meta property="og:description" content="I feel like the name is pretty self explanatory">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>
+    /* Phones get the dedicated, easy-to-read /mobile overview. Honor ?full=1
+       (and remember it) so the full site stays reachable on mobile. */
+    (function () {
+      try {
+        if (/[?&]full=1/.test(location.search)) { sessionStorage.setItem('full-site', '1'); }
+        if (sessionStorage.getItem('full-site') === '1') return;
+        var isMobile = window.matchMedia('(max-width: 760px)').matches ||
+          (matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) <= 820);
+        if (isMobile && location.pathname === '/') { location.replace('/mobile'); }
+      } catch (e) {}
+    })();
+  </script>
+  <title>Camron Farjami — Student, Researcher &amp; Developer · camr.one</title>
+  <meta name="description" content="Camron Farjami — student, hematology/oncology researcher, and self-taught web developer. Published case reports, biohybrid microrobot research, and a corner of the internet that's a little more me.">
+  <meta name="author" content="Camron Farjami">
+  <meta name="keywords" content="Camron Farjami, camr.one, researcher, oncology research, web developer, University of Michigan, biology, portfolio">
+  <meta name="theme-color" content="#0a0c12" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f6fc" media="(prefers-color-scheme: light)">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://camr.one/">
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="camr.one">
+  <meta property="og:title" content="Camron Farjami — Student, Researcher &amp; Developer">
+  <meta property="og:description" content="Student, hematology/oncology researcher, and self-taught developer. A corner of the internet that's a little more me.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/photos/pfp.png">
+  <meta property="og:url" content="https://camr.one/">
+  <meta property="og:image" content="https://camr.one/photos/pfp.png">
+  <meta property="og:image:alt" content="Camron Farjami">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Camron Farjami — Student, Researcher &amp; Developer">
+  <meta name="twitter:description" content="Student, hematology/oncology researcher, and self-taught developer.">
+  <meta name="twitter:image" content="https://camr.one/photos/pfp.png">
   <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="/photos/pfp.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/paste/style.css">
   <link rel="stylesheet" href="/upload/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Camron Farjami",
+    "url": "https://camr.one/",
+    "image": "https://camr.one/photos/pfp.png",
+    "jobTitle": "Student & Researcher",
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of Michigan" },
+    "sameAs": [
+      "https://www.linkedin.com/in/camron-farjami-608822359/",
+      "https://github.com/LuxologyGG",
+      "https://orcid.org/0009-0007-9651-9681",
+      "https://letterboxd.com/camrone/"
+    ]
+  }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/bsehovac/shader-program@master/ShaderProgram.js"></script>
 </head>
@@ -45,10 +92,6 @@
       alt="Centered visual"
     />
     <div class="glass-card">
-      <label class="toggle" aria-label="Toggle theme" title="Switch between light and dark mode">
-        <input id="theme-toggle-input" type="checkbox" aria-label="Toggle light mode and dark mode" />
-        <div></div>
-      </label>
       <button class="back-button" aria-label="Back to prompt" title="Go back">&#8592;</button>
       <div class="profile-badge">
         <div class="profile-glass">
@@ -56,7 +99,7 @@
         </div>
         <div class="profile-text">
             <div class="profile-name">Hey, I'm Camron <span class="wave-emoji" id="wave-emoji" aria-hidden="true">👋</span></div>
-            <div class="profile-title">Student · Researcher <a href="/overview" class="overview-btn" title="Quick overview of everything">Overview</a></div>
+            <div class="profile-title">Student · Researcher <a href="/overview" class="overview-btn" aria-label="Quick overview of me"><span class="overview-btn__label">Overview</span><span class="overview-btn__arrow" aria-hidden="true">→</span><span class="overview-btn__tip" role="tooltip">Just want a quick overview of me? Click here</span></a></div>
             <div class="social-chips">
               <a class="social-chip" href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noreferrer" title="My LinkedIn profile">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1-.001 5.001A2.5 2.5 0 0 1 4.98 3.5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31c-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg>
@@ -84,6 +127,9 @@
               </a>
               <a class="social-chip" href="https://orcid.org/0009-0007-9651-9681" target="_blank" rel="noreferrer" title="My ORCID profile">
                 <svg viewBox="50 36 170 170" aria-hidden="true"><path fill="currentColor" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/><path fill="currentColor" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/><path fill="currentColor" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z"/></svg>
+              </a>
+              <a class="social-chip" href="https://letterboxd.com/camrone/" target="_blank" rel="noreferrer" title="My Letterboxd profile">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="12" r="4.3" fill="#FF8000"/><circle cx="17" cy="12" r="4.3" fill="#40BCF4"/><circle cx="12" cy="12" r="4.3" fill="#00E054" style="mix-blend-mode:lighten"/></svg>
               </a>
               <button class="social-chip copy-chip" id="social-email" type="button" title="Copy my email address">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4l-8 5l-8-5V6l8 5l8-5Z"/></svg>
@@ -128,24 +174,26 @@
         <div class="overview-scroll-area" id="overview-scroll-area"></div>
       </div>
       <div class="work-content">
-        <div class="work-tabs">
-          <button class="work-tab is-active" data-target="#work-about" title="About me">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">About</span>
-          </button>
-          <button class="work-tab" data-target="#work-experience" title="My experience and skills">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">Experience</span>
-          </button>
-          <button class="work-tab" data-target="#work-search" title="Search and explore the site">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">Explore</span>
+        <div class="work-tabs liquid-nav" id="liquid-nav">
+          <span class="liquid-nav__glare" id="liquid-glare" aria-hidden="true"></span>
+          <div class="liquid-nav__items">
+            <span class="liquid-nav__pill" id="liquid-pill" aria-hidden="true"></span>
+            <button class="work-tab is-active" data-target="#work-about" title="About me">
+              <span class="work-tab__label">About</span>
+            </button>
+            <button class="work-tab" data-target="#work-experience" title="My experience and skills">
+              <span class="work-tab__label">Experience</span>
+            </button>
+            <button class="work-tab" data-target="#work-search" title="Search and explore the site">
+              <span class="work-tab__label">Explore</span>
+            </button>
+          </div>
+          <span class="liquid-nav__divider" aria-hidden="true"></span>
+          <button class="liquid-nav__theme" id="nav-theme-btn" type="button" aria-label="Toggle light and dark theme">
+            <span class="theme-icon-wrap">
+              <svg class="theme-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg class="theme-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
           </button>
         </div>
         <div class="work-sections">
@@ -159,13 +207,18 @@
             </p>
             <div class="about-stack glassy">
               <div class="about-row">
-                <div class="about-logo glassy">
-                  <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC logo">
+                <div class="about-logo glassy about-logo-cbsc" aria-hidden="true">
+                  <img src="/photos/cbsc.png" alt="CBSC" onerror="this.remove()">
+                  <svg class="cbsc-fallback" viewBox="0 0 64 64" fill="none" stroke-width="6.5" stroke-linecap="round">
+                    <ellipse cx="26" cy="31" rx="16" ry="9.5" transform="rotate(-28 26 31)" stroke="#C49A3A"/>
+                    <ellipse cx="33" cy="25" rx="9.5" ry="16" transform="rotate(12 33 25)" stroke="#3f3f44"/>
+                    <ellipse cx="37" cy="39" rx="16" ry="9.5" transform="rotate(22 37 39)" stroke="#1F5FA8"/>
+                  </svg>
                 </div>
                 <div class="about-current-text glassy">
-                  <div class="about-current-title">I'm currently working at <strong>USC</strong></div>
-                  <div class="about-current-sub">Research Intern</div>
-                  <div class="about-current-body">Where I work  with Dr. Yaghmour researching BPDCN. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
+                  <div class="about-current-title">I'm currently at <strong>Cancer &amp; Blood Specialty Clinic</strong></div>
+                  <div class="about-current-sub">Research Intern · Hematology/Oncology</div>
+                  <div class="about-current-body">Managing study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
                 </div>
               </div>
               <div class="about-row discord-row" id="discord-row">
@@ -218,10 +271,16 @@
             </div>
             <div class="htl-detail glassy" id="htl-detail"></div>
             <div class="exp-coding-section">
-              <a href="/photos/Resume.pdf" target="_blank" rel="noopener" class="resume-banner glassy">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                View My Resume
-              </a>
+              <div class="resume-banner-row">
+                <a href="/photos/Resume.pdf" target="_blank" rel="noopener" class="resume-banner glassy">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  View My Resume
+                </a>
+                <a href="/photos/CV.pdf" target="_blank" rel="noopener" class="resume-banner glassy">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  View My CV
+                </a>
+              </div>
 
               <h4 class="exp-section-label">Tech Stack</h4>
               <div class="tech-logos">
@@ -1322,6 +1381,21 @@
         });
       }
 
+      // Pre-build both map backgrounds (tiles + canvas) ahead of time so
+      // switching to Experience/Explore doesn't fetch-and-flicker. Silent:
+      // it never changes the visible blend targets, only warms the caches.
+      let mapWarmed = false;
+      window._graphPaperWarm = function () {
+        if (mapWarmed) return;
+        mapWarmed = true;
+        loadMapLocation().then(loc => {
+          if (!loc) { mapWarmed = false; return; }
+          const idle = window.requestIdleCallback || function (cb) { return setTimeout(cb, 200); };
+          idle(() => { if (!(mapReady && mapCanvasTheme === theme)) buildMapCanvas(); });
+          idle(() => { if (!(topoMapReady && topoMapCanvasTheme === theme)) buildTopoMapCanvas(); });
+        });
+      };
+
       window._graphPaperSetMode = function (mode) {
         bgMode = mode;
         // Update "What's this?" tooltip text
@@ -1600,7 +1674,7 @@
     }
 
     function initThemeToggle() {
-      if (!themeToggleInput) return;
+      const navThemeBtn = document.getElementById('nav-theme-btn');
 
       const saved = localStorage.getItem('theme');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -1610,26 +1684,21 @@
 
       setTheme(initialMode);
 
-      themeToggleInput.addEventListener('input', () => {
-        const nextMode = themeToggleInput.checked ? 'dark' : 'light';
+      if (!navThemeBtn) return;
+
+      navThemeBtn.addEventListener('click', () => {
+        const nextMode = document.body.classList.contains('light-mode') ? 'dark' : 'light';
         localStorage.setItem('theme', nextMode);
 
-        const toggleEl = themeToggleInput.closest('.toggle');
-        let x = window.innerWidth / 2;
-        let y = window.innerHeight / 2;
-        if (toggleEl) {
-          const rect = toggleEl.getBoundingClientRect();
-          x = rect.left + rect.width / 2;
-          y = rect.top + rect.height / 2;
-        }
-        document.documentElement.style.setProperty('--x', `${x}px`);
-        document.documentElement.style.setProperty('--y', `${y}px`);
+        // Center the circular reveal on the toggle button.
+        const rect = navThemeBtn.getBoundingClientRect();
+        document.documentElement.style.setProperty('--x', `${rect.left + rect.width / 2}px`);
+        document.documentElement.style.setProperty('--y', `${rect.top + rect.height / 2}px`);
 
         if (!document.startViewTransition) {
           setTheme(nextMode);
           return;
         }
-
         document.startViewTransition(() => {
           setTheme(nextMode);
         });
@@ -1897,13 +1966,39 @@
 
     const WORK_TIMELINE_DATA = [
       {
+        id: 'cbsc_intern',
+        yearStart: 2026,
+        yearEnd: 2026,
+        date: 'Jun 2026 - Present',
+        title: 'Research Intern',
+        org: 'Cancer and Blood Specialty Clinic (CBSC) · Long Beach, CA',
+        meta: 'Cancer and Blood Specialty Clinic (CBSC) · Jun 2026 - Present · Long Beach, CA',
+        body: [
+          'Manage study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry.'
+        ]
+      },
+      {
+        id: 'lomalinda_researcher',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'Feb 2025 - Present',
+        title: 'Researcher',
+        org: 'Loma Linda University Medical Center · Hybrid, CA',
+        meta: 'Loma Linda University Medical Center · Feb 2025 - Present · Hybrid, CA',
+        body: [
+          'Work under Dr. Mojtaba Akhtari on hematology/oncology research projects.',
+          'Contribute to case reports and clinical papers on multiple myeloma and complex malignancies.',
+          'Presented onstage at the MOASC 2026 Oncology Leadership & Research Summit as one of three high school students in attendance.'
+        ]
+      },
+      {
         id: 'assistant_researcher',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Sep 2025 - Present',
+        date: 'Sep 2025 - Jun 2026',
         title: 'Assistant Researcher',
         org: 'USC Norris Comprehensive Cancer Center · Los Angeles, CA',
-        meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 - Present · Los Angeles, CA (On-site)',
+        meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 - Jun 2026 · Los Angeles, CA (On-site)',
         body: [
           'Observed hematology/oncology rounds (AML, stem cell transplantation, novel maintenance therapies).',
           'Learned regimen selection (7+3, FLAG, CPX-351) and managed engraftment/transplant toxicities.',
@@ -1916,10 +2011,10 @@
         id: 'nyas_student',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Aug 2025 - Present',
+        date: 'Aug 2025 - Mar 2026',
         title: 'Student',
         org: 'New York Academy of Sciences · Remote',
-        meta: 'New York Academy of Sciences · Aug 2025 - Present · Remote',
+        meta: 'New York Academy of Sciences · Aug 2025 - Mar 2026 · Remote',
         body: [
           'Selected for a global community of high-achieving students and STEM mentors.',
           'Collaborating on sustainability, energy, and global health challenges.'
@@ -1929,10 +2024,10 @@
         id: 'ucla_intern',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'May 2025 - Present',
+        date: 'May 2025 - Feb 2026',
         title: 'Intern',
-        org: 'UCLA Computer Science (GLITCH) · Los Angeles, CA',
-        meta: 'UCLA Computer Science (GLITCH) · May 2025 - Present · Los Angeles, CA (Hybrid)',
+        org: 'UCLA Computer Science · Los Angeles, CA',
+        meta: 'UCLA Computer Science · May 2025 - Feb 2026 · Los Angeles, CA (Hybrid)',
         body: [
           'Contributed to Hot Potato, a GPS-based multiplayer mobile game for real-world interaction.',
           'Collaborated on design, development, debugging, and agile teamwork.',
@@ -1943,10 +2038,10 @@
         id: 'southbay_board',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Feb 2025 - Present',
+        date: 'Feb 2025 - May 2026',
         title: 'Board Member & Lead Web Developer',
         org: 'South Bay STEM Association · Rancho Palos Verdes, CA',
-        meta: 'South Bay STEM Association · Feb 2025 - Present · Rancho Palos Verdes, CA',
+        meta: 'South Bay STEM Association · Feb 2025 - May 2026 · Rancho Palos Verdes, CA',
         body: [
           'Oversee STEM initiatives, mentor students, and build web platforms for education and outreach.',
           'Skills: web dev, non-profit management, STEM, volunteering, WordPress/JS/CSS/HTML.'
@@ -2617,6 +2712,34 @@
       }
     ];
 
+    // Things I'm building — sourced from my CV, not GitHub.
+    const BUILD_PROJECTS = [
+      {
+        title: 'Homa',
+        desc: 'AI-personalized nootropics & supplement platform that generates custom compound "stacks" from a 2,900+ compound interaction database.',
+        tags: ['Next.js', 'Supabase', 'AI'],
+        url: 'https://homa.bio'
+      },
+      {
+        title: 'Avely',
+        desc: 'AI health check-in app paired with a hardware device for everyday wellness tracking.',
+        tags: ['AI', 'Hardware', 'Health'],
+        url: 'https://avely.tech'
+      },
+      {
+        title: 'Fara',
+        desc: 'An AI companion designed for neurodiverse adults.',
+        tags: ['AI', 'Companion'],
+        url: ''
+      },
+      {
+        title: 'camr.one',
+        desc: 'This site — my personal portfolio, built from scratch on Cloudflare Workers.',
+        tags: ['JavaScript', 'Cloudflare'],
+        url: 'https://camr.one'
+      }
+    ];
+
     function getContactAvailabilityLabel() {
       const status = lastDiscordPresenceData?.status || 'offline';
       if (status === 'offline') return 'Offline';
@@ -2816,6 +2939,33 @@
         </a>`
       ).join('');
 
+      // Everyday carry — drop transparent product PNG/WebPs into /photos/edc/
+      // (named below) and they'll replace the emoji glyph automatically.
+      const EDC_ITEMS = [
+        { name: 'iPhone 15 Pro', glyph: '📱', note: 'Titanium, always-on, and somehow always at 38%.', img: '/photos/edc/iphone-15-pro.webp', link: 'https://www.apple.com/iphone-15-pro/' },
+        { name: 'AirPods Pro 2', glyph: '🎧', note: 'My off-switch for the rest of the world.', img: '/photos/edc/airpods-pro.webp', link: 'https://www.apple.com/airpods-pro/' },
+        { name: 'Owala FreeSip', glyph: '🧴', note: 'Black on black. Hydration with a dress code.', img: '/photos/edc/owala.webp', link: 'https://owalalife.com/products/owala-freesip-24-oz' },
+        { name: 'Ember Mug²', glyph: '☕', note: 'Coffee that refuses to go cold. Worth it.', img: '/photos/edc/ember.webp', link: 'https://ember.com/products/ember-mug-2' },
+        { name: 'Chrome Hearts Evangelist', glyph: '🕶️', note: 'The one splurge I will not be justifying.', img: '/photos/edc/chrome-hearts.webp', link: 'https://www.chromehearts.com/' },
+        { name: 'iPad Pro 13″ (M2)', glyph: '📝', note: 'Notes, papers, and the occasional 2am sketch.', img: '/photos/edc/ipad-pro.webp', link: 'https://www.apple.com/ipad-pro/' },
+        { name: 'MacBook Air M4', glyph: '💻', note: 'Where this whole site got (re)built.', img: '/photos/edc/macbook-air.webp', link: 'https://www.apple.com/macbook-air/' },
+        { name: 'Omega Seamaster 300M', glyph: '⌚', note: '42mm Master Chronometer. Bond would approve.', img: '/photos/edc/omega-seamaster.webp', link: 'https://www.omegawatches.com/en-us/watch-omega-seamaster-diver-300m-co-axial-master-chronometer-42-mm-21030422001018' },
+        { name: 'Casio AE-1200WHD', glyph: '⏱️', note: 'The $25 "Casio Royale." Function over flex.', img: '/photos/edc/casio-ae1200.webp', link: 'https://www.casio.com/us/watches/casio/product.AE-1200WHD-7AV/' },
+      ];
+      const edcCards = EDC_ITEMS.map(it =>
+        `<a class="edc-card" href="${it.link}" target="_blank" rel="noopener" title="${it.name}">
+          <div class="edc-thumb">
+            <img src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.remove();" />
+            <span class="edc-glyph" aria-hidden="true">${it.glyph}</span>
+          </div>
+          <div class="edc-meta">
+            <span class="edc-name">${it.name}</span>
+            <span class="edc-note">${it.note}</span>
+          </div>
+          <span class="edc-arrow" aria-hidden="true">→</span>
+        </a>`
+      ).join('');
+
       container.innerHTML = `
         <div class="ov-inner">
           <div class="ov-header">
@@ -2833,7 +2983,7 @@
 
           <div class="ov-section">
             <div class="ov-section-label">OVERVIEW</div>
-            <p class="ov-body">High school senior researching cancer biology at USC Norris Comprehensive Cancer Center and building software at UCLA GLITCH Lab. I like working at the intersection of biomedical research and technology. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
+            <p class="ov-body">Incoming Biology &amp; Pre-Med student at the University of Michigan and a hematology/oncology researcher across academic medical centers. Co-author on multiple peer-reviewed case reports, with parallel work building AI-driven health technology. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
           </div>
 
           <div class="ov-section">
@@ -2871,16 +3021,25 @@
             </div>
           </div>
 
+          <div class="ov-section">
+            <div class="ov-section-label">EVERYDAY CARRY</div>
+            <div class="edc-grid">${edcCards}</div>
+          </div>
+
           <div class="ov-section ov-links-section">
             <div class="ov-section-label">LINKS</div>
             <div class="ov-links">
               <a href="/photos/Resume.pdf" target="_blank" rel="noopener">resume</a>
               <span class="ov-link-sep">|</span>
+              <a href="/photos/CV.pdf" target="_blank" rel="noopener">cv</a>
+              <span class="ov-link-sep">|</span>
               <a href="mailto:camron@camr.one">email</a>
               <span class="ov-link-sep">|</span>
               <a href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noopener">linkedin</a>
               <span class="ov-link-sep">|</span>
-              <a href="https://github.com/camronjones" target="_blank" rel="noopener">github</a>
+              <a href="https://github.com/LuxologyGG" target="_blank" rel="noopener">github</a>
+              <span class="ov-link-sep">|</span>
+              <a href="https://letterboxd.com/camrone/" target="_blank" rel="noopener">letterboxd</a>
             </div>
           </div>
         </div>
@@ -2926,8 +3085,8 @@
             </a>
           </div>
         </div>
-        <div class="contact-cal-section glassy">
-          <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-quick-chat"></div>
+        <div class="contact-cal-section">
+          <div class="cal-inline-wrap" id="my-cal-inline-quick-chat"></div>
         </div>
       `;
 
@@ -3031,15 +3190,8 @@
           ghCard.querySelector('.contrib-graph').innerHTML = '<div class="github-loading">Could not load contributions</div>';
         });
 
-      // Fetch repos for project cards
-      fetch('https://api.github.com/users/' + username + '/repos?sort=updated&per_page=30')
-        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-        .then(repos => {
-          buildProjectCards(projCard.querySelector('.projects-grid'), repos);
-        })
-        .catch(() => {
-          buildProjectCards(projCard.querySelector('.projects-grid'), []);
-        });
+      // Project cards come from my CV (BUILD_PROJECTS), not GitHub.
+      buildProjectCards(projCard.querySelector('.projects-grid'), []);
     }
 
     function buildContribGraph(container, data) {
@@ -3171,26 +3323,23 @@
     }
 
     function buildProjectCards(gridEl, repos) {
-      const repoCards = repos
-        .filter(r => !r.fork)
-        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-        .slice(0, 6)
-        .map((r, i) => {
-          const tags = [r.language, ...(r.topics || [])].filter(Boolean).slice(0, 3);
-          return `<a class="project-card" href="${r.html_url}" target="_blank" rel="noreferrer" style="animation-delay:${i * 60 + 40}ms">
-            <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+      const buildCards = BUILD_PROJECTS.map((p, i) => {
+        const tag = p.url ? 'a' : 'div';
+        const href = p.url ? ` href="${p.url}" target="_blank" rel="noreferrer"` : '';
+        return `<${tag} class="project-card${p.url ? '' : ' no-link'}"${href} style="animation-delay:${i * 60 + 40}ms">
+            <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
             <div class="project-card-body">
-              <div class="project-card-title">${escHtml(r.name)}</div>
-              <div class="project-card-desc">${escHtml(r.description || 'No description')}</div>
-              ${tags.length ? `<div class="project-card-tags">${tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
+              <div class="project-card-title">${escHtml(p.title)}</div>
+              <div class="project-card-desc">${escHtml(p.desc)}</div>
+              <div class="project-card-tags">${p.tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>
             </div>
-            <span class="project-type-badge repo">repo</span>
-            <svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>`;
-        });
+            <span class="project-type-badge build">building</span>
+            ${p.url ? '<svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' : ''}
+          </${tag}>`;
+      });
 
       const researchCards = RESEARCH_PROJECTS.map((p, i) => {
-        const delay = (repoCards.length + i) * 60 + 40;
+        const delay = (buildCards.length + i) * 60 + 40;
         return `<a class="project-card" href="${p.url}" target="_blank" rel="noreferrer" style="animation-delay:${delay}ms">
           <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
           <div class="project-card-body">
@@ -3240,7 +3389,7 @@
     function initDaysSince() {
       const el = document.getElementById('days-since-usc');
       if (!el) return;
-      const start = Date.UTC(2025, 8, 18); // Sept 18, 2025 (months 0-indexed)
+      const start = Date.UTC(2026, 5, 18); // ~Jun 18, 2026 — started CBSC about a week ago
       const now = Date.now();
       const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
       el.textContent = days >= 0 ? days : 0;
@@ -3273,6 +3422,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       initNavigation();
       initThemeToggle();
+      initLiquidNav();
       initWorkCard();
       initDaysSince();
       initExperienceDetails();
@@ -3306,6 +3456,42 @@
       }
     });
 
+    // ------- Liquid glass nav: sliding active pill + interactive glare -------
+    function updateLiquidPill(animate = true) {
+      const pill = document.getElementById('liquid-pill');
+      const active = document.querySelector('.liquid-nav__items .work-tab.is-active');
+      if (!pill || !active) return;
+      if (!animate) pill.style.transition = 'none';
+      else pill.style.transition = '';
+      pill.style.width = active.offsetWidth + 'px';
+      pill.style.transform = `translateX(${active.offsetLeft}px)`;
+      if (!animate) {
+        // force reflow so the next change animates
+        void pill.offsetWidth;
+        pill.style.transition = '';
+      }
+    }
+
+    function initLiquidNav() {
+      const nav = document.getElementById('liquid-nav');
+      const glare = document.getElementById('liquid-glare');
+      if (!nav) return;
+      // Position the pill without animation on first paint.
+      requestAnimationFrame(() => updateLiquidPill(false));
+      // Re-measure once fonts settle (label widths can shift).
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => updateLiquidPill(false));
+      }
+      window.addEventListener('resize', () => updateLiquidPill(false));
+      if (glare) {
+        nav.addEventListener('mousemove', (e) => {
+          const r = nav.getBoundingClientRect();
+          glare.style.setProperty('--gx', `${e.clientX - r.left}px`);
+          glare.style.setProperty('--gy', `${e.clientY - r.top}px`);
+        });
+      }
+    }
+
     // ------- Work card toggle -------
     function setActiveWorkTab(target) {
       const tabButtons = document.querySelectorAll('.work-tab');
@@ -3313,6 +3499,7 @@
       const isExperience = target === '#work-experience';
       const isSearch = target === '#work-search';
       tabButtons.forEach((btn) => btn.classList.toggle('is-active', btn.getAttribute('data-target') === target));
+      updateLiquidPill();
       document.body.classList.toggle('experience-active', isExperience);
       document.body.classList.toggle('search-active', isSearch);
       sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));
@@ -3337,6 +3524,8 @@
       const target = opts.target || (activeWorkTab ? activeWorkTab.getAttribute('data-target') : '#work-about');
       setActiveWorkTab(target);
       document.body.classList.add('work-mode');
+      // Warm the map backgrounds so switching tabs doesn't fetch-and-flicker.
+      if (window._graphPaperWarm) window._graphPaperWarm();
       startDiscordPresence();
       if (opts.initial) {
         requestAnimationFrame(() => {
@@ -3370,23 +3559,35 @@
       // Last: capture new rect
       const last = card.getBoundingClientRect();
 
-      // Invert: set the card to where it WAS
+      // Read the new mode's base transform (e.g. translate(-50%,-50%) resolved to px)
+      // so we can compose the FLIP on top of it instead of clobbering the centering.
+      let baseTx = 0, baseTy = 0;
+      try {
+        const ct = getComputedStyle(card).transform;
+        if (ct && ct !== 'none') {
+          const m = new DOMMatrixReadOnly(ct);
+          baseTx = m.m41; baseTy = m.m42;
+        }
+      } catch (_) {}
+
+      // Invert: place the card visually where it WAS, keeping its base centering.
       const dx = first.left - last.left;
       const dy = first.top - last.top;
       const sw = first.width / last.width;
       const sh = first.height / last.height;
 
       card.style.transformOrigin = 'top left';
-      card.style.transform = `translate(${dx}px, ${dy}px) scale(${sw}, ${sh})`;
+      card.style.transform = `translate(${baseTx + dx}px, ${baseTy + dy}px) scale(${sw}, ${sh})`;
 
-      // Play: animate to final position
+      // Play: animate to final position (faster + smoother than before)
       requestAnimationFrame(() => {
-        card.style.transition = 'transform 650ms cubic-bezier(0.25, 0.8, 0.25, 1)';
-        card.style.transform = '';
+        card.style.transition = 'transform 1300ms cubic-bezier(0.65, 0, 0.25, 1)';
+        card.style.transform = `translate(${baseTx}px, ${baseTy}px)`;
         card.addEventListener('transitionend', function cleanup(e) {
           if (e.propertyName !== 'transform') return;
           card.removeEventListener('transitionend', cleanup);
           card.style.transition = '';
+          card.style.transform = '';
           card.style.transformOrigin = '';
         }, { once: false });
       });
@@ -3448,7 +3649,21 @@
       const workTabsEl = document.querySelector('.work-tabs');
       if (workSectionsEl && workTabsEl) {
         let tabsHidden = false;
+        let scrollIdleTimer = null;
         workSectionsEl.addEventListener('scroll', () => {
+          // In Explore: fade the tabs out while actively scrolling, then bring
+          // them back once scrolling stops (regardless of position).
+          if (document.body.classList.contains('search-active')) {
+            workTabsEl.classList.remove('is-hidden');
+            workTabsEl.classList.add('is-scroll-fade');
+            if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
+            scrollIdleTimer = setTimeout(() => {
+              workTabsEl.classList.remove('is-scroll-fade');
+            }, 360);
+            return;
+          }
+          workTabsEl.classList.remove('is-scroll-fade');
+          // About / Experience: hide once the user scrolls past the top.
           const scrolled = workSectionsEl.scrollTop > 40;
           if (scrolled && !tabsHidden) {
             tabsHidden = true;

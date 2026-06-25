@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Camron Farjami</title>
+<meta name="description" content="Camron Farjami — Biology & Pre-Med student, hematology/oncology researcher, and builder.">
+<meta name="theme-color" content="#0b0c0f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/photos/pfp.png">
+<style>
+  :root{
+    --bg:#0b0c0f; --card:#15171c; --card-2:#1b1e24; --bd:rgba(255,255,255,.09);
+    --tx:#f3f4f6; --tx-2:rgba(243,244,246,.62); --tx-3:rgba(243,244,246,.42);
+    --accent:#3ddc97; --accent-soft:rgba(61,220,151,.14);
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f7f9; --card:#ffffff; --card-2:#fbfbfd; --bd:rgba(0,0,0,.08);
+      --tx:#14161a; --tx-2:rgba(20,22,26,.62); --tx-3:rgba(20,22,26,.45);
+      --accent:#16a35e; --accent-soft:rgba(22,163,94,.1); }
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    background:var(--bg); color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    padding:calc(34px + env(safe-area-inset-top)) 20px calc(48px + env(safe-area-inset-bottom));
+    max-width:620px; margin:0 auto;
+  }
+  .wrap>section{ animation:rise .6s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* Header */
+  .hero{display:flex;align-items:center;gap:15px;margin-bottom:18px;}
+  .hero img{width:62px;height:62px;border-radius:18px;object-fit:cover;border:1px solid var(--bd);}
+  .hero h1{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.15;}
+  .hero .role{font-size:13.5px;color:var(--tx-2);margin-top:3px;}
+  .meta{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--tx-3);margin-bottom:20px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+
+  /* Actions */
+  .actions{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px;}
+  .btn{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:11px 14px;border-radius:13px;font-size:13.5px;font-weight:600;text-decoration:none;
+    background:var(--card);border:1px solid var(--bd);color:var(--tx);transition:transform .15s ease;}
+  .btn:active{transform:scale(.97);}
+  .btn.primary{background:var(--accent);color:#04130c;border-color:transparent;}
+  .btn svg{width:16px;height:16px;}
+
+  /* Sections */
+  section{margin-bottom:28px;}
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);margin-bottom:13px;}
+  .bio{font-size:15.5px;color:var(--tx);line-height:1.7;}
+
+  .row{display:block;text-decoration:none;color:inherit;padding:14px 15px;border-radius:14px;
+    background:var(--card);border:1px solid var(--bd);margin-bottom:10px;transition:transform .15s ease;}
+  a.row:active{transform:scale(.985);}
+  .row-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .row-title{font-size:15px;font-weight:650;letter-spacing:-.01em;}
+  .row-date{font-size:12px;color:var(--tx-3);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums;}
+  .row-org{font-size:13px;color:var(--tx-2);margin-top:2px;}
+  .row-desc{font-size:13.5px;color:var(--tx-2);margin-top:7px;line-height:1.6;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .tag{font-size:10.5px;font-weight:600;letter-spacing:.02em;padding:3px 8px;border-radius:99px;
+    background:var(--accent-soft);color:var(--accent);}
+  .ext{color:var(--accent);font-size:12px;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
+
+  .pubs li{font-size:13.5px;color:var(--tx-2);line-height:1.55;padding:9px 0;border-bottom:1px solid var(--bd);list-style:none;}
+  .pubs li:last-child{border-bottom:none;}
+  .pubs a{color:var(--accent);text-decoration:none;}
+  .pubs .yr{color:var(--tx-3);font-size:12px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .mini{padding:13px 14px;border-radius:14px;background:var(--card);border:1px solid var(--bd);}
+  .mini .t{font-size:14px;font-weight:650;}
+  .mini .s{font-size:12px;color:var(--tx-2);margin-top:3px;line-height:1.45;}
+
+  /* Socials */
+  .socials{display:flex;flex-wrap:wrap;gap:10px;}
+  .soc{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:13px;
+    background:var(--card);border:1px solid var(--bd);color:var(--tx-2);text-decoration:none;transition:transform .15s,color .2s;}
+  .soc:active{transform:scale(.94);}
+  .soc svg{width:21px;height:21px;}
+
+  footer{margin-top:34px;text-align:center;font-size:12px;color:var(--tx-3);}
+  footer a{color:var(--tx-2);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="hero" style="animation-delay:0ms">
+    <img src="/photos/pfp.png" alt="Camron Farjami">
+    <div>
+      <h1>Camron Farjami</h1>
+      <div class="role">Biology &amp; Pre-Med · Researcher · Builder</div>
+    </div>
+  </section>
+  <div class="meta"><span class="dot"></span> Rancho Palos Verdes, CA · open to research &amp; collaborations</div>
+
+  <section class="actions" style="animation-delay:40ms">
+    <a class="btn primary" href="/photos/Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Résumé</a>
+    <a class="btn" href="/photos/CV.pdf" target="_blank" rel="noopener">CV</a>
+    <a class="btn" href="mailto:farjamicamron@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>Email</a>
+  </section>
+
+  <section style="animation-delay:80ms">
+    <div class="lbl">About</div>
+    <p class="bio">Incoming Biology &amp; Pre-Med student at the University of Michigan and a hematology/oncology researcher across academic medical centers. Co-author on multiple peer-reviewed case reports, with parallel work building AI-driven health technology. Outside of that, I ski, cook, and debate.</p>
+  </section>
+
+  <section style="animation-delay:120ms">
+    <div class="lbl">Currently</div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Research Intern</span><span class="row-date">Jun 2026 — Now</span></div>
+      <div class="row-org">Cancer &amp; Blood Specialty Clinic · Long Beach, CA</div>
+      <div class="row-desc">Managing study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry.</div>
+    </div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Researcher</span><span class="row-date">Feb 2025 — Now</span></div>
+      <div class="row-org">Loma Linda University Medical Center · Hybrid, CA</div>
+      <div class="row-desc">Under Dr. Akhtari on multiple myeloma case reports &amp; clinical papers. Presented onstage at MOASC 2026.</div>
+    </div>
+  </section>
+
+  <section style="animation-delay:160ms">
+    <div class="lbl">Past Roles</div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Assistant Researcher</span><span class="row-date">2025 — 2026</span></div>
+      <div class="row-org">USC Norris Comprehensive Cancer Center</div>
+    </div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Board Member &amp; Lead Web Dev</span><span class="row-date">2025 — 2026</span></div>
+      <div class="row-org">South Bay STEM Association</div>
+    </div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Research Fellow</span><span class="row-date">2025</span></div>
+      <div class="row-org">Non-Trivial · Inflection Grant recipient</div>
+    </div>
+  </section>
+
+  <section style="animation-delay:200ms">
+    <div class="lbl">Building</div>
+    <a class="row" href="https://homa.bio" target="_blank" rel="noopener">
+      <div class="row-top"><span class="row-title">Homa</span><span class="row-date">homa.bio ↗</span></div>
+      <div class="row-desc">AI-personalized nootropics &amp; supplement platform generating custom compound “stacks” from a 2,900+ compound database.</div>
+      <div class="tags"><span class="tag">Next.js</span><span class="tag">Supabase</span><span class="tag">AI</span></div>
+    </a>
+    <a class="row" href="https://avely.tech" target="_blank" rel="noopener">
+      <div class="row-top"><span class="row-title">Avely</span><span class="row-date">avely.tech ↗</span></div>
+      <div class="row-desc">AI health check-in app paired with a hardware device for everyday wellness tracking.</div>
+      <div class="tags"><span class="tag">AI</span><span class="tag">Hardware</span><span class="tag">Health</span></div>
+    </a>
+    <div class="row">
+      <div class="row-top"><span class="row-title">Fara</span></div>
+      <div class="row-desc">An AI companion designed for neurodiverse adults.</div>
+      <div class="tags"><span class="tag">AI</span><span class="tag">Companion</span></div>
+    </div>
+  </section>
+
+  <section style="animation-delay:240ms">
+    <div class="lbl">Research &amp; Publications</div>
+    <ul class="pubs">
+      <li><a href="https://figshare.com/articles/preprint/Living_Machines_Algae-Based_Biohybrid_Microrobots_for_Precision_Oncology/29896883" target="_blank" rel="noopener">Living Machines: Algae-Based Biohybrid Microrobots for Precision Oncology</a> <span class="yr">· Figshare, 2025</span></li>
+      <li>Blastic Plasmacytoid Dendritic Cell Neoplasm with Systemic Mastocytosis: A Case Report <span class="yr">· 2025</span></li>
+      <li>Manganese Deficiency as an Under-Recognized Cause of Chronic Anemia <span class="yr">· 2025</span></li>
+      <li><a href="https://www.preprints.org/manuscript/202606.0210" target="_blank" rel="noopener">A Comprehensive Review of Zinc Deficiency-Associated Anemia</a> <span class="yr">· Preprints.org, 2026</span></li>
+      <li>+ 4 additional hematology/oncology case reports (USC Norris, 2025–2026)</li>
+    </ul>
+  </section>
+
+  <section style="animation-delay:280ms">
+    <div class="lbl">Education</div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">B.Sc. Biology, Minor in Business</span><span class="row-date">2026 — 2030</span></div>
+      <div class="row-org">University of Michigan · Pre-Medicine</div>
+    </div>
+    <div class="row">
+      <div class="row-top"><span class="row-title">High School Diploma</span><span class="row-date">2022 — 2026</span></div>
+      <div class="row-org">Palos Verdes Peninsula HS · 3.8 UW / 4.5 W · SAT 1530</div>
+    </div>
+  </section>
+
+  <section style="animation-delay:320ms">
+    <div class="lbl">Awards</div>
+    <div class="grid2">
+      <div class="mini"><div class="t">Inflection Grant</div><div class="s">1 of 5 from 350+ applicants</div></div>
+      <div class="mini"><div class="t">Silver Medalist</div><div class="s">US Medicine &amp; Disease Olympiad</div></div>
+      <div class="mini"><div class="t">MOASC 2026</div><div class="s">Certificate of Presentation</div></div>
+      <div class="mini"><div class="t">TSA</div><div class="s">4th in California</div></div>
+    </div>
+  </section>
+
+  <section style="animation-delay:360ms">
+    <div class="lbl">Elsewhere</div>
+    <div class="socials">
+      <a class="soc" href="https://github.com/LuxologyGG" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.23.66-.5v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.59.67.5A10 10 0 0 0 12 2Z"/></svg></a>
+      <a class="soc" href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg></a>
+      <a class="soc" href="https://letterboxd.com/camrone/" target="_blank" rel="noopener" aria-label="Letterboxd"><svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="4.3" fill="#FF8000"/><circle cx="17" cy="12" r="4.3" fill="#40BCF4"/><circle cx="12" cy="12" r="4.3" fill="#00E054" style="mix-blend-mode:lighten"/></svg></a>
+      <a class="soc" href="mailto:farjamicamron@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></a>
+    </div>
+  </section>
+
+  <footer>
+    <a href="/?full=1">View the full site →</a>
+  </footer>
+</div>
+</body>
+</html>
