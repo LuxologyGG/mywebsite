@@ -79,10 +79,6 @@
       alt="Centered visual"
     />
     <div class="glass-card">
-      <label class="toggle" aria-label="Toggle theme" title="Switch between light and dark mode">
-        <input id="theme-toggle-input" type="checkbox" aria-label="Toggle light mode and dark mode" />
-        <div></div>
-      </label>
       <button class="back-button" aria-label="Back to prompt" title="Go back">&#8592;</button>
       <div class="profile-badge">
         <div class="profile-glass">
@@ -169,24 +165,26 @@
         <div class="overview-scroll-area" id="overview-scroll-area"></div>
       </div>
       <div class="work-content">
-        <div class="work-tabs">
-          <button class="work-tab is-active" data-target="#work-about" title="About me">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">About</span>
-          </button>
-          <button class="work-tab" data-target="#work-experience" title="My experience and skills">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">Experience</span>
-          </button>
-          <button class="work-tab" data-target="#work-search" title="Search and explore the site">
-            <span class="work-tab__glass-filter"></span>
-            <span class="work-tab__glass-overlay"></span>
-            <span class="work-tab__glass-specular"></span>
-            <span class="work-tab__label">Explore</span>
+        <div class="work-tabs liquid-nav" id="liquid-nav">
+          <span class="liquid-nav__glare" id="liquid-glare" aria-hidden="true"></span>
+          <div class="liquid-nav__items">
+            <span class="liquid-nav__pill" id="liquid-pill" aria-hidden="true"></span>
+            <button class="work-tab is-active" data-target="#work-about" title="About me">
+              <span class="work-tab__label">About</span>
+            </button>
+            <button class="work-tab" data-target="#work-experience" title="My experience and skills">
+              <span class="work-tab__label">Experience</span>
+            </button>
+            <button class="work-tab" data-target="#work-search" title="Search and explore the site">
+              <span class="work-tab__label">Explore</span>
+            </button>
+          </div>
+          <span class="liquid-nav__divider" aria-hidden="true"></span>
+          <button class="liquid-nav__theme" id="nav-theme-btn" type="button" aria-label="Toggle light and dark theme">
+            <span class="theme-icon-wrap">
+              <svg class="theme-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg class="theme-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
           </button>
         </div>
         <div class="work-sections">
@@ -1645,7 +1643,7 @@
     }
 
     function initThemeToggle() {
-      if (!themeToggleInput) return;
+      const navThemeBtn = document.getElementById('nav-theme-btn');
 
       const saved = localStorage.getItem('theme');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -1655,26 +1653,21 @@
 
       setTheme(initialMode);
 
-      themeToggleInput.addEventListener('input', () => {
-        const nextMode = themeToggleInput.checked ? 'dark' : 'light';
+      if (!navThemeBtn) return;
+
+      navThemeBtn.addEventListener('click', () => {
+        const nextMode = document.body.classList.contains('light-mode') ? 'dark' : 'light';
         localStorage.setItem('theme', nextMode);
 
-        const toggleEl = themeToggleInput.closest('.toggle');
-        let x = window.innerWidth / 2;
-        let y = window.innerHeight / 2;
-        if (toggleEl) {
-          const rect = toggleEl.getBoundingClientRect();
-          x = rect.left + rect.width / 2;
-          y = rect.top + rect.height / 2;
-        }
-        document.documentElement.style.setProperty('--x', `${x}px`);
-        document.documentElement.style.setProperty('--y', `${y}px`);
+        // Center the circular reveal on the toggle button.
+        const rect = navThemeBtn.getBoundingClientRect();
+        document.documentElement.style.setProperty('--x', `${rect.left + rect.width / 2}px`);
+        document.documentElement.style.setProperty('--y', `${rect.top + rect.height / 2}px`);
 
         if (!document.startViewTransition) {
           setTheme(nextMode);
           return;
         }
-
         document.startViewTransition(() => {
           setTheme(nextMode);
         });
@@ -3399,6 +3392,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       initNavigation();
       initThemeToggle();
+      initLiquidNav();
       initWorkCard();
       initDaysSince();
       initExperienceDetails();
@@ -3432,6 +3426,42 @@
       }
     });
 
+    // ------- Liquid glass nav: sliding active pill + interactive glare -------
+    function updateLiquidPill(animate = true) {
+      const pill = document.getElementById('liquid-pill');
+      const active = document.querySelector('.liquid-nav__items .work-tab.is-active');
+      if (!pill || !active) return;
+      if (!animate) pill.style.transition = 'none';
+      else pill.style.transition = '';
+      pill.style.width = active.offsetWidth + 'px';
+      pill.style.transform = `translateX(${active.offsetLeft}px)`;
+      if (!animate) {
+        // force reflow so the next change animates
+        void pill.offsetWidth;
+        pill.style.transition = '';
+      }
+    }
+
+    function initLiquidNav() {
+      const nav = document.getElementById('liquid-nav');
+      const glare = document.getElementById('liquid-glare');
+      if (!nav) return;
+      // Position the pill without animation on first paint.
+      requestAnimationFrame(() => updateLiquidPill(false));
+      // Re-measure once fonts settle (label widths can shift).
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => updateLiquidPill(false));
+      }
+      window.addEventListener('resize', () => updateLiquidPill(false));
+      if (glare) {
+        nav.addEventListener('mousemove', (e) => {
+          const r = nav.getBoundingClientRect();
+          glare.style.setProperty('--gx', `${e.clientX - r.left}px`);
+          glare.style.setProperty('--gy', `${e.clientY - r.top}px`);
+        });
+      }
+    }
+
     // ------- Work card toggle -------
     function setActiveWorkTab(target) {
       const tabButtons = document.querySelectorAll('.work-tab');
@@ -3439,6 +3469,7 @@
       const isExperience = target === '#work-experience';
       const isSearch = target === '#work-search';
       tabButtons.forEach((btn) => btn.classList.toggle('is-active', btn.getAttribute('data-target') === target));
+      updateLiquidPill();
       document.body.classList.toggle('experience-active', isExperience);
       document.body.classList.toggle('search-active', isSearch);
       sections.forEach((section) => section.classList.toggle('is-active', `#${section.id}` === target));

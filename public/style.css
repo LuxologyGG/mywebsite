@@ -1503,6 +1503,180 @@ body.light-mode .profile-title {
   transition: opacity 200ms ease, transform 200ms ease;
 }
 
+/* ============================================================
+   Apple "Liquid Glass" nav — centered pill bar with a sliding
+   active pill, interactive glare, divider, and theme toggle.
+   ============================================================ */
+.work-tabs.liquid-nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 6px;
+  grid-template-columns: none;
+  border-radius: 99px;
+  background: rgba(28, 30, 36, 0.45);
+  -webkit-backdrop-filter: blur(34px) saturate(180%);
+  backdrop-filter: blur(34px) saturate(180%);
+  box-shadow:
+    0 24px 60px -18px rgba(0,0,0,0.6),
+    0 8px 22px -10px rgba(0,0,0,0.5),
+    inset 0 1.5px 2px -0.5px rgba(255,255,255,0.28),
+    inset 0 -2px 4px -1px rgba(255,255,255,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.14);
+  overflow: visible;
+}
+/* Aqua reflection across the top edge ("wet" highlight) */
+.work-tabs.liquid-nav::before {
+  content: "";
+  position: absolute;
+  top: 1px; left: 1px; right: 1px; height: 46%;
+  border-radius: 99px 99px 24px 24px / 99px 99px 14px 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+.liquid-nav__glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  background: radial-gradient(circle 80px at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,0.5) 0%, transparent 100%);
+  mix-blend-mode: overlay;
+}
+.liquid-nav:hover .liquid-nav__glare { opacity: 1; }
+
+.liquid-nav__items {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  z-index: 3;
+}
+.liquid-nav__pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  background: rgba(72, 74, 82, 0.85);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.28), inset 0 1px 1px rgba(255,255,255,0.18);
+  transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+              width 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+              background 0.4s ease;
+  z-index: 1;
+}
+
+/* Reset the old glassy tab styling and make buttons simple pill labels */
+.liquid-nav .work-tab {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 99px;
+  overflow: visible;
+  color: rgba(255,255,255,0.62);
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.liquid-nav .work-tab::before,
+.liquid-nav .work-tab::after { display: none !important; }
+.liquid-nav .work-tab__label {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.liquid-nav .work-tab:active .work-tab__label { transform: scale(0.93); }
+.liquid-nav .work-tab.is-active { color: #fff; }
+.liquid-nav .work-tab:hover:not(.is-active) { color: rgba(255,255,255,0.85); }
+
+.liquid-nav__divider {
+  width: 1px;
+  height: 22px;
+  margin: 0 6px;
+  background: rgba(255,255,255,0.16);
+  z-index: 3;
+}
+.liquid-nav__theme {
+  position: relative;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease, background 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.liquid-nav__theme:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.theme-icon-wrap {
+  position: relative;
+  width: 19px;
+  height: 19px;
+  pointer-events: none;
+}
+.theme-icon-wrap svg {
+  position: absolute;
+  top: 0; left: 0;
+  transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.4s ease;
+}
+/* Dark mode (default): show moon. Light mode: show sun. */
+.theme-sun { opacity: 0; transform: rotate(90deg) scale(0); }
+.theme-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+body.light-mode .theme-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+body.light-mode .theme-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
+
+/* ---- Light mode liquid glass ---- */
+body.light-mode .work-tabs.liquid-nav {
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 24px 50px -20px rgba(0,0,0,0.25),
+    0 6px 16px -8px rgba(0,0,0,0.18),
+    inset 0 1.5px 2px -0.5px rgba(255,255,255,0.9),
+    inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+body.light-mode .work-tabs.liquid-nav::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%);
+}
+body.light-mode .liquid-nav__pill {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.9);
+}
+body.light-mode .liquid-nav .work-tab { color: rgba(0,0,0,0.5); }
+body.light-mode .liquid-nav .work-tab.is-active { color: #0a0a0a; }
+body.light-mode .liquid-nav .work-tab:hover:not(.is-active) { color: rgba(0,0,0,0.8); }
+body.light-mode .liquid-nav__divider { background: rgba(0,0,0,0.14); }
+body.light-mode .liquid-nav__theme { color: rgba(0,0,0,0.5); }
+body.light-mode .liquid-nav__theme:hover { color: #000; background: rgba(0,0,0,0.06); }
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-nav__pill { transition: none; }
+}
+
 .work-tab {
   position: relative;
   overflow: hidden;
