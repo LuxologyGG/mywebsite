@@ -120,7 +120,7 @@
                 <svg viewBox="50 36 170 170" aria-hidden="true"><path fill="currentColor" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/><path fill="currentColor" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/><path fill="currentColor" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z"/></svg>
               </a>
               <a class="social-chip" href="https://letterboxd.com/camrone/" target="_blank" rel="noreferrer" title="My Letterboxd profile">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="3.1" fill="currentColor"/><circle cx="12" cy="12" r="3.1" fill="currentColor"/><circle cx="19" cy="12" r="3.1" fill="currentColor"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="12" r="4.3" fill="#FF8000"/><circle cx="17" cy="12" r="4.3" fill="#40BCF4"/><circle cx="12" cy="12" r="4.3" fill="#00E054" style="mix-blend-mode:lighten"/></svg>
               </a>
               <button class="social-chip copy-chip" id="social-email" type="button" title="Copy my email address">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4l-8 5l-8-5V6l8 5l8-5Z"/></svg>
@@ -200,13 +200,11 @@
             </p>
             <div class="about-stack glassy">
               <div class="about-row">
-                <div class="about-logo glassy">
-                  <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC logo">
-                </div>
+                <div class="about-logo glassy about-logo-text">LLU</div>
                 <div class="about-current-text glassy">
-                  <div class="about-current-title">I'm currently working at <strong>USC</strong></div>
-                  <div class="about-current-sub">Research Intern</div>
-                  <div class="about-current-body">Where I work  with Dr. Yaghmour researching BPDCN. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
+                  <div class="about-current-title">I'm currently researching at <strong>Loma Linda</strong></div>
+                  <div class="about-current-sub">Researcher · Hematology/Oncology</div>
+                  <div class="about-current-body">Working under Dr. Akhtari on multiple myeloma case reports &amp; clinical papers. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
                 </div>
               </div>
               <div class="about-row discord-row" id="discord-row">
@@ -1944,13 +1942,40 @@
 
     const WORK_TIMELINE_DATA = [
       {
+        id: 'cbsc_intern',
+        yearStart: 2026,
+        yearEnd: 2026,
+        date: 'Jun 2026 - Present',
+        title: 'Research Intern',
+        org: 'Cancer and Blood Specialty Clinic (CBSC) · Long Beach, CA',
+        meta: 'Cancer and Blood Specialty Clinic (CBSC) · Jun 2026 - Present · Long Beach, CA',
+        body: [
+          'Support hematology/oncology research in an outpatient clinical setting.',
+          'Contribute to clinical case reports and manuscript preparation.'
+        ]
+      },
+      {
+        id: 'lomalinda_researcher',
+        yearStart: 2025,
+        yearEnd: 2026,
+        date: 'Feb 2025 - Present',
+        title: 'Researcher',
+        org: 'Loma Linda University Medical Center · Hybrid, CA',
+        meta: 'Loma Linda University Medical Center · Feb 2025 - Present · Hybrid, CA',
+        body: [
+          'Work under Dr. Mojtaba Akhtari on hematology/oncology research projects.',
+          'Contribute to case reports and clinical papers on multiple myeloma and complex malignancies.',
+          'Presented onstage at the MOASC 2026 Oncology Leadership & Research Summit as one of three high school students in attendance.'
+        ]
+      },
+      {
         id: 'assistant_researcher',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Sep 2025 - Present',
+        date: 'Sep 2025 - Jun 2026',
         title: 'Assistant Researcher',
         org: 'USC Norris Comprehensive Cancer Center · Los Angeles, CA',
-        meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 - Present · Los Angeles, CA (On-site)',
+        meta: 'USC Norris Comprehensive Cancer Center · Sep 2025 - Jun 2026 · Los Angeles, CA (On-site)',
         body: [
           'Observed hematology/oncology rounds (AML, stem cell transplantation, novel maintenance therapies).',
           'Learned regimen selection (7+3, FLAG, CPX-351) and managed engraftment/transplant toxicities.',
@@ -1963,10 +1988,10 @@
         id: 'nyas_student',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Aug 2025 - Present',
+        date: 'Aug 2025 - Mar 2026',
         title: 'Student',
         org: 'New York Academy of Sciences · Remote',
-        meta: 'New York Academy of Sciences · Aug 2025 - Present · Remote',
+        meta: 'New York Academy of Sciences · Aug 2025 - Mar 2026 · Remote',
         body: [
           'Selected for a global community of high-achieving students and STEM mentors.',
           'Collaborating on sustainability, energy, and global health challenges.'
@@ -1976,10 +2001,10 @@
         id: 'ucla_intern',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'May 2025 - Present',
+        date: 'May 2025 - Feb 2026',
         title: 'Intern',
-        org: 'UCLA Computer Science (GLITCH) · Los Angeles, CA',
-        meta: 'UCLA Computer Science (GLITCH) · May 2025 - Present · Los Angeles, CA (Hybrid)',
+        org: 'UCLA Computer Science · Los Angeles, CA',
+        meta: 'UCLA Computer Science · May 2025 - Feb 2026 · Los Angeles, CA (Hybrid)',
         body: [
           'Contributed to Hot Potato, a GPS-based multiplayer mobile game for real-world interaction.',
           'Collaborated on design, development, debugging, and agile teamwork.',
@@ -1990,10 +2015,10 @@
         id: 'southbay_board',
         yearStart: 2025,
         yearEnd: 2026,
-        date: 'Feb 2025 - Present',
+        date: 'Feb 2025 - May 2026',
         title: 'Board Member & Lead Web Developer',
         org: 'South Bay STEM Association · Rancho Palos Verdes, CA',
-        meta: 'South Bay STEM Association · Feb 2025 - Present · Rancho Palos Verdes, CA',
+        meta: 'South Bay STEM Association · Feb 2025 - May 2026 · Rancho Palos Verdes, CA',
         body: [
           'Oversee STEM initiatives, mentor students, and build web platforms for education and outreach.',
           'Skills: web dev, non-profit management, STEM, volunteering, WordPress/JS/CSS/HTML.'
@@ -2664,6 +2689,34 @@
       }
     ];
 
+    // Things I'm building — sourced from my CV, not GitHub.
+    const BUILD_PROJECTS = [
+      {
+        title: 'Homa',
+        desc: 'AI-personalized nootropics & supplement platform that generates custom compound "stacks" from a 2,900+ compound interaction database.',
+        tags: ['Next.js', 'Supabase', 'AI'],
+        url: 'https://homa.bio'
+      },
+      {
+        title: 'Avely',
+        desc: 'AI health check-in app paired with a hardware device for everyday wellness tracking.',
+        tags: ['AI', 'Hardware', 'Health'],
+        url: 'https://avely.tech'
+      },
+      {
+        title: 'Fara',
+        desc: 'An AI companion designed for neurodiverse adults.',
+        tags: ['AI', 'Companion'],
+        url: ''
+      },
+      {
+        title: 'camr.one',
+        desc: 'This site — my personal portfolio, built from scratch on Cloudflare Workers.',
+        tags: ['JavaScript', 'Cloudflare'],
+        url: 'https://camr.one'
+      }
+    ];
+
     function getContactAvailabilityLabel() {
       const status = lastDiscordPresenceData?.status || 'offline';
       if (status === 'offline') return 'Offline';
@@ -2907,7 +2960,7 @@
 
           <div class="ov-section">
             <div class="ov-section-label">OVERVIEW</div>
-            <p class="ov-body">High school senior researching cancer biology at USC Norris Comprehensive Cancer Center and building software at UCLA GLITCH Lab. I like working at the intersection of biomedical research and technology. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
+            <p class="ov-body">Incoming Biology &amp; Pre-Med student at the University of Michigan and a hematology/oncology researcher across academic medical centers. Co-author on multiple peer-reviewed case reports, with parallel work building AI-driven health technology. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
           </div>
 
           <div class="ov-section">
@@ -3114,15 +3167,8 @@
           ghCard.querySelector('.contrib-graph').innerHTML = '<div class="github-loading">Could not load contributions</div>';
         });
 
-      // Fetch repos for project cards
-      fetch('https://api.github.com/users/' + username + '/repos?sort=updated&per_page=30')
-        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-        .then(repos => {
-          buildProjectCards(projCard.querySelector('.projects-grid'), repos);
-        })
-        .catch(() => {
-          buildProjectCards(projCard.querySelector('.projects-grid'), []);
-        });
+      // Project cards come from my CV (BUILD_PROJECTS), not GitHub.
+      buildProjectCards(projCard.querySelector('.projects-grid'), []);
     }
 
     function buildContribGraph(container, data) {
@@ -3254,26 +3300,23 @@
     }
 
     function buildProjectCards(gridEl, repos) {
-      const repoCards = repos
-        .filter(r => !r.fork)
-        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-        .slice(0, 6)
-        .map((r, i) => {
-          const tags = [r.language, ...(r.topics || [])].filter(Boolean).slice(0, 3);
-          return `<a class="project-card" href="${r.html_url}" target="_blank" rel="noreferrer" style="animation-delay:${i * 60 + 40}ms">
-            <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+      const buildCards = BUILD_PROJECTS.map((p, i) => {
+        const tag = p.url ? 'a' : 'div';
+        const href = p.url ? ` href="${p.url}" target="_blank" rel="noreferrer"` : '';
+        return `<${tag} class="project-card${p.url ? '' : ' no-link'}"${href} style="animation-delay:${i * 60 + 40}ms">
+            <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
             <div class="project-card-body">
-              <div class="project-card-title">${escHtml(r.name)}</div>
-              <div class="project-card-desc">${escHtml(r.description || 'No description')}</div>
-              ${tags.length ? `<div class="project-card-tags">${tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
+              <div class="project-card-title">${escHtml(p.title)}</div>
+              <div class="project-card-desc">${escHtml(p.desc)}</div>
+              <div class="project-card-tags">${p.tags.map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>
             </div>
-            <span class="project-type-badge repo">repo</span>
-            <svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>`;
-        });
+            <span class="project-type-badge build">building</span>
+            ${p.url ? '<svg class="project-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' : ''}
+          </${tag}>`;
+      });
 
       const researchCards = RESEARCH_PROJECTS.map((p, i) => {
-        const delay = (repoCards.length + i) * 60 + 40;
+        const delay = (buildCards.length + i) * 60 + 40;
         return `<a class="project-card" href="${p.url}" target="_blank" rel="noreferrer" style="animation-delay:${delay}ms">
           <div class="project-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
           <div class="project-card-body">
@@ -3323,7 +3366,7 @@
     function initDaysSince() {
       const el = document.getElementById('days-since-usc');
       if (!el) return;
-      const start = Date.UTC(2025, 8, 18); // Sept 18, 2025 (months 0-indexed)
+      const start = Date.UTC(2025, 1, 1); // Feb 2025 — Loma Linda (months 0-indexed)
       const now = Date.now();
       const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
       el.textContent = days >= 0 ? days : 0;
@@ -3475,7 +3518,7 @@
 
       // Play: animate to final position (faster + smoother than before)
       requestAnimationFrame(() => {
-        card.style.transition = 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)';
+        card.style.transition = 'transform 760ms cubic-bezier(0.22, 1, 0.36, 1)';
         card.style.transform = `translate(${baseTx}px, ${baseTy}px)`;
         card.addEventListener('transitionend', function cleanup(e) {
           if (e.propertyName !== 'transform') return;
