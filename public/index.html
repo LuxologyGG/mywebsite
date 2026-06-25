@@ -208,7 +208,8 @@
             <div class="about-stack glassy">
               <div class="about-row">
                 <div class="about-logo glassy about-logo-cbsc" aria-hidden="true">
-                  <svg viewBox="0 0 64 64" fill="none" stroke-width="6.5" stroke-linecap="round">
+                  <img src="/photos/cbsc.png" alt="CBSC" onerror="this.remove()">
+                  <svg class="cbsc-fallback" viewBox="0 0 64 64" fill="none" stroke-width="6.5" stroke-linecap="round">
                     <ellipse cx="26" cy="31" rx="16" ry="9.5" transform="rotate(-28 26 31)" stroke="#C49A3A"/>
                     <ellipse cx="33" cy="25" rx="9.5" ry="16" transform="rotate(12 33 25)" stroke="#3f3f44"/>
                     <ellipse cx="37" cy="39" rx="16" ry="9.5" transform="rotate(22 37 39)" stroke="#1F5FA8"/>
@@ -217,7 +218,7 @@
                 <div class="about-current-text glassy">
                   <div class="about-current-title">I'm currently at <strong>Cancer &amp; Blood Specialty Clinic</strong></div>
                   <div class="about-current-sub">Research Intern · Hematology/Oncology</div>
-                  <div class="about-current-body">Managing study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry — plus building an internal HIPAA-compliant case report form platform to streamline multi-site trial operations. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
+                  <div class="about-current-body">Managing study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry. I've been there for <strong><span id="days-since-usc"></span> days</strong>.</div>
                 </div>
               </div>
               <div class="about-row discord-row" id="discord-row">
@@ -1973,8 +1974,7 @@
         org: 'Cancer and Blood Specialty Clinic (CBSC) · Long Beach, CA',
         meta: 'Cancer and Blood Specialty Clinic (CBSC) · Jun 2026 - Present · Long Beach, CA',
         body: [
-          'Manage study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry.',
-          'Building an internal HIPAA-compliant case report form (CRF) platform to streamline multi-site trial operations.'
+          'Manage study checklists, pre-visit patient coordination, drug ordering, and sponsor data entry.'
         ]
       },
       {
@@ -3581,7 +3581,7 @@
 
       // Play: animate to final position (faster + smoother than before)
       requestAnimationFrame(() => {
-        card.style.transition = 'transform 1000ms cubic-bezier(0.65, 0, 0.25, 1)';
+        card.style.transition = 'transform 1300ms cubic-bezier(0.65, 0, 0.25, 1)';
         card.style.transform = `translate(${baseTx}px, ${baseTy}px)`;
         card.addEventListener('transitionend', function cleanup(e) {
           if (e.propertyName !== 'transform') return;

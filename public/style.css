@@ -556,12 +556,12 @@ body.light-mode .map-whats-this__body strong {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: width 1000ms cubic-bezier(0.65, 0, 0.25, 1),
-              height 1000ms cubic-bezier(0.65, 0, 0.25, 1),
-              max-width 1000ms cubic-bezier(0.65, 0, 0.25, 1),
-              max-height 1000ms cubic-bezier(0.65, 0, 0.25, 1),
-              top 1000ms cubic-bezier(0.65, 0, 0.25, 1),
-              padding 1000ms cubic-bezier(0.65, 0, 0.25, 1),
+  transition: width 1300ms cubic-bezier(0.65, 0, 0.25, 1),
+              height 1300ms cubic-bezier(0.65, 0, 0.25, 1),
+              max-width 1300ms cubic-bezier(0.65, 0, 0.25, 1),
+              max-height 1300ms cubic-bezier(0.65, 0, 0.25, 1),
+              top 1300ms cubic-bezier(0.65, 0, 0.25, 1),
+              padding 1300ms cubic-bezier(0.65, 0, 0.25, 1),
               background 340ms ease, border-color 340ms ease;
 }
 
@@ -1100,8 +1100,10 @@ body.light-mode .search-result-item:hover {
 }
 body.light-mode .about-logo-text { color: #1a1a1a; }
 
-.about-logo-cbsc { background: #ffffff; display: flex; align-items: center; justify-content: center; }
+.about-logo-cbsc { background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.about-logo-cbsc img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
 .about-logo-cbsc svg { width: 82%; height: 82%; }
+.about-logo-cbsc img ~ .cbsc-fallback { display: none; }
 
 /* Light mode overrides for projects */
 body.light-mode .contrib-cell {
@@ -1515,21 +1517,21 @@ body.light-mode .profile-title {
 .work-tabs.liquid-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
-  left: 14px;
-  right: 14px;
-  bottom: 8px;
-  width: auto;
-  margin: 0;
-  padding: 7px 2px 3px;
+  gap: 3px;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 5px;
   grid-template-columns: none;
-  background: transparent;
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  border-radius: 0;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 15px;
+  box-shadow: 0 6px 18px -12px rgba(0,0,0,0.45);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
   overflow: visible;
 }
 .liquid-nav__glare { display: none; }
@@ -1537,20 +1539,19 @@ body.light-mode .profile-title {
 .liquid-nav__items {
   position: relative;
   display: flex;
-  gap: 2px;
+  gap: 3px;
   z-index: 2;
 }
-/* Soft, low-contrast sliding highlight — reads as a selected state,
-   not a candy pill. */
+/* Sliding active highlight — visible but integrated (not a candy pill). */
 .liquid-nav__pill {
   position: absolute;
-  top: 3px;
+  top: 2px;
   left: 0;
-  height: calc(100% - 6px);
+  height: calc(100% - 4px);
   width: 0;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.09);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  border-radius: 11px;
+  background: rgba(255,255,255,0.16);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
   transition: transform 0.55s cubic-bezier(0.65, 0, 0.25, 1),
               width 0.55s cubic-bezier(0.65, 0, 0.25, 1),
               background 0.3s ease;
@@ -1563,13 +1564,13 @@ body.light-mode .profile-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 0 16px;
+  height: 38px;
+  padding: 0 18px;
   background: transparent !important;
   border: none !important;
-  border-radius: 10px;
+  border-radius: 11px;
   overflow: visible;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.66);
   font-family: "Noto Sans", sans-serif;
   font-size: 13.5px;
   font-weight: 600;
@@ -1586,25 +1587,25 @@ body.light-mode .profile-title {
   transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .liquid-nav .work-tab:active .work-tab__label { transform: scale(0.94); }
-.liquid-nav .work-tab.is-active { color: #fff; }
-.liquid-nav .work-tab:hover:not(.is-active) { color: rgba(255,255,255,0.82); }
+.liquid-nav .work-tab.is-active { color: #fff; font-weight: 700; }
+.liquid-nav .work-tab:hover:not(.is-active) { color: rgba(255,255,255,0.9); }
 
 .liquid-nav__divider {
   width: 1px;
-  height: 18px;
-  margin: 0 6px 0 auto; /* push the toggle to the far right */
-  background: rgba(255,255,255,0.12);
+  height: 20px;
+  margin: 0 4px;
+  background: rgba(255,255,255,0.16);
   z-index: 2;
 }
 .liquid-nav__theme {
   position: relative;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border: none;
   background: transparent;
-  border-radius: 10px;
-  color: rgba(255,255,255,0.5);
+  border-radius: 11px;
+  color: rgba(255,255,255,0.62);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1612,7 +1613,7 @@ body.light-mode .profile-title {
   transition: color 0.3s ease, background 0.3s ease;
   -webkit-tap-highlight-color: transparent;
 }
-.liquid-nav__theme:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.liquid-nav__theme:hover { color: #fff; background: rgba(255,255,255,0.10); }
 .theme-icon-wrap {
   position: relative;
   width: 18px;
@@ -1631,17 +1632,21 @@ body.light-mode .theme-sun { opacity: 1; transform: rotate(0deg) scale(1); }
 body.light-mode .theme-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
 
 /* ---- Light mode ---- */
-body.light-mode .work-tabs.liquid-nav { border-top-color: rgba(0,0,0,0.07); }
-body.light-mode .liquid-nav__pill {
-  background: rgba(0,0,0,0.06);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+body.light-mode .work-tabs.liquid-nav {
+  background: rgba(255,255,255,0.7);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px -12px rgba(0,0,0,0.3);
 }
-body.light-mode .liquid-nav .work-tab { color: rgba(0,0,0,0.45); }
+body.light-mode .liquid-nav__pill {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.04);
+}
+body.light-mode .liquid-nav .work-tab { color: rgba(0,0,0,0.55); }
 body.light-mode .liquid-nav .work-tab.is-active { color: #0a0a0a; }
-body.light-mode .liquid-nav .work-tab:hover:not(.is-active) { color: rgba(0,0,0,0.78); }
-body.light-mode .liquid-nav__divider { background: rgba(0,0,0,0.12); }
-body.light-mode .liquid-nav__theme { color: rgba(0,0,0,0.45); }
-body.light-mode .liquid-nav__theme:hover { color: #000; background: rgba(0,0,0,0.05); }
+body.light-mode .liquid-nav .work-tab:hover:not(.is-active) { color: rgba(0,0,0,0.85); }
+body.light-mode .liquid-nav__divider { background: rgba(0,0,0,0.14); }
+body.light-mode .liquid-nav__theme { color: rgba(0,0,0,0.5); }
+body.light-mode .liquid-nav__theme:hover { color: #000; background: rgba(0,0,0,0.06); }
 
 @media (prefers-reduced-motion: reduce) {
   .liquid-nav__pill { transition: none; }
@@ -2298,36 +2303,19 @@ body.light-mode .about-current-sub {
   left: 1px;
   right: 1px;
   bottom: 1px;
-  height: 84px;
+  height: 44px;
   border-radius: 0 0 15px 15px;
   pointer-events: none;
   z-index: 5;
   background: linear-gradient(to top,
-    rgba(10, 12, 18, 0.78) 0%,
-    rgba(10, 12, 18, 0.55) 42%,
+    rgba(10, 12, 18, 0.32) 0%,
     rgba(10, 12, 18, 0) 100%);
-  -webkit-mask-image: linear-gradient(to top, #000 52%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 52%, transparent 100%);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
 }
-/* faint teal glow riding the top edge of the scrim */
-.work-mode .glass-card::before {
-  content: "";
-  position: absolute;
-  left: 14%;
-  right: 14%;
-  bottom: 62px;
-  height: 22px;
-  pointer-events: none;
-  z-index: 5;
-  background: radial-gradient(60% 100% at 50% 100%, rgba(146, 243, 208, 0.12), rgba(146, 243, 208, 0) 72%);
-  filter: blur(2px);
-}
+/* (removed the heavy teal glow + dark scrim that washed out the bottom) */
+.work-mode .glass-card::before { display: none; }
 body.light-mode.work-mode .glass-card::after {
   background: linear-gradient(to top,
-    rgba(244, 246, 252, 0.86) 0%,
-    rgba(244, 246, 252, 0.6) 42%,
+    rgba(244, 246, 252, 0.4) 0%,
     rgba(244, 246, 252, 0) 100%);
 }
 /* The experience/explore views expand the card; keep the scrim subtle there */
