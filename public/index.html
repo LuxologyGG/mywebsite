@@ -3,6 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>
+    /* Phones get the dedicated, easy-to-read /mobile overview. Honor ?full=1
+       (and remember it) so the full site stays reachable on mobile. */
+    (function () {
+      try {
+        if (/[?&]full=1/.test(location.search)) { sessionStorage.setItem('full-site', '1'); }
+        if (sessionStorage.getItem('full-site') === '1') return;
+        var isMobile = window.matchMedia('(max-width: 760px)').matches ||
+          (matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) <= 820);
+        if (isMobile && location.pathname === '/') { location.replace('/mobile'); }
+      } catch (e) {}
+    })();
+  </script>
   <title>Camron Farjami — Student, Researcher &amp; Developer · camr.one</title>
   <meta name="description" content="Camron Farjami — student, hematology/oncology researcher, and self-taught web developer. Published case reports, biohybrid microrobot research, and a corner of the internet that's a little more me.">
   <meta name="author" content="Camron Farjami">
@@ -144,10 +157,6 @@
           <div class="blog-grid" id="blog-grid">
             <p class="blog-loading">Loading articles…</p>
           </div>
-
-          <!-- From LinkedIn -->
-          <h3 class="blog-section-title">From LinkedIn</h3>
-          <div class="linkedin-grid" id="linkedin-grid"></div>
 
           <!-- Publications -->
           <div class="pub-container glassy">
@@ -3745,47 +3754,6 @@
           `;
           blogGrid.appendChild(card);
         });
-      }
-
-      // From LinkedIn — LinkedIn has no clean public API, so this is a small
-      // curated list. Add entries here (newest first) and they render as cards;
-      // leave it empty and it shows a tasteful "follow" card instead.
-      const LINKEDIN_PROFILE = 'https://www.linkedin.com/in/camron-farjami-608822359/';
-      const linkedinPosts = [
-        // { title: 'Presented at MOASC 2026', desc: 'One of three high-school students onstage at the Oncology Leadership & Research Summit.', date: 'Mar 2026', href: 'https://www.linkedin.com/posts/...' },
-      ];
-      const liGrid = document.getElementById('linkedin-grid');
-      if (liGrid) {
-        liGrid.innerHTML = '';
-        const liIcon = '<svg class="li-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1-.001 5.001A2.5 2.5 0 0 1 4.98 3.5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31c-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg>';
-        if (linkedinPosts.length) {
-          linkedinPosts.forEach((p, i) => {
-            const card = document.createElement('a');
-            card.className = 'linkedin-card glassy';
-            card.href = p.href || LINKEDIN_PROFILE;
-            card.target = '_blank';
-            card.rel = 'noreferrer';
-            card.style.animationDelay = (i * 80) + 'ms';
-            card.innerHTML = `
-              <div class="li-head">${liIcon}<span class="li-date">${p.date || ''}</span></div>
-              <div class="li-title">${p.title || ''}</div>
-              <div class="li-desc">${p.desc || ''}</div>
-            `;
-            liGrid.appendChild(card);
-          });
-        } else {
-          const card = document.createElement('a');
-          card.className = 'linkedin-card linkedin-follow glassy';
-          card.href = LINKEDIN_PROFILE;
-          card.target = '_blank';
-          card.rel = 'noreferrer';
-          card.innerHTML = `
-            <div class="li-head">${liIcon}<span class="li-date">@camron-farjami</span></div>
-            <div class="li-title">Catch my latest on LinkedIn</div>
-            <div class="li-desc">Research updates, talks, and the occasional unhinged build log. Tap to follow →</div>
-          `;
-          liGrid.appendChild(card);
-        }
       }
 
       // Render publications

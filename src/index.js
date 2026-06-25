@@ -526,6 +526,11 @@ export default {
       }
     }
 
+    // Dedicated mobile overview page (/mobile -> /mobile/index.html)
+    if (url.pathname === "/mobile" || url.pathname === "/mobile/") {
+      return env.ASSETS.fetch(new Request(new URL("/mobile/index.html", request.url)));
+    }
+
     // SPA fallback for /paste, /upload, and /projects page routes (not static assets like .js/.css)
     if ((url.pathname.startsWith("/paste") || url.pathname === "/upload" || url.pathname === "/projects" || url.pathname === "/contact") && !url.pathname.includes(".")) {
       // Inject OG meta tags for individual paste pages
