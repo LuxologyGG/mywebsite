@@ -1365,6 +1365,21 @@
         });
       }
 
+      // Pre-build both map backgrounds (tiles + canvas) ahead of time so
+      // switching to Experience/Explore doesn't fetch-and-flicker. Silent:
+      // it never changes the visible blend targets, only warms the caches.
+      let mapWarmed = false;
+      window._graphPaperWarm = function () {
+        if (mapWarmed) return;
+        mapWarmed = true;
+        loadMapLocation().then(loc => {
+          if (!loc) { mapWarmed = false; return; }
+          const idle = window.requestIdleCallback || function (cb) { return setTimeout(cb, 200); };
+          idle(() => { if (!(mapReady && mapCanvasTheme === theme)) buildMapCanvas(); });
+          idle(() => { if (!(topoMapReady && topoMapCanvasTheme === theme)) buildTopoMapCanvas(); });
+        });
+      };
+
       window._graphPaperSetMode = function (mode) {
         bgMode = mode;
         // Update "What's this?" tooltip text
@@ -3494,6 +3509,8 @@
       const target = opts.target || (activeWorkTab ? activeWorkTab.getAttribute('data-target') : '#work-about');
       setActiveWorkTab(target);
       document.body.classList.add('work-mode');
+      // Warm the map backgrounds so switching tabs doesn't fetch-and-flicker.
+      if (window._graphPaperWarm) window._graphPaperWarm();
       startDiscordPresence();
       if (opts.initial) {
         requestAnimationFrame(() => {
