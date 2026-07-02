@@ -1466,6 +1466,9 @@
     let discordProgressTimer = null;
     let lastDiscordPresenceData = null;
     let lastFmData = null;
+    let lastFmFetchedAt = 0;
+    let lastFmPollTimer = null;
+    const LASTFM_REFRESH_MS = 5 * 60 * 1000;
 
     function formatLastSeenTime(ts) {
       const d = new Date(ts);
@@ -2407,25 +2410,37 @@
     }
 
     function fetchLastFm() {
-      if (lastFmData) {
-        applyLastFmData(lastFmData);
-        return;
-      }
+      // Show cached data immediately so the card doesn't flash "Loading...",
+      // but only if it's still fresh -- otherwise fall through and refetch.
+      const isStale = !lastFmData || (Date.now() - lastFmFetchedAt) > LASTFM_REFRESH_MS;
+      if (lastFmData) applyLastFmData(lastFmData);
+      if (!isStale) return;
+
       fetch('/api/lastfm')
         .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(data => {
+          lastFmFetchedAt = Date.now();
           if (data.track) {
             lastFmData = data.track;
             applyLastFmData(lastFmData);
-          } else {
+          } else if (!lastFmData) {
             const songEl = document.getElementById('lastfm-song');
             if (songEl) songEl.textContent = 'Unavailable';
           }
         })
         .catch(() => {
-          const songEl = document.getElementById('lastfm-song');
-          if (songEl) songEl.textContent = 'Unavailable';
+          if (!lastFmData) {
+            const songEl = document.getElementById('lastfm-song');
+            if (songEl) songEl.textContent = 'Unavailable';
+          }
         });
+
+      startLastFmPolling();
+    }
+
+    function startLastFmPolling() {
+      if (lastFmPollTimer) return;
+      lastFmPollTimer = setInterval(fetchLastFm, LASTFM_REFRESH_MS);
     }
 
     function applyLastFmData(track) {
