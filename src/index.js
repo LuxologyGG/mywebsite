@@ -43,6 +43,32 @@ function shortDate(v) {
   }).format(new Date(v));
 }
 
+// Roots with a low false-positive risk are matched with a trailing \w* so
+// conjugations (fucking, shitty, bitches, nigga's, faggots...) are caught too.
+const PROFANITY_STEMS = [
+  "fuck", "motherfucker", "shit", "bitch", "cunt", "asshole", "pussy", "whore",
+  "slut", "nigger", "nigga", "faggot", "retard", "twat", "wank", "bastard", "goddamn",
+];
+// Roots that double as prefixes of everyday words (Dickinson, Cocktail,
+// Cockpit...) are matched as whole words only, to avoid false positives.
+const PROFANITY_WHOLE_WORDS = ["dick", "cock"];
+
+const PROFANITY_REGEX = new RegExp(
+  `\\b(?:(?:${PROFANITY_STEMS.join("|")})\\w*|(?:${PROFANITY_WHOLE_WORDS.join("|")})s?\\b)`,
+  "i"
+);
+
+function containsProfanity(text) {
+  if (!text) return false;
+  return PROFANITY_REGEX.test(text);
+}
+
+function isCleanTrack(track) {
+  if (!track?.name) return false;
+  const artist = track.artist?.name || track.artist?.["#text"] || "";
+  return !containsProfanity(track.name) && !containsProfanity(artist);
+}
+
 function corsHeaders(origin) {
   return {
     "access-control-allow-origin": origin || "*",
@@ -287,16 +313,27 @@ export default {
       try {
         const apiBase = `https://ws.audioscrobbler.com/2.0/?api_key=${env.LASTFM_API_KEY}&format=json&user=Camronia`;
 
-        // Try 7day first, fall back to overall if empty
+        // Try 7day first, fall back to overall. Within each period, skip any
+        // top track containing profanity and fall through to the next-best one.
         let track = null;
+        let firstTrackOverall = null;
         for (const period of ['7day', 'overall']) {
-          const res = await fetch(`${apiBase}&method=user.gettoptracks&period=${period}&limit=1`);
+          const res = await fetch(`${apiBase}&method=user.gettoptracks&period=${period}&limit=50`);
           if (!res.ok) continue;
           const data = await res.json();
           const tracks = data.toptracks?.track;
-          track = Array.isArray(tracks) ? tracks[0] : tracks;
-          if (track?.name) break;
+          const list = Array.isArray(tracks) ? tracks : (tracks ? [tracks] : []);
+          if (!firstTrackOverall && list[0]?.name) firstTrackOverall = list[0];
+          const clean = list.find(isCleanTrack);
+          if (clean) {
+            track = clean;
+            break;
+          }
         }
+
+        // If every top track in both periods was flagged, fall back to the
+        // single top track rather than showing nothing.
+        if (!track) track = firstTrackOverall;
 
         if (!track?.name) {
           return new Response(JSON.stringify({ error: "No top track found" }), { status: 404, headers });
