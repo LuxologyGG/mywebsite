@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>camr.one / mobile</title>
+  <meta name="description" content="Camron Farjami mobile profile">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" type="image/webp" href="/photos/poker-chip(1).webp">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+
+    @font-face {
+      font-family: 'GeistPixelSquare';
+      src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    :root {
+      --background: #0a0a0a;
+      --surface: #0d0d0d;
+      --edge: rgba(255, 255, 255, 0.14);
+      --edge-soft: rgba(255, 255, 255, 0.08);
+      --foreground: rgba(255, 255, 255, 0.96);
+      --muted: rgba(255, 255, 255, 0.62);
+      --quiet: rgba(255, 255, 255, 0.38);
+      --pattern: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: 'Noto Sans', system-ui, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03), transparent 35%),
+        linear-gradient(180deg, #0a0a0a 0%, #090909 100%);
+    }
+
+    .page {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 0 8px 32px;
+    }
+
+    .strip {
+      position: relative;
+      left: 50%;
+      width: 100vw;
+      height: 32px;
+      transform: translateX(-50%);
+      border-top: 1px solid var(--edge);
+      border-bottom: 1px solid var(--edge);
+      background:
+        repeating-linear-gradient(
+          315deg,
+          var(--pattern) 0,
+          var(--pattern) 1px,
+          transparent 1px,
+          transparent 10px
+        );
+      background-size: 10px 10px;
+    }
+
+    .frame {
+      border-left: 1px solid var(--edge);
+      border-right: 1px solid var(--edge);
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
+    }
+
+    .section-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--edge);
+    }
+
+    .kicker {
+      margin: 0;
+      font-family: 'GeistPixelSquare', 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 10vw, 4.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      max-width: 32ch;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .meta {
+      border: 1px solid var(--edge-soft);
+      padding: 6px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .copy-block {
+      padding: 12px 14px 18px;
+      border-bottom: 1px solid var(--edge-soft);
+    }
+
+    .copy-title {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 760;
+    }
+
+    .copy {
+      margin: 0;
+      max-width: 36ch;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.65;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      padding: 14px;
+      border-bottom: 1px solid var(--edge-soft);
+      align-items: start;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .row-label {
+      margin: 0 0 6px;
+      font-family: 'GeistPixelSquare', 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--quiet);
+    }
+
+    .row-title {
+      margin: 0 0 5px;
+      font-size: 1.15rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      font-weight: 720;
+    }
+
+    .row-copy {
+      margin: 0;
+      max-width: 34ch;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.58;
+    }
+
+    .row-meta {
+      color: var(--quiet);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    .footer {
+      border-left: 1px solid var(--edge);
+      border-right: 1px solid var(--edge);
+      border-bottom: 1px solid var(--edge);
+      padding: 14px;
+      color: var(--quiet);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 540px) {
+      .row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .row-meta {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="strip"></div>
+
+    <section class="frame">
+      <div class="section-head">
+        <p class="kicker">camr.one / mobile profile</p>
+      </div>
+      <div class="hero">
+        <h1>Camron<br>Farjami</h1>
+        <p class="subtitle">
+          Student, researcher, and developer. This is the stripped-down mobile read: the important stuff only.
+        </p>
+        <div class="meta-row">
+          <div class="meta">USC research</div>
+          <div class="meta">software + biology</div>
+          <div class="meta">Los Angeles / CA</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"></div>
+
+    <section class="frame">
+      <div class="section-head">
+        <p class="kicker">Current Work</p>
+      </div>
+      <div class="copy-block">
+        <h2 class="copy-title">What I am focused on right now.</h2>
+        <p class="copy">
+          Research, site rebuilding, and shipping cleaner frontend systems. The goal here is clarity first, not page count.
+        </p>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Research</p>
+          <h3 class="row-title">Cancer research at USC</h3>
+          <p class="row-copy">Working with Dr. Yaghmour on BPDCN-related research and data-driven biology work.</p>
+        </div>
+        <div class="row-meta">active</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Build</p>
+          <h3 class="row-title">camr.one redesign</h3>
+          <p class="row-copy">Reworking the site around cleaner pages, stronger formatting, and better mobile readability.</p>
+        </div>
+        <div class="row-meta">shipping</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Stack</p>
+          <h3 class="row-title">Cloudflare + frontend systems</h3>
+          <p class="row-copy">Using Workers, KV, HTML/CSS/JS, and lightweight interaction design to keep the site custom instead of template-like.</p>
+        </div>
+        <div class="row-meta">ongoing</div>
+      </div>
+    </section>
+
+    <div class="strip"></div>
+
+    <section class="frame">
+      <div class="section-head">
+        <p class="kicker">Contact</p>
+      </div>
+      <div class="copy-block">
+        <h2 class="copy-title">How to reach me.</h2>
+        <p class="copy">
+          Kept plain on purpose so it is easy to read and easy to copy.
+        </p>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Email</p>
+          <h3 class="row-title">camron@camr.one</h3>
+          <p class="row-copy">Best direct route for anything serious, specific, or time-sensitive.</p>
+        </div>
+        <div class="row-meta">primary</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Discord</p>
+          <h3 class="row-title">1042651808557977600</h3>
+          <p class="row-copy">Useful if you already know me or need a faster back-and-forth.</p>
+        </div>
+        <div class="row-meta">chat</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">LinkedIn</p>
+          <h3 class="row-title">Camron Farjami</h3>
+          <p class="row-copy">The professional version, without the site experiments and half-finished redesigns.</p>
+        </div>
+        <div class="row-meta">network</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">GitHub</p>
+          <h3 class="row-title">LuxologyGG</h3>
+          <p class="row-copy">Where the code and the more obvious build history live.</p>
+        </div>
+        <div class="row-meta">code</div>
+      </div>
+    </section>
+
+    <div class="strip"></div>
+
+    <section class="frame">
+      <div class="section-head">
+        <p class="kicker">Snapshot</p>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Interests</p>
+          <h3 class="row-title">Science, skiing, cooking, piano</h3>
+          <p class="row-copy">A mix of research-heavy work and things that force me away from a screen.</p>
+        </div>
+        <div class="row-meta">personal</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Recognition</p>
+          <h3 class="row-title">Inflection Grant · USMDO Silver</h3>
+          <p class="row-copy">The shorter line-item version of the stuff that tends to come up in intros.</p>
+        </div>
+        <div class="row-meta">selected</div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="row-label">Goal</p>
+          <h3 class="row-title">Readable, useful, no clutter</h3>
+          <p class="row-copy">This mobile page exists to be scannable in under a minute, not to reproduce the full desktop site.</p>
+        </div>
+        <div class="row-meta">intent</div>
+      </div>
+    </section>
+
+    <div class="strip"></div>
+
+    <div class="footer">
+      Mobile version for readability only.<br>
+      No extra routing, no extra navigation, no buried actions.
+    </div>
+  </main>
+</body>
+</html>
