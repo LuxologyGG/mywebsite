@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A standalone recreation of Dub's animated product navigation.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Dub Product Menu Recreation</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header" data-menu-root>
+      <nav class="navbar" aria-label="Primary navigation">
+        <a class="brand demo-link" href="#" aria-label="Dub home">
+          <svg viewBox="0 0 68 28" role="img" aria-hidden="true">
+            <path d="M13.3 7.2v6.5a6.1 6.1 0 1 1-3.1-5.3V3.6h3.1v9.7a3.1 3.1 0 1 0 0 .8V7.2Z"/>
+            <path d="M23.1 8.1v7.2c0 2.2 1.1 3.3 3 3.3 1.9 0 3-1.1 3-3.3V8.1h3.2v7.5c0 4-2.4 6.1-6.2 6.1s-6.2-2.1-6.2-6.1V8.1h3.2Z"/>
+            <path d="M38.5 3.6v5.9a6.3 6.3 0 1 1-3.1 5.5V3.6h3.1Zm3.1 8.4a3.2 3.2 0 1 0 0 6.5 3.2 3.2 0 0 0 0-6.5Z"/>
+          </svg>
+        </a>
+
+        <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+          <span class="mobile-toggle__label">Menu</span>
+          <span class="mobile-toggle__icon" aria-hidden="true">
+            <i></i><i></i>
+          </span>
+        </button>
+
+        <div class="nav-content" id="primary-navigation">
+          <div class="nav-links">
+            <button
+              class="nav-link product-trigger"
+              id="product-trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="product-menu"
+            >
+              <span>Product</span>
+              <svg class="chevron" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="m3.1 4.7 2.9 2.9 2.9-2.9"/>
+              </svg>
+            </button>
+            <a class="nav-link demo-link" href="#">
+              <span>Solutions</span>
+              <svg class="chevron" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="m3.1 4.7 2.9 2.9 2.9-2.9"/>
+              </svg>
+            </a>
+            <a class="nav-link demo-link" href="#">
+              <span>Resources</span>
+              <svg class="chevron" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="m3.1 4.7 2.9 2.9 2.9-2.9"/>
+              </svg>
+            </a>
+            <a class="nav-link demo-link" href="#">Enterprise</a>
+            <a class="nav-link demo-link" href="#">Customers</a>
+            <a class="nav-link demo-link" href="#">Pricing</a>
+          </div>
+
+          <div class="nav-actions">
+            <a class="button button--secondary demo-link" href="#">Log in</a>
+            <a class="button button--primary demo-link" href="#">Sign up</a>
+          </div>
+
+          <section
+            class="mega-menu"
+            id="product-menu"
+            aria-label="Products"
+            aria-hidden="true"
+            hidden
+          >
+        <div class="product-grid">
+          <a class="product-card product-card--links demo-link" href="#">
+            <div class="product-card__copy">
+              <span class="product-icon product-icon--orange" aria-hidden="true">
+                <svg viewBox="0 0 18 18">
+                  <path d="M6.1 11.9 12 6m-2.2-.1 1.3-1.3a2.6 2.6 0 0 1 3.7 3.7l-2 2a2.6 2.6 0 0 1-3.7 0M8.2 12.1l-1.3 1.3a2.6 2.6 0 0 1-3.7-3.7l2-2a2.6 2.6 0 0 1 3.7 0"/>
+                </svg>
+              </span>
+              <h2>Dub Links</h2>
+              <p>Short links with superpowers for modern marketing teams.</p>
+            </div>
+            <div class="card-visual links-visual" aria-hidden="true">
+              <div class="link-row">
+                <span class="link-favicon">d.</span>
+                <span class="link-meta">
+                  <strong>d.to</strong>
+                  <small>↳ dub.co</small>
+                </span>
+                <span class="link-tools">⌘ ✣</span>
+                <span class="click-badge">☼&nbsp; 151.8K clicks</span>
+              </div>
+              <div class="link-row">
+                <span class="link-favicon">d.</span>
+                <span class="link-meta">
+                  <strong>d.to/register</strong>
+                  <small>↳ app.dub.co/register</small>
+                </span>
+                <span class="link-tools">□ ✣</span>
+                <span class="click-badge">☼&nbsp; 100K clicks</span>
+              </div>
+              <div class="link-row link-row--faded">
+                <span class="link-favicon">d.</span>
+                <span class="link-meta">
+                  <strong>d.to/try</strong>
+                  <small>↳ app.dub.co/try</small>
+                </span>
+                <span class="link-tools">□ ✣</span>
+                <span class="click-badge">☼&nbsp; 65.8K clicks</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="product-card product-card--analytics demo-link" href="#">
+            <div class="product-card__copy">
+              <span class="product-icon product-icon--green" aria-hidden="true">
+                <svg viewBox="0 0 18 18">
+                  <rect x="3" y="9" width="3" height="5" rx="1"/>
+                  <rect x="7.5" y="6" width="3" height="8" rx="1"/>
+                  <rect x="12" y="3" width="3" height="11" rx="1"/>
+                </svg>
+              </span>
+              <h2>Dub Analytics</h2>
+              <p>Powerful analytics delivered instantly.</p>
+            </div>
+            <div class="card-visual analytics-visual" aria-hidden="true">
+              <svg class="chart" viewBox="0 0 360 175" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#10c7ae" stop-opacity=".22"/>
+                    <stop offset="1" stop-color="#10c7ae" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g class="chart-grid">
+                  <path d="M0 24H360M0 67H360M0 110H360M0 153H360"/>
+                  <path d="M42 0V175M104 0V175M166 0V175M228 0V175M290 0V175M352 0V175"/>
+                </g>
+                <path class="chart-area" d="M0 155 55 117 105 123 151 131 198 83 244 33 266 26 284 37 307 39 360 0V175H0Z"/>
+                <path class="chart-line" d="M0 155 55 117 105 123 151 131 198 83 244 33 266 26 284 37 307 39 360 0"/>
+                <circle class="chart-point" cx="266" cy="26" r="4"/>
+              </svg>
+              <div class="analytics-url">
+                <span class="chain">↕</span>
+                <strong>d.to/try</strong>
+              </div>
+              <div class="analytics-date">Apr 2025</div>
+              <div class="analytics-stats">
+                <span><i class="stat-dot stat-dot--clicks"></i>Clicks <strong>12.5K</strong></span>
+                <span><i class="stat-dot stat-dot--leads"></i>Leads <strong>8.2K</strong></span>
+                <span><i class="stat-dot stat-dot--sales"></i>Sales <strong>$12K</strong></span>
+              </div>
+              <div class="analytics-profile">
+                <span class="avatar avatar--danielle">DW</span>
+                <span><strong>Danielle Wilson</strong><small>danielle@dub.co</small></span>
+                <span class="country">🇺🇸</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="product-card product-card--partners demo-link" href="#">
+            <div class="product-card__copy">
+              <span class="product-icon product-icon--purple" aria-hidden="true">
+                <svg viewBox="0 0 18 18">
+                  <path d="M6.3 8.1a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Zm5.5 1.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6ZM2.8 14c.2-2.4 1.4-3.7 3.5-3.7s3.3 1.3 3.5 3.7m.2 0c.2-1.8.8-2.8 2-2.8s2 1 2.2 2.8"/>
+                </svg>
+              </span>
+              <h2>Dub Partners</h2>
+              <p>Grow your revenue on auto-pilot with partnerships.</p>
+            </div>
+            <div class="card-visual partners-visual" aria-hidden="true">
+              <div class="partner-row">
+                <span class="avatar avatar--lauren">LA</span>
+                <span class="partner-name"><strong>Lauren Anderson</strong><small>🇺🇸 &nbsp; Laure</small></span>
+                <span class="partner-value"><small>Payouts</small><strong>$550</strong></span>
+              </div>
+              <div class="partner-row">
+                <span class="avatar avatar--mia">MT</span>
+                <span class="partner-name"><strong>Mia Taylor</strong><small>🇨🇦 &nbsp; Revue</small></span>
+                <span class="partner-value"><small>Revenue</small><strong>$22.6K</strong></span>
+              </div>
+              <div class="partner-row">
+                <span class="avatar avatar--sophie">SL</span>
+                <span class="partner-name"><strong>Sophie Laurent</strong><small>🇫🇷 &nbsp; Revue</small></span>
+                <span class="partner-value"><small>Payouts</small><strong>$3.3K</strong></span>
+              </div>
+              <div class="partner-row">
+                <span class="avatar avatar--hiroshi">HT</span>
+                <span class="partner-name"><strong>Hiroshi Tanaka</strong><small>🇯🇵 &nbsp; Revue</small></span>
+                <span class="partner-value"><small>Revenue</small><strong>$19.2K</strong></span>
+              </div>
+              <div class="partner-row partner-row--faded">
+                <span class="avatar avatar--elias">EW</span>
+                <span class="partner-name"><strong>Elias Weber</strong><small>🇩🇪 &nbsp; Revue</small></span>
+                <span class="partner-value"><small>Payouts</small><strong>$860</strong></span>
+              </div>
+              <div class="partner-row partner-row--faded">
+                <span class="avatar avatar--liam">LC</span>
+                <span class="partner-name"><strong>Liam Carter</strong><small>🇬🇧 &nbsp; Laure</small></span>
+                <span class="partner-value"><small>Revenue</small><strong>$8.7K</strong></span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="menu-footer">
+          <a class="footer-card demo-link" href="#">
+            <span class="footer-card__copy">
+              <strong>Dub Integrations</strong>
+              <small>Enhance your short links</small>
+            </span>
+            <span class="integration-stack" aria-hidden="true">
+              <i class="integration-logo integration-logo--segment">◇</i>
+              <i class="integration-logo integration-logo--stripe">S</i>
+              <i class="integration-logo integration-logo--make">M</i>
+              <i class="integration-logo integration-logo--zapier">_zap</i>
+            </span>
+          </a>
+
+          <a class="footer-card demo-link" href="#">
+            <span class="footer-card__copy">
+              <strong>Dub API</strong>
+              <small>Unlock further capabilities</small>
+            </span>
+            <span class="code-window" aria-hidden="true">
+              <span class="code-window__bar"><i></i><i></i><i></i><em>Typescript</em></span>
+              <code><b>import</b> { Dub } <b>from</b> <mark>"dub"</mark>;<br><br><span>const</span> dub = <b>new</b> Dub({<br>&nbsp;&nbsp;token: <mark>"DUB_API_KEY"</mark>,<br>});</code>
+            </span>
+          </a>
+        </div>
+          </section>
+        </div>
+      </nav>
+    </header>
+
+    <main class="backdrop" aria-hidden="true">
+      <div class="backdrop-glow"></div>
+      <div class="feature-pills">
+        <span><i class="pill-icon pill-icon--purple">♙</i>Affiliate Programs</span>
+        <span><i class="pill-icon pill-icon--green">▥</i>Conversion Analytics</span>
+        <span><i class="pill-icon pill-icon--orange">↗</i>Short Links</span>
+      </div>
+      <div class="backdrop-card">
+        <span class="backdrop-card__icon">d.</span>
+        <span>
+          <strong>Links that do more</strong>
+          <small>Built for modern marketing teams</small>
+        </span>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
