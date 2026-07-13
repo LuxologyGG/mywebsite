@@ -27,6 +27,68 @@ function reduceMenuState(state, event) {
   }
 }
 
+function handleEscape(state, focusTrigger, focusMobileToggle, dispatch) {
+  if (!state.open && !state.mobileOpen) return false;
+
+  if (state.mobileOpen) {
+    focusMobileToggle();
+  } else if (state.open) {
+    focusTrigger();
+  }
+  dispatch({ type: state.mobileOpen ? "MOBILE_CLOSE" : "ESCAPE" });
+  return true;
+}
+
+function handleTriggerFocus(focusVisible, dispatch, suppressOpen = false) {
+  if (!focusVisible || suppressOpen) return false;
+  dispatch({ type: "OPEN" });
+  return true;
+}
+
+function getTriggerClickEvent({
+  open,
+  openedByHover,
+  hoverCapable,
+  mobile,
+}) {
+  if (open && openedByHover && hoverCapable && !mobile) return null;
+  return { type: "TOGGLE" };
+}
+
+function getFocusInEvent({ open, focusInsideRoot }) {
+  if (!open || focusInsideRoot) return null;
+  return { type: "CLOSE" };
+}
+
+function getViewportChangeEvent({ open, mobileOpen }) {
+  if (!open && !mobileOpen) return null;
+  return { type: "MOBILE_CLOSE" };
+}
+
+function getBreakpointFocusTarget({ focusWillHide, enteringMobile }) {
+  if (!focusWillHide) return null;
+  return enteringMobile ? "mobile" : "product";
+}
+
+function getViewportTransitionPlan({
+  enteringMobile,
+  focusWillHide,
+  mobileOpen,
+  open,
+}) {
+  return {
+    event: getViewportChangeEvent({ mobileOpen, open }),
+    focusTarget: getBreakpointFocusTarget({
+      enteringMobile,
+      focusWillHide,
+    }),
+  };
+}
+
+function getPanelConcealProperty(mobile) {
+  return mobile ? "max-height" : "transform";
+}
+
 function initNavigation() {
   const root = document.querySelector("[data-menu-root]");
   if (!root) return;
@@ -44,6 +106,8 @@ function initNavigation() {
   let state = { open: false, mobileOpen: false };
   let hoverCloseTimer = 0;
   let panelHideTimer = 0;
+  let openedByHover = false;
+  let suppressProductFocusOpen = false;
 
   function clearHoverClose() {
     window.clearTimeout(hoverCloseTimer);
@@ -67,8 +131,20 @@ function initNavigation() {
     window.clearTimeout(panelHideTimer);
     panelHideTimer = window.setTimeout(() => {
       if (!state.open) panel.hidden = true;
-    }, 360);
+    }, 700);
   }
+
+  panel.addEventListener("transitionend", (event) => {
+    if (
+      event.target !== panel ||
+      event.propertyName !== getPanelConcealProperty(mobileQuery.matches)
+    ) {
+      return;
+    }
+
+    window.clearTimeout(panelHideTimer);
+    if (!state.open) panel.hidden = true;
+  });
 
   function render(previousState) {
     root.classList.toggle("is-product-open", state.open);
@@ -84,6 +160,7 @@ function initNavigation() {
   function dispatch(event) {
     const previousState = state;
     state = reduceMenuState(state, event);
+    if (!state.open) openedByHover = false;
     if (state !== previousState) render(previousState);
   }
 
@@ -98,13 +175,22 @@ function initNavigation() {
   trigger.addEventListener("click", (event) => {
     event.preventDefault();
     clearHoverClose();
-    dispatch({ type: "TOGGLE" });
+    const clickEvent = getTriggerClickEvent({
+      open: state.open,
+      openedByHover,
+      hoverCapable: hoverQuery.matches,
+      mobile: mobileQuery.matches,
+    });
+    openedByHover = false;
+    if (clickEvent) dispatch(clickEvent);
   });
 
   trigger.addEventListener("pointerenter", () => {
     if (!hoverQuery.matches || mobileQuery.matches) return;
     clearHoverClose();
+    const wasOpen = state.open;
     dispatch({ type: "OPEN" });
+    if (!wasOpen && state.open) openedByHover = true;
   });
   trigger.addEventListener("pointerleave", scheduleHoverClose);
 
@@ -113,13 +199,19 @@ function initNavigation() {
 
   trigger.addEventListener("focus", () => {
     clearHoverClose();
-    dispatch({ type: "OPEN" });
+    handleTriggerFocus(
+      trigger.matches(":focus-visible"),
+      dispatch,
+      suppressProductFocusOpen
+    );
   });
 
   document.addEventListener("focusin", (event) => {
-    if (!state.open) return;
-    if (event.target === trigger || panel.contains(event.target)) return;
-    dispatch({ type: "CLOSE" });
+    const focusEvent = getFocusInEvent({
+      open: state.open,
+      focusInsideRoot: root.contains(event.target),
+    });
+    if (focusEvent) dispatch(focusEvent);
   });
 
   document.addEventListener("pointerdown", (event) => {
@@ -129,10 +221,13 @@ function initNavigation() {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || (!state.open && !state.mobileOpen)) return;
-    const shouldRestoreFocus = state.open;
-    dispatch({ type: state.mobileOpen ? "MOBILE_CLOSE" : "ESCAPE" });
-    if (shouldRestoreFocus) trigger.focus();
+    if (event.key !== "Escape") return;
+    handleEscape(
+      state,
+      () => trigger.focus({ preventScroll: true }),
+      () => mobileToggle.focus({ preventScroll: true }),
+      dispatch
+    );
   });
 
   mobileToggle.addEventListener("click", () => {
@@ -141,8 +236,26 @@ function initNavigation() {
   });
 
   function handleViewportChange() {
-    if (!mobileQuery.matches && state.mobileOpen) {
-      dispatch({ type: "MOBILE_CLOSE" });
+    const activeElement = document.activeElement;
+    const enteringMobile = mobileQuery.matches;
+    const transitionPlan = getViewportTransitionPlan({
+      ...state,
+      enteringMobile,
+      focusWillHide: enteringMobile
+        ? navContent.contains(activeElement)
+        : activeElement === mobileToggle || panel.contains(activeElement),
+    });
+
+    if (transitionPlan.focusTarget === "mobile") {
+      mobileToggle.focus({ preventScroll: true });
+    } else if (transitionPlan.focusTarget === "product") {
+      suppressProductFocusOpen = true;
+      trigger.focus({ preventScroll: true });
+      suppressProductFocusOpen = false;
+    }
+
+    if (transitionPlan.event) {
+      dispatch(transitionPlan.event);
     } else {
       navContent.setAttribute(
         "aria-hidden",
@@ -172,7 +285,17 @@ function initNavigation() {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { reduceMenuState };
+  module.exports = {
+    getBreakpointFocusTarget,
+    getFocusInEvent,
+    getPanelConcealProperty,
+    getTriggerClickEvent,
+    getViewportChangeEvent,
+    getViewportTransitionPlan,
+    handleEscape,
+    handleTriggerFocus,
+    reduceMenuState,
+  };
 }
 
 if (typeof document !== "undefined") {
