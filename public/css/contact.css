@@ -1,0 +1,255 @@
+/* contact.css — Contact mode and signal tower animation. */
+
+/* --- Contact Mode (full-view like blog) --- */
+
+body.contact-mode .world {
+  opacity: 0;
+  pointer-events: none;
+}
+body.contact-mode #map-whats-this {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.contact-mode .glass-card {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 1040px;
+  height: 80vh;
+  max-height: 80vh;
+  padding-top: 44px;
+  z-index: 20;
+}
+
+.contact-mode .work-content,
+.contact-mode .blog-content-block,
+.contact-mode .overview-content-block {
+  display: none;
+}
+
+.contact-mode .contact-content-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  pointer-events: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.contact-mode .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.contact-mode .center-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-mode .toggle {
+  right: 52px;
+}
+
+.contact-mode .profile-badge {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 8;
+}
+
+.contact-mode .profile-glass img {
+  opacity: 1;
+}
+
+/* Contact content block (hidden by default) */
+.contact-content-block {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+/* Signal tower animation */
+@keyframes contactFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.contact-signals {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+  overflow: hidden;
+  transition: opacity 0.8s ease;
+  background: #000;
+}
+
+body.light-mode .contact-signals {
+  background: #fff;
+}
+
+body.contact-mode .contact-signals {
+  opacity: 1;
+}
+
+
+
+/* ── Overview button ── */
+.overview-btn {
+  display: inline-block;
+  font-family: 'GeistPixelSquare', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  margin-left: 8px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+  position: relative;
+  top: -1px;
+}
+.overview-btn:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.08);
+}
+body.light-mode .overview-btn {
+  color: rgba(0,0,0,0.5);
+  border-color: rgba(0,0,0,0.2);
+}
+body.light-mode .overview-btn:hover {
+  color: #000;
+  border-color: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.05);
+}
+
+/* ── Overview background ── */
+.overview-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+  overflow: hidden;
+  transition: opacity 0.8s ease;
+  background: #000;
+}
+
+.overview-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+body.light-mode .overview-bg {
+  background: #f5f6fb;
+}
+
+body.overview-mode .overview-bg {
+  opacity: 1;
+}
+
+body.overview-mode .world {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.overview-mode #map-whats-this {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* ── Overview mode ── */
+.overview-content-block {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+.overview-mode .glass-card {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 720px;
+  height: 82vh;
+  max-height: 82vh;
+  padding-top: 44px;
+  z-index: 20;
+}
+
+.overview-mode .work-content,
+.overview-mode .blog-content-block,
+.overview-mode .contact-content-block {
+  display: none;
+}
+
+.overview-mode .overview-content-block {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  pointer-events: auto;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.overview-mode .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.overview-mode .center-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overview-mode .toggle {
+  right: 52px;
+}
+
+.overview-mode .profile-badge {
+  display: none;
+}
+
+/* ── Overview text fade-in ── */
+@keyframes ovFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.overview-mode .ov-header       { animation: ovFadeUp 0.6s ease both; animation-delay: 0.1s; }
+.overview-mode .ov-resume-btn   { animation: ovFadeUp 0.6s ease both; animation-delay: 0.2s; }
+.overview-mode .ov-section:nth-child(3) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.3s; }
+.overview-mode .ov-section:nth-child(4) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.4s; }
+.overview-mode .ov-section:nth-child(5) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.55s; }
+.overview-mode .ov-section:nth-child(6) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.65s; }
+.overview-mode .ov-section:nth-child(7) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.75s; }
+.overview-mode .ov-section:nth-child(8) { animation: ovFadeUp 0.6s ease both; animation-delay: 0.85s; }

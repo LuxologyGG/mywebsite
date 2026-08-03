@@ -9,9 +9,9 @@ kv_namespaces = [
 [assets]
 directory = "./public"
 binding = "ASSETS"
-
-[assets.routing]
-not_found_handling = "single-page-application"
+# not_found_handling is left at its default ("none") so unmatched paths reach the
+# Worker; SPA fallback lives in src/routes/spa.js, which serves the shell for
+# client-routed pages and keeps a 404 status for genuinely unknown ones.
 
 [vars]
 DISCORD_USER_ID = "1042651808557977600"

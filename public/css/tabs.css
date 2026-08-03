@@ -1,0 +1,612 @@
+/* tabs.css — Work-card tabs and the glass tab treatment. */
+
+/* Light mode glass tabs */
+body.light-mode .work-tab {
+  color: #222;
+}
+
+body.light-mode .work-tab__glass-overlay {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+body.light-mode .work-tab__glass-specular {
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+body.light-mode .work-tab.is-active .work-tab__glass-overlay {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* Solid tabs on explore tab so content behind is hidden */
+.search-active .work-tab__glass-overlay {
+  background: rgba(30, 30, 36, 0.95);
+}
+
+.search-active .work-tab.is-active .work-tab__glass-overlay {
+  background: rgba(50, 50, 58, 0.95);
+}
+
+body.light-mode.search-active .work-tab__glass-overlay {
+  background: rgba(235, 236, 242, 0.95);
+}
+
+body.light-mode.search-active .work-tab.is-active .work-tab__glass-overlay {
+  background: rgba(220, 222, 230, 0.95);
+}
+
+.work-sections {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  padding-bottom: 80px;
+  min-height: 0;
+  /* Work section scrollbar (keeps it dark, avoids white hover track) */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) transparent;
+}
+
+.work-sections::-webkit-scrollbar {
+  width: 8px;
+}
+
+.work-sections::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.work-sections::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.work-sections::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.28);
+  background-clip: padding-box;
+}
+
+.work-section {
+  display: none;
+  line-height: 1.5;
+  font-size: 14px;
+  font-family: "Noto Sans", sans-serif;
+}
+
+#work-about {
+  overflow: hidden;
+}
+
+.work-section.is-active {
+  display: block;
+  animation: fadeUp 0.5s ease;
+}
+
+.work-section h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.Typewriter {
+  display: inline-block;
+}
+
+.Typewriter__wrapper {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.Typewriter__cursor {
+  display: inline-block;
+  margin-left: 1px;
+  -webkit-animation: Typewriter-cursor 1s infinite;
+  animation: Typewriter-cursor 1s infinite;
+}
+
+@-webkit-keyframes Typewriter-cursor {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes Typewriter-cursor {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.about-stack {
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  margin-bottom: 8px;
+  display: grid;
+  gap: 12px;
+}
+
+.about-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+
+.about-row.discord-row {
+  display: none;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.about-row.discord-row.is-visible {
+  display: grid;
+  opacity: 1;
+}
+
+.about-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  transition: width 220ms ease, height 220ms ease;
+}
+
+.about-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.about-current-text {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-current-title {
+  font-weight: 800;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.about-current-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.about-current-body {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.presence-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.presence-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.presence-status-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.presence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.presence-dot.status-online {
+  background: #43b581;
+}
+
+.presence-dot.status-idle {
+  background: #faa61a;
+}
+
+.presence-dot.status-dnd {
+  background: #f04747;
+}
+
+.presence-dot.status-offline {
+  background: #ffffff;
+}
+
+.presence-main {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.presence-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.about-current-text#discord-presence-card {
+  transition: min-height 220ms ease, padding 220ms ease;
+}
+
+.about-current-text#discord-presence-card.is-music-expanded {
+  min-height: 92px;
+}
+
+.presence-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+
+.presence-progress {
+  margin-top: 8px;
+}
+
+.presence-progress-times {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.presence-progress-track {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.presence-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.9);
+  transition: width 900ms linear;
+}
+
+.presence-art-wrap {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.presence-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+}
+
+.presence-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.55);
+  display: block;
+}
+
+.presence-vinyl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.38);
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.presence-vinyl-label {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.presence-vinyl-label img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.presence-vinyl-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24%;
+  height: 24%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.presence-vinyl-hole {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #111;
+  z-index: 2;
+}
+
+.presence-art-wrap.is-vinyl {
+  overflow: hidden;
+}
+
+.about-logo:has(.presence-art-wrap.is-vinyl) {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+
+.about-row:has(.presence-art-wrap.is-vinyl) {
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+}
+
+.presence-art-wrap.is-vinyl .presence-cover {
+  display: none;
+}
+
+.presence-art-wrap.is-vinyl .presence-vinyl {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  animation: 7s linear vinyl-spin infinite;
+}
+
+.presence-vinyl-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+
+.presence-vinyl-song {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.presence-vinyl-artist {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.presence-art-wrap.is-vinyl .presence-cover img {
+  transform: scale(1.3);
+}
+
+@keyframes vinyl-out {
+  0% { left: 35%; }
+  100% { left: 51%; }
+}
+
+@keyframes vinyl-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+body.light-mode .about-stack,
+body.light-mode .about-current-text,
+body.light-mode .about-logo {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.14);
+  color: #111;
+}
+
+body.light-mode .about-current-sub {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.work-section ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.work-section li {
+  margin-bottom: 6px;
+}
+
+.work-content,
+.work-content h3,
+.work-content p,
+.work-content button,
+.work-content .htl-wrap {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.work-mode .glass-card {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 640px;
+  max-width: 92vw;
+  height: 580px;
+  max-height: 580px;
+  padding-top: 44px;
+}
+
+.work-mode.experience-active .glass-card {
+  width: 94vw;
+  max-width: 1240px;
+  height: 84vh;
+  max-height: 84vh;
+  padding-top: 58px;
+}
+
+.work-initializing .glass-card {
+  transition: none !important;
+  opacity: 0;
+}
+
+.work-fade-in .glass-card {
+  animation: workCardFadeIn 280ms ease both;
+}
+
+@keyframes workCardFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+.work-mode .work-content {
+  display: flex;
+  height: 100%;
+  overflow: visible;
+}
+
+.work-content,
+.work-content h3,
+.work-content p,
+.work-content button,
+.work-content .htl-wrap {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.work-mode .back-button {
+  display: none;
+}
+
+.work-mode .profile-badge {
+  display: flex;
+}
+
+.paste-active .glass-card {
+  width: 94vw;
+  max-width: 1240px;
+  height: 84vh;
+  max-height: 84vh;
+  padding-top: 58px;
+}
+
+.paste-active .work-tabs {
+  display: none;
+}
+
+.paste-active .work-sections {
+  padding-bottom: 0;
+}
+
+.paste-active .profile-badge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 8;
+}
+
+.paste-active .back-button,
+.upload-active .back-button,
+.experience-active .back-button,
+.search-active .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paste-active .toggle,
+.upload-active .toggle,
+.blog-mode .toggle,
+.experience-active .toggle,
+.search-active .toggle {
+  right: 52px;
+}
+
+.paste-active .center-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.paste-active #work-paste {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.paste-active #work-paste .paste-textarea {
+  flex: 1;
+  min-height: 0;
+  resize: none;
+}
+
+.paste-active .work-sections {
+  padding-top: 56px;
+}
+
+.work-mode.experience-active .profile-badge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 8;
+}
+
+.work-mode.experience-active .work-sections {
+  padding-top: 56px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent 40px, black 90px);
+  mask-image: linear-gradient(to bottom, transparent 0px, transparent 40px, black 90px);
+}
+
+.work-mode .center-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.work-mode .profile-glass img {
+  opacity: 1;
+}

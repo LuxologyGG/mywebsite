@@ -1,0 +1,522 @@
+/* base.css — Tokens, resets, layout shell, profile card, and shared glass styles. */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,900');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+
+@font-face {
+  font-family: 'GeistPixelSquare';
+  src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+:root {
+  --background-color-light: hsla(230, 80%, 98%, 1);
+  --toggle-light: hsla(230, 25%, 10%, 1);
+  --background-color-dark: hsla(230, 55%, 4%, 1);
+  --toggle-dark: hsla(230, 25%, 75%, 1);
+  --x: 50%;
+  --y: 50%;
+  --background-color: var(--background-color-light);
+  --toggle-color: var(--toggle-light);
+}
+
+html.dark {
+  --background-color: var(--background-color-dark);
+  --toggle-color: var(--toggle-dark);
+}
+
+body{
+  overflow: hidden;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: "PT Serif", serif;
+}
+
+.toggle {
+  position: absolute;
+  top: 17px;
+  right: 10px;
+  transform: scale(.5);
+  transform-origin: top right;
+  cursor: pointer;
+  z-index: 8;
+  transition: right 0.3s ease;
+}
+
+
+.toggle input {
+  display: none;
+}
+
+.toggle input + div {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  position: relative;
+  box-shadow: inset 16px -16px 0 0 var(--toggle-color);
+  transform: scale(1) rotate(-2deg);
+  transition: box-shadow .5s ease 0s, transform .4s ease .1s;
+}
+
+.toggle input + div::before {
+  content: '';
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: light-dark(transparent, var(--toggle-color));
+  transition: background .3s ease;
+}
+
+.toggle input + div::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: -4px 0 0 -4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-shadow:
+    0 -23px 0 var(--toggle-color),
+    0 23px 0 var(--toggle-color),
+    23px 0 0 var(--toggle-color),
+    -23px 0 0 var(--toggle-color),
+    15px 15px 0 var(--toggle-color),
+    -15px 15px 0 var(--toggle-color),
+    15px -15px 0 var(--toggle-color),
+    -15px -15px 0 var(--toggle-color);
+  transform: scale(0);
+  transition: all .3s ease;
+}
+
+.toggle input:checked + div {
+  box-shadow: inset 32px -32px 0 0 var(--background-color);
+  transform: scale(.5) rotate(0deg);
+  transition: transform .3s ease .1s, box-shadow .2s ease 0s;
+}
+
+.toggle input:checked + div::before {
+  background: var(--toggle-color);
+  transition: background .3s ease .1s;
+}
+
+.toggle input:checked + div::after {
+  transform: scale(1.5);
+  transition: transform .5s ease .15s;
+}
+
+.site-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20vh;
+  opacity: 1;
+  transition: opacity 420ms ease;
+}
+
+.site-preloader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 2999;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+.nav-preloader.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.loader {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 20px, 0 -20px;
+  border-radius: 3px;
+  background: currentColor;
+  display: block;
+  position: relative;
+  color: #FFF;
+  transform: translateY(20px);
+  box-sizing: border-box;
+  animation: animloader 2s ease infinite;
+}
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 20px, 0 -20px;
+  border-radius: 3px;
+  background: currentColor;
+  color: #FFF;
+  position: absolute;
+  left: 20px;
+  top: 0;
+  animation: animloader 2s 0.2s ease infinite;
+}
+.loader::before {
+  animation-delay: 0.4s;
+  left: 40px;
+}
+
+@keyframes animloader {
+  0% {
+    top: 0;
+    color: white;
+  }
+  50% {
+    top: 20px;
+    color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    top: 0;
+    color: white;
+  }
+}
+
+.purse {
+  --coin-diam: 160px;
+  --coin-depth: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--coin-diam);
+  height: var(--coin-diam);
+  transform: translate(-50%, -50%) scale(0.6);
+  transform-origin: center center;
+  perspective: 1000px;
+  filter: grayscale(1);
+  -webkit-filter: grayscale(1);
+}
+
+.coin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  animation: coin-spin 2s linear infinite;
+}
+
+.coin .front,
+.coin .back {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2), inset 0 0 24px rgba(0, 0, 0, 0.26);
+}
+
+.coin .front {
+  transform: translateZ(calc(var(--coin-depth) / 2));
+  background-image: url("/photos/front.png");
+}
+
+.coin .back {
+  transform: translateZ(calc(var(--coin-depth) / -2)) rotateY(180deg);
+  background-image: url("/photos/back.png");
+}
+
+.coin .side {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: calc(var(--coin-depth) * 0.95) solid rgba(185, 185, 185, 0.95);
+  background: transparent;
+  transform-style: preserve-3d;
+  transform: rotateY(90deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 0 10px rgba(0, 0, 0, 0.22);
+}
+
+.coin .side .spoke {
+  display: none;
+}
+
+@keyframes coin-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+@keyframes theme-reveal-in {
+  from { clip-path: circle(0% at var(--x) var(--y)); }
+  to { clip-path: circle(150% at var(--x) var(--y)); }
+}
+
+@keyframes theme-reveal-out {
+  from { clip-path: circle(150% at var(--x) var(--y)); }
+  to { clip-path: circle(0% at var(--x) var(--y)); }
+}
+
+::view-transition-new(root) {
+  animation: theme-reveal-in 0.5s ease-in-out forwards;
+  z-index: 1;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: theme-reveal-out 0.5s ease-in-out forwards;
+  animation-delay: 0.5s;
+  z-index: 0;
+  mix-blend-mode: normal;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+body.light-mode {
+  background: #f5f6fb;
+  color: #111;
+}
+
+canvas {
+  display: block;
+}
+
+.view {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.view.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.world{
+  position: fixed;
+  inset: 0;
+  width:100%;
+  height:100%;
+  background: #0a0a0a;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+
+/* ── "What's this?" map tooltip ── */
+.map-whats-this {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  transition: opacity 0.35s ease, width 0.3s cubic-bezier(.4,0,.2,1), height 0.3s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+body.search-active .map-whats-this {
+  opacity: 1;
+  pointer-events: auto;
+}
+.map-whats-this:hover {
+  width: 260px;
+  height: 120px;
+}
+.map-whats-this__btn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-family: 'GeistPixelSquare', monospace;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+body.light-mode .map-whats-this__btn {
+  color: rgba(0,0,0,0.3);
+}
+.map-whats-this:hover .map-whats-this__btn {
+  opacity: 0;
+  pointer-events: none;
+}
+.map-whats-this__body {
+  position: absolute;
+  inset: 0;
+  padding: 12px 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.map-whats-this:hover .map-whats-this__body {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.25s ease 0.25s;
+}
+.map-whats-this__body p {
+  margin: 0;
+  font-family: 'GeistPixelSquare', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.2px;
+}
+body.light-mode .map-whats-this__body p {
+  color: rgba(0,0,0,0.5);
+}
+.map-whats-this__body strong {
+  color: rgba(255,255,255,0.9);
+  font-weight: normal;
+}
+body.light-mode .map-whats-this__body strong {
+  color: #111;
+}
+
+#home-view {
+  position: relative;
+  z-index: 2;
+}
+
+#blog-view {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  padding-top: 120px;
+  font-family: 'Roboto Mono', monospace;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  height: 50px;
+  width: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left-color: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  animation: animation-rotate 1000ms linear infinite;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  z-index: 6;
+}
+
+.loading::before,
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left-color: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+}
+
+.loading::before {
+  margin: -23px 0 0 -23px;
+  height: 44px;
+  width: 44px;
+  animation: animation-rotate 1000ms linear infinite;
+}
+
+.loading::after {
+  margin: -29px 0 0 -29px;
+  height: 56px;
+  width: 56px;
+  animation: animation-rotate 2000ms linear infinite;
+}
+
+.loading.visible {
+  opacity: 1;
+}
+
+.center-image {
+  position: fixed;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  max-width: 22vw;
+  border-radius: 16px;
+  box-shadow: none;
+  border: none;
+  outline: none;
+  pointer-events: none;
+  transition: top 0.7s ease, left 0.7s ease, width 0.7s ease, transform 0.7s ease, opacity 0.7s ease, border-radius 0.7s ease, box-shadow 0.7s ease;
+}
+
+.glass-card {
+  position: fixed;
+  top: 52%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: auto;
+  min-width: 260px;
+  width: 520px;
+  max-width: 90vw;
+  min-height: 90px;
+  height: auto;
+  max-height: 200px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 780ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
