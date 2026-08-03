@@ -45,8 +45,8 @@ const RESEARCH_PROJECTS = [
 // Things I've built, as distinct from things I've published.
 const BUILD_PROJECTS = [
   {
-    title: 'Homa',
-    desc: 'AI-personalized nootropics platform generating custom compound "stacks" from 2,900+ compounds and 130,000+ interaction entries, behind a safety-gated API.',
+    title: 'Homa — Founder',
+    desc: 'AI supplement intelligence. The industry sells you bottles; Homa shows you the biology — every compound mapped to the pathway it acts on, evidence graded from public biomedical research, and interactions checked, across 2,900+ compounds and 130,000+ interaction entries.',
     tags: ['Next.js', 'Supabase', 'Three.js'],
     type: 'build',
     url: 'https://homa.bio'
@@ -279,7 +279,7 @@ function showOverview() {
         <img src="/photos/pfp.png" alt="Camron" class="ov-pfp" />
         <div class="ov-header-text">
           <div class="ov-name">Camron Farjami</div>
-          <div class="ov-subtitle">Biology &amp; pre-medicine student. Hematology/oncology researcher. Builder.</div>
+          <div class="ov-subtitle">Founder at Homa. Biology &amp; pre-medicine student. Hematology/oncology researcher.</div>
         </div>
       </div>
 

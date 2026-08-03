@@ -19,7 +19,24 @@ body.light-mode .work-tab.is-active .work-tab__glass-overlay {
   background: rgba(255, 255, 255, 0.6);
 }
 
-/* Solid tabs on explore tab so content behind is hidden */
+/* Solid tabs on explore tab so content behind is hidden.
+ *
+ * Making the pills opaque isn't enough on its own: .work-tabs is a grid with an
+ * 8px gap and no backdrop, so scrolling results still showed through the gaps
+ * between them. This lays an opaque panel behind the whole bar. */
+.search-active .work-tabs::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 14px;
+  background: rgba(18, 18, 22, 0.97);
+  z-index: -1;
+}
+
+body.light-mode.search-active .work-tabs::before {
+  background: rgba(240, 241, 246, 0.98);
+}
+
 .search-active .work-tab__glass-overlay {
   background: rgba(30, 30, 36, 0.95);
 }
@@ -191,6 +208,21 @@ body.light-mode.search-active .work-tab.is-active .work-tab__glass-overlay {
 .about-current-body {
   font-size: 12px;
   opacity: 0.9;
+}
+
+/* Inherit the card's colour instead of falling back to the browser's blue. */
+.about-current-sub a,
+.about-current-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 200ms ease;
+}
+
+.about-current-sub a:hover,
+.about-current-body a:hover {
+  text-decoration-color: currentColor;
 }
 
 .presence-head {

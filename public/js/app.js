@@ -34,7 +34,7 @@ async function fetchUniqueCount() {
 function initDaysSince() {
   const el = document.getElementById('days-since-current-role');
   if (!el) return;
-  const start = Date.UTC(2026, 5, 1); // Jun 1, 2026 — CBSC start (months 0-indexed)
+  const start = Date.UTC(2026, 0, 1); // Jan 1, 2026 — Homa founded (months 0-indexed)
   const now = Date.now();
   const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   el.textContent = days >= 0 ? days : 0;
@@ -150,40 +150,87 @@ function enterBlogMode() {
 }
 
 // Smooth card morph between modes
+let morphCleanup = null;
+
+/**
+ * FLIP the glass card between two layouts.
+ *
+ * The card centres itself with its own CSS transform (translateX(-50%), plus a
+ * vertical offset in some modes). A naive FLIP writes over that transform, so
+ * the card jumped sideways by half its width for the length of the animation
+ * and snapped back at the end. The base translate is therefore read off the
+ * computed style and carried through every keyframe, including the final one.
+ */
 function morphCard(applyNewMode) {
   const card = document.querySelector('.glass-card');
   if (!card) { applyNewMode(); return; }
 
-  // First: capture current rect
+  // First: where the card is right now, mid-animation included, so interrupting
+  // a morph continues from what's on screen instead of snapping.
   const first = card.getBoundingClientRect();
 
-  // Apply new mode (changes classes, content, dimensions)
+  // Finish any morph still running before measuring the new layout.
+  if (morphCleanup) morphCleanup();
   card.style.transition = 'none';
+  card.style.transform = '';
+  card.style.transformOrigin = '';
+
   applyNewMode();
 
-  // Last: capture new rect
+  // Last: the settled geometry of the new layout, base transform included.
   const last = card.getBoundingClientRect();
 
-  // Invert: set the card to where it WAS
+  // The card's own centring transform, in pixels. Scaling about the top-left
+  // corner leaves that corner fixed, so the base offset can just ride along as
+  // a plain translate rather than composing awkwardly with a percentage.
+  const base = new DOMMatrixReadOnly(getComputedStyle(card).transform);
+  const tx = base.m41;
+  const ty = base.m42;
+
   const dx = first.left - last.left;
   const dy = first.top - last.top;
-  const sw = first.width / last.width;
-  const sh = first.height / last.height;
+  const sw = last.width ? first.width / last.width : 1;
+  const sh = last.height ? first.height / last.height : 1;
+
+  const settled = `translate(${tx}px, ${ty}px)`;
+
+  // Nothing moved — don't arm a transition that will never fire.
+  if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5 &&
+      Math.abs(sw - 1) < 0.005 && Math.abs(sh - 1) < 0.005) {
+    card.style.transition = '';
+    return;
+  }
 
   card.style.transformOrigin = 'top left';
-  card.style.transform = `translate(${dx}px, ${dy}px) scale(${sw}, ${sh})`;
+  card.style.transform = `translate(${dx + tx}px, ${dy + ty}px) scale(${sw}, ${sh})`;
 
-  // Play: animate to final position
-  requestAnimationFrame(() => {
-    card.style.transition = 'transform 650ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+  // Flush the inverted state; without this the browser coalesces it with the
+  // line below and the card lands on its mark with no animation at all.
+  void card.offsetWidth;
+
+  card.style.transition = 'transform 650ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+  card.style.transform = settled;
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    clearTimeout(timer);
+    card.removeEventListener('transitionend', onEnd);
+    card.style.transition = '';
     card.style.transform = '';
-    card.addEventListener('transitionend', function cleanup(e) {
-      if (e.propertyName !== 'transform') return;
-      card.removeEventListener('transitionend', cleanup);
-      card.style.transition = '';
-      card.style.transformOrigin = '';
-    }, { once: false });
-  });
+    card.style.transformOrigin = '';
+    morphCleanup = null;
+  };
+  function onEnd(e) {
+    if (e.propertyName !== 'transform') return;
+    finish();
+  }
+  card.addEventListener('transitionend', onEnd);
+  // transitionend never fires if the transition is interrupted or dropped, and
+  // leaving the inline transition set breaks the next morph.
+  const timer = setTimeout(finish, 800);
+  morphCleanup = finish;
 }
 
 // Every body-level mode class the views toggle. Kept in one place so leaving an

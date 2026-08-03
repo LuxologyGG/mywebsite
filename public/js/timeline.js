@@ -4,6 +4,17 @@
 // buildHorizontalTimeline(). Only `date`, `title`, `meta`, and `body` are read.
 const WORK_TIMELINE_DATA = [
   {
+    id: 'homa_founder',
+    date: '2026 - Present',
+    title: 'Founder',
+    meta: 'Homa · 2026 - Present · homa.bio',
+    body: [
+      'Building AI supplement intelligence: mapping every compound to the pathway it acts on, grading the evidence behind each claim from public biomedical research, and checking how compounds interact.',
+      'Architected a database of 2,900+ compounds and 130,000+ interaction entries behind a single safety-gated write path.',
+      'Built the immersive Three.js/GSAP web experience and orchestrated multiple AI agents for large-scale data enrichment and quality control.'
+    ]
+  },
+  {
     id: 'cbsc_intern',
     date: 'Jun 2026 - Present',
     title: 'Research Intern',

@@ -1,0 +1,156 @@
+/* light.css — Light-mode corrections. Loaded last so it wins on equal specificity.
+ *
+ * The site is authored dark-first: text colours are written as #fff or
+ * rgba(255,255,255,a) and interactive surfaces are white overlays. `body.light-mode`
+ * flips the page to #f5f6fb and inherits #111, but any rule that sets colour
+ * explicitly beats that inheritance — so every such rule needs a counterpart here
+ * or it renders white-on-white. These are the ones that were missing.
+ */
+
+/* --- Panel containers -------------------------------------------------------
+ * These set colour for a whole scroll area, so a missing override made every
+ * descendant without its own light rule invisible. This is the bulk of the bug. */
+body.light-mode .work-sections,
+body.light-mode .blog-scroll-area,
+body.light-mode .overview-scroll-area,
+body.light-mode .contact-scroll-area,
+body.light-mode .blog-panel {
+  color: #111;
+}
+
+/* --- Views that sit transparently over the page ---------------------------- */
+body.light-mode #blog-view .card figcaption,
+body.light-mode .sad-mac-container figcaption,
+body.light-mode .home-return-btn {
+  color: #111;
+}
+
+body.light-mode .home-return-btn:hover {
+  background: rgba(0, 0, 0, 0.07);
+  color: #000;
+}
+
+/* --- Secondary text -------------------------------------------------------- */
+body.light-mode .presence-status-wrap,
+body.light-mode .contrib-scroll {
+  color: rgba(0, 0, 0, 0.66);
+}
+
+body.light-mode .ov-subtitle,
+body.light-mode .ov-exp-org,
+body.light-mode .ov-award-sub,
+body.light-mode .contact-locale,
+body.light-mode .interest-label,
+body.light-mode .recent-interests-title,
+body.light-mode .exp-section-label {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+body.light-mode .ov-section-label,
+body.light-mode .ov-exp-date,
+body.light-mode .ov-link-sep,
+body.light-mode .ov-cert-issuer,
+body.light-mode .map-whats-this__btn {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+body.light-mode .ov-project-desc,
+body.light-mode .exp-item-issuer,
+body.light-mode .ov-links a,
+body.light-mode .contact-availability {
+  color: rgba(0, 0, 0, 0.64);
+}
+
+body.light-mode .ov-links a:hover {
+  color: #000;
+}
+
+/* The timeline's onboarding hint is white and sits over the page, not a card. */
+body.light-mode .htl-click-hint-text {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+body.light-mode .htl-click-hint-arrow path {
+  stroke: rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .overview-btn {
+  color: rgba(0, 0, 0, 0.6);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* Pills were white-on-white: white text over an 8%-white chip. */
+body.light-mode .ov-tag {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.62);
+}
+
+/* --- Interactive surfaces ---------------------------------------------------
+ * A white overlay over a light page is invisible, so hover and focus states had
+ * no feedback at all. Mirrored to dark overlays at the same weight. */
+body.light-mode .article-card:hover,
+body.light-mode .search-result-item:hover,
+body.light-mode .project-card:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #111;
+}
+
+body.light-mode .social-chip:hover,
+body.light-mode .ip-copy-btn:hover,
+body.light-mode .ip-lookup-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #111;
+}
+
+body.light-mode .pill-button,
+body.light-mode .exp-tab {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+body.light-mode .pill-button:hover,
+body.light-mode .exp-tab.is-active {
+  background: rgba(0, 0, 0, 0.12);
+  color: #111;
+}
+
+body.light-mode .search-bar:focus-within,
+body.light-mode .ip-lookup-input:focus {
+  color: #111;
+}
+
+body.light-mode .contrib-cell[data-tooltip]:hover {
+  color: #111;
+}
+
+/* The toast keeps white text, so give it a dark surface to sit on. */
+body.light-mode .toast {
+  background: rgba(24, 24, 28, 0.92);
+  color: #fff;
+}
+
+body.light-mode .about-current-sub a,
+body.light-mode .about-current-body a {
+  text-decoration-color: rgba(0, 0, 0, 0.35);
+}
+
+/* The ring is drawn from white borders and vanished against a light page. */
+body.light-mode .loading,
+body.light-mode .loading::before,
+body.light-mode .loading::after {
+  border-color: rgba(0, 0, 0, 0.1);
+  border-left-color: rgba(0, 0, 0, 0.4);
+}
+
+/* --- Tab bar ----------------------------------------------------------------
+ * The Explore tab scrolls content underneath the tab bar, which is why the dark
+ * theme makes the tabs opaque there. The light theme had a rule for the inactive
+ * tabs but none for the active one, and the generic 0.6-alpha active rule is more
+ * specific — so search results showed straight through the selected tab. */
+body.light-mode.search-active .work-tab__glass-overlay {
+  background: rgba(238, 239, 245, 1);
+}
+
+body.light-mode.search-active .work-tab.is-active .work-tab__glass-overlay {
+  background: rgba(248, 249, 252, 1);
+}
