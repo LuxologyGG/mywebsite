@@ -9,9 +9,9 @@ kv_namespaces = [
 [assets]
 directory = "./public"
 binding = "ASSETS"
-
-[assets.routing]
-not_found_handling = "single-page-application"
+# SPA fallback is handled in src/routes/spa.js so that unknown paths can keep a
+# 404 status while still rendering the site's own not-found view.
+not_found_handling = "none"
 
 [vars]
 DISCORD_USER_ID = "1042651808557977600"

@@ -1,0 +1,269 @@
+/* experience.css — Tech stack, awards, and certification rows. */
+
+/* Tech Stack & Experience Cards */
+
+/* Resume and CV sit side by side, wrapping on narrow screens. */
+.doc-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.resume-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 200ms ease, border 200ms ease, transform 200ms ease;
+  margin-bottom: 4px;
+}
+
+.resume-banner:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.resume-banner svg {
+  opacity: 0.7;
+}
+
+.exp-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 14px 0 6px;
+}
+
+.tech-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tech-logo-item {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  opacity: 0;
+  animation: techLogoIn 420ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.tech-logo-item:nth-child(1)  { animation-delay: 40ms; }
+.tech-logo-item:nth-child(2)  { animation-delay: 70ms; }
+.tech-logo-item:nth-child(3)  { animation-delay: 100ms; }
+.tech-logo-item:nth-child(4)  { animation-delay: 130ms; }
+.tech-logo-item:nth-child(5)  { animation-delay: 160ms; }
+.tech-logo-item:nth-child(6)  { animation-delay: 190ms; }
+.tech-logo-item:nth-child(7)  { animation-delay: 220ms; }
+.tech-logo-item:nth-child(8)  { animation-delay: 250ms; }
+.tech-logo-item:nth-child(9)  { animation-delay: 280ms; }
+.tech-logo-item:nth-child(10) { animation-delay: 310ms; }
+.tech-logo-item:nth-child(11) { animation-delay: 340ms; }
+.tech-logo-item:nth-child(12) { animation-delay: 370ms; }
+.tech-logo-item:nth-child(13) { animation-delay: 400ms; }
+.tech-logo-item:nth-child(14) { animation-delay: 430ms; }
+.tech-logo-item:nth-child(15) { animation-delay: 460ms; }
+.tech-logo-item:nth-child(16) { animation-delay: 490ms; }
+.tech-logo-item:nth-child(17) { animation-delay: 520ms; }
+
+@keyframes techLogoIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tech-logo-item:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.tech-logo-item img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+}
+
+.invert-dark img {
+  filter: invert(1);
+}
+
+.exp-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exp-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+a.exp-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.exp-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.exp-item-title {
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exp-item-issuer {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exp-row-link {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  transition: background 180ms ease, color 180ms ease;
+}
+
+a.exp-row:hover .exp-row-link {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+/* Light mode overrides for experience */
+body.light-mode .exp-section-label {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-mode .resume-banner {
+  color: #111;
+}
+
+body.light-mode .resume-banner:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .tech-logo-item {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .tech-logo-item:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .invert-dark img {
+  filter: none;
+}
+
+body.light-mode .exp-row {
+  color: #111;
+}
+
+body.light-mode .exp-item-issuer {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+body.light-mode .exp-row-link {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode a.exp-row:hover .exp-row-link {
+  background: rgba(0, 0, 0, 0.1);
+  color: #111;
+}
+
+@media (max-width: 520px) {
+  .htl-node { min-width: 100px; padding: 0 16px; }
+  .htl-label { font-size: 12px; max-width: 100px; }
+  .htl-detail { margin: 16px 6px 0; }
+  .htl-detail-title { font-size: 15px; }
+  .htl-detail-body { font-size: 12px; }
+  .tech-logo-item { width: 38px; height: 38px; }
+  .tech-logo-item img { width: 22px; height: 22px; }
+  .exp-item-title { font-size: 12px; }
+  .exp-item-issuer { font-size: 10px; }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 13px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease, transform 250ms ease;
+  z-index: 8;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+}
+.blog-panel {
+  background: transparent;
+  color: #fff;
+  max-width: 1100px;
+  width: 100%;
+  padding: 32px 20px 40px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.blog-panel h1 {
+  margin: 0 0 14px;
+  font-size: 42px;
+  letter-spacing: 0.5px;
+}
+
+.blog-panel p {
+  margin: 0 0 12px;
+  font-size: 18px;
+  line-height: 1.6;
+}
