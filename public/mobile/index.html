@@ -438,7 +438,12 @@
     }
 
     /* ── Days counter ── */
-    #m-days-usc { color: var(--fg); font-weight: 700; }
+    #m-days-current { color: var(--fg); font-weight: 700; }
+
+    /* The Homa mark ships black; invert it against this page's dark surface. */
+    .work-card-logo.invert-dark img { filter: invert(1); }
+
+    .work-card-desc a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
     /* ── Footer ── */
     .footer {
@@ -492,11 +497,11 @@
       <img class="hero-photo" src="/photos/pfp.png" alt="Camron's profile photo">
       <div class="hero-identity">
         <div class="hero-name">Hey, I'm Camron 👋</div>
-        <div class="hero-title">Student · Researcher · Developer</div>
+        <div class="hero-title">Student · Researcher · Founder</div>
       </div>
     </div>
     <p class="hero-bio">
-      I like science, skiing, and cooking. I'm based in Southern California, currently doing cancer research at USC and building things on the internet.
+      I like science, skiing, and cooking. I'm based in Southern California, building Homa and doing hematology/oncology research.
     </p>
     <div class="hero-actions">
       <a href="/photos/Resume.pdf" target="_blank" rel="noopener" class="btn btn-primary">
@@ -515,13 +520,13 @@
     <div class="kicker">// Current Work</div>
     <div class="section-title">What I'm up to</div>
     <div class="work-card">
-      <div class="work-card-logo">
-        <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC">
+      <div class="work-card-logo invert-dark">
+        <img src="/photos/homa-logo.svg" alt="Homa">
       </div>
       <div class="work-card-body">
-        <div class="work-card-org">University of Southern California</div>
-        <div class="work-card-role">Research Intern · <span id="m-days-usc">—</span> days</div>
-        <div class="work-card-desc">Working with <strong>Dr. Yaghmour</strong> on research into BPDCN — a rare and aggressive blood cancer.</div>
+        <div class="work-card-org">Homa</div>
+        <div class="work-card-role">Founder · <span id="m-days-current">—</span> days</div>
+        <div class="work-card-desc">The supplement industry sells you bottles; <strong>Homa</strong> shows you the biology — every compound mapped to the pathway it acts on, evidence graded from public research. <a href="https://homa.bio" target="_blank" rel="noopener">homa.bio</a></div>
       </div>
     </div>
   </div>
@@ -679,14 +684,6 @@
         <svg viewBox="50 36 170 170"><path fill="currentColor" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/><path fill="currentColor" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/><path fill="currentColor" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z"/></svg>
         ORCID
       </a>
-      <a href="https://steamcommunity.com/id/luxygg/" target="_blank" rel="noreferrer" class="social-card">
-        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0z"/></svg>
-        Steam
-      </a>
-      <a href="https://namemc.com/profile/Camronia.1" target="_blank" rel="noreferrer" class="social-card">
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0v24h24V0Zm4.8 4.8H16V8h3.2v11.2H16V8H8v11.2H4.8V8Z"/></svg>
-        Minecraft
-      </a>
     </div>
   </div>
 
@@ -698,12 +695,11 @@
 </div><!-- /page-grid -->
 
 <script>
-  // Days at USC counter
+  // Days building Homa
   (function () {
-    const start = Date.UTC(2025, 8, 18); // Sept 18, 2025
-    const now = new Date();
+    const start = Date.UTC(2026, 0, 1); // Jan 1, 2026
     const days = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-    const el = document.getElementById('m-days-usc');
+    const el = document.getElementById('m-days-current');
     if (el) el.textContent = days >= 0 ? days : 0;
   })();
 

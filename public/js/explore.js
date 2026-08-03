@@ -156,6 +156,7 @@ function renderIpDetails(data) {
 
 function showIpInfo() {
   exploreSubView = 'ip';
+  if (typeof destroyIpGlobe === 'function') destroyIpGlobe();
   searchResultsEl.innerHTML = '';
   const card = document.createElement('div');
   card.className = 'ip-info-card glassy';
@@ -168,9 +169,14 @@ function showIpInfo() {
       card.innerHTML = `
         <div class="ip-info-header">Your Public IP</div>
         <div class="ip-info-address">${data.ip}</div>
+        ${data.loc ? '<canvas class="ip-globe" width="400" height="400" aria-hidden="true"></canvas>' : ''}
         ${renderIpDetails(data)}
         <button class="ip-copy-btn glassy" onclick="navigator.clipboard.writeText('${data.ip}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy IP',1500)">Copy IP</button>
       `;
+      // Purely decorative, and loaded on demand — never block the card on it.
+      if (data.loc && typeof mountIpGlobe === 'function') {
+        mountIpGlobe(card.querySelector('.ip-globe'), data.loc);
+      }
     })
     .catch(() => {
       card.innerHTML = '<div class="ip-loading">Could not fetch IP info</div>';

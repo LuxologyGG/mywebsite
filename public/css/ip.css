@@ -393,3 +393,23 @@ body.light-mode .profile-title {
     inset 1px 1px 0 rgba(255, 255, 255, 0.55),
     inset 0 0 8px rgba(255, 255, 255, 0.2);
 }
+
+/* Globe pinned to the visitor's coordinates. Decorative and lazily mounted, so
+   it stays hidden until COBE has actually painted a frame. */
+.ip-globe {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 10px auto 14px;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  contain: layout paint;
+}
+
+.ip-globe.is-ready {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-globe { transition: none; }
+}
