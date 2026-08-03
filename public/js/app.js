@@ -243,6 +243,7 @@ const OVERLAY_MODE_CLASSES = [
 
 function exitOverlay(skipBgReset) {
   document.body.classList.remove(...OVERLAY_MODE_CLASSES);
+  if (typeof destroyIpGlobe === 'function') destroyIpGlobe();
   if (overviewScene) overviewScene.stop();
   stopDiscordPresence();
   if (!skipBgReset && window._graphPaperSetMode) window._graphPaperSetMode('grid');

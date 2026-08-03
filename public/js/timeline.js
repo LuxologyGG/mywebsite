@@ -15,16 +15,6 @@ const WORK_TIMELINE_DATA = [
     ]
   },
   {
-    id: 'cbsc_intern',
-    date: 'Jun 2026 - Present',
-    title: 'Research Intern',
-    meta: 'Cancer and Blood Specialty Clinic · Jun 2026 - Present · Long Beach, CA',
-    body: [
-      'Support hematology/oncology research in an outpatient clinical setting.',
-      'Contribute to clinical case reports and manuscript preparation.'
-    ]
-  },
-  {
     id: 'umich_bs',
     date: 'Aug 2026 - May 2030',
     title: 'B.S. Biology',

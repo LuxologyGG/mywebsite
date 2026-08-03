@@ -3,6 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    /* Send phones to /mobile/. Runs inline and before any stylesheet so the
+     * redirect happens ahead of first paint rather than flashing the desktop
+     * layout. Deliberately client-side: Cloudflare's asset handler serves "/"
+     * before the Worker sees it, so a Worker-side redirect would never fire.
+     *
+     * Opting out is the "View Full Site" link on /mobile/, which sets
+     * prefer_desktop=1 for a day. Crawlers are left on the full site so it is
+     * the version that gets indexed, and tablets keep the desktop layout. */
+    (function () {
+      try {
+        if (location.pathname !== '/') return;
+        if (/(?:^|;\s*)prefer_desktop=1/.test(document.cookie)) return;
+        var ua = navigator.userAgent || '';
+        if (/bot|crawl|spider|slurp|bingpreview|headless|lighthouse/i.test(ua)) return;
+        var phone = /Android.*Mobile|iPhone|iPod|Windows Phone|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        if (phone && window.innerWidth <= 820) location.replace('/mobile/');
+      } catch (e) { /* never block the page on this */ }
+    })();
+  </script>
   <title>Camron Farjami — camr.one</title>
   <meta name="author" content="Camron Farjami">
   <meta name="description" content="Camron Farjami — biology and pre-medicine student, hematology/oncology researcher, and builder. Research, publications, projects, and contact.">
@@ -456,6 +476,7 @@
   <script defer src="/js/router.js"></script>
   <script defer src="/js/presence.js"></script>
   <script defer src="/js/timeline.js"></script>
+  <script defer src="/js/globe.js"></script>
   <script defer src="/js/explore.js"></script>
   <script defer src="/js/pages.js"></script>
   <script defer src="/js/app.js"></script>
