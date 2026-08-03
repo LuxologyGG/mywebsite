@@ -296,7 +296,7 @@ function showOverview() {
 
       <div class="ov-section">
         <div class="ov-section-label">OVERVIEW</div>
-        <p class="ov-body">Incoming biology undergraduate at the University of Michigan on the pre-medical track, currently researching hematology and oncology at the Cancer and Blood Specialty Clinic and Loma Linda University Medical Center. Co-author on several peer-reviewed case reports, with parallel work building AI-driven health technology. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
+        <p class="ov-body">Founder of Homa, an AI supplement intelligence platform that maps every compound to the pathway it acts on and grades the evidence behind each claim. Incoming biology undergraduate at the University of Michigan on the pre-medical track, with ongoing hematology and oncology research at Loma Linda University Medical Center and co-authorship on several peer-reviewed case reports. Outside of that, I ski, cook, and debate (ranked top 50 nationally).</p>
       </div>
 
       <div class="ov-section">
