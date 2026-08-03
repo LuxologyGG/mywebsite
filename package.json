@@ -7,8 +7,6 @@
     "mongodb": "^7.1.0"
   },
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
     "test": "node test/profanity.test.mjs && node test/api.test.mjs"
   }
 }
