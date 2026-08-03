@@ -27,6 +27,13 @@ export default {
     if (path === "/api/upload") return handleUpload(request, env, cors);
     if (path === "/api/github-contributions") return handleGithubContributions(request, cors);
 
+    // Standalone mobile profile page. It is its own document rather than a view
+    // of the SPA, so it is matched before the shell fallback; without this,
+    // /mobile has no extension and would be served index.html with a 404.
+    if (path === "/mobile" || path === "/mobile/") {
+      return env.ASSETS.fetch(new Request(new URL("/mobile/index.html", request.url)));
+    }
+
     if (isSpaRoute(path)) return handleSpa(request, env, url);
 
     const asset = await env.ASSETS.fetch(request);

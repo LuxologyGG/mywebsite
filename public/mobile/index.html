@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Camron's Personal Website and Portfolio</title>
+  <meta name="description" content="Camron's personal website and portfolio — student, researcher, developer.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/photos/poker-chip(1).png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f0f0f0;
+      --muted: rgba(240,240,240,0.45);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+      --card-bg: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.1);
+      --accent: #fff;
+      --kicker: rgba(255,255,255,0.32);
+      --col-pad: 22px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      /* Account for sticky nav when jumping to anchors */
+      scroll-padding-top: 64px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      /* Safe-area padding for notched phones */
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    /* ── Grid border lines (Ashish Gogula style) ── */
+    .page-grid {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 var(--col-pad);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      /* Enough bottom padding so footer clears home-bar on iPhone */
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+
+    /* Dotted background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-grid > * { position: relative; z-index: 1; }
+
+    /* ── Top nav bar ── */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 100;
+      /* Stretch to full page-grid width, flush with borders */
+      margin-left: calc(-1 * var(--col-pad));
+      margin-right: calc(-1 * var(--col-pad));
+      padding-left: var(--col-pad);
+      padding-right: var(--col-pad);
+    }
+
+    .topnav-name {
+      font-family: "DM Mono", monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .topnav-fullsite {
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border-strong);
+      padding: 5px 12px;
+      border-radius: 20px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .topnav-fullsite:hover { color: var(--fg); border-color: rgba(255,255,255,0.3); }
+
+    /* ── Section kicker label ── */
+    .kicker {
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--kicker);
+      margin-bottom: 14px;
+    }
+
+    /* ── Section wrapper ── */
+    .section {
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 40px 0 36px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero-photo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border-strong);
+      flex-shrink: 0;
+    }
+
+    .hero-identity {}
+
+    .hero-name {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--fg);
+    }
+
+    .hero-title {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .hero-bio {
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(240,240,240,0.78);
+      margin-bottom: 22px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.15s;
+      cursor: pointer;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: #fff;
+      color: #0a0a0a;
+    }
+
+    .btn-primary:hover { background: #e8e8e8; }
+
+    .btn-ghost {
+      background: var(--card-bg);
+      color: var(--fg);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+    /* ── Status pill ── */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3ba55d;
+      box-shadow: 0 0 6px rgba(59,165,93,0.6);
+      flex-shrink: 0;
+      animation: pulse-green 2s ease infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 0 6px rgba(59,165,93,0.6); }
+      50%       { box-shadow: 0 0 12px rgba(59,165,93,0.9); }
+    }
+
+    /* ── Current work card ── */
+    .work-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+    }
+
+    .work-card-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .work-card-logo img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .work-card-body {}
+
+    .work-card-org {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 2px;
+    }
+
+    .work-card-role {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .work-card-desc {
+      font-size: 13px;
+      color: rgba(240,240,240,0.6);
+      line-height: 1.5;
+    }
+
+    .work-card-desc strong { color: var(--fg); }
+
+    /* ── Tech stack ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+      gap: 10px;
+    }
+
+    .tech-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 10px;
+      font-family: "DM Mono", monospace;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .tech-item:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .tech-item img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .tech-item.invert img { filter: brightness(0) invert(1); }
+
+    /* ── List cards (awards / certs) ── */
+    .list-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    a.list-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .list-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .list-card-body { flex: 1; min-width: 0; }
+
+    .list-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .list-card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .list-card-arrow {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Socials grid ── */
+    .socials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .social-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .social-card svg, .social-card img {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .social-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 18px;
+    }
+
+    /* ── Days counter ── */
+    #m-days-usc { color: var(--fg); font-weight: 700; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 28px 0;
+      text-align: center;
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      color: var(--kicker);
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+
+    /* ── Fade-in animation ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.05s; }
+    .fade-in:nth-child(2) { animation-delay: 0.12s; }
+    .fade-in:nth-child(3) { animation-delay: 0.19s; }
+    .fade-in:nth-child(4) { animation-delay: 0.26s; }
+    .fade-in:nth-child(5) { animation-delay: 0.33s; }
+    .fade-in:nth-child(6) { animation-delay: 0.40s; }
+    .fade-in:nth-child(7) { animation-delay: 0.47s; }
+    .fade-in:nth-child(8) { animation-delay: 0.54s; }
+  </style>
+</head>
+<body>
+
+<div class="page-grid">
+
+  <!-- ── Top nav ── -->
+  <nav class="topnav">
+    <a href="/mobile/" class="topnav-name">camr.one</a>
+    <a href="/" class="topnav-fullsite" id="desktop-link">View Full Site →</a>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <div class="hero fade-in">
+    <div class="status-pill">
+      <span class="status-dot"></span>
+      Open to research opportunities
+    </div>
+    <div class="hero-top">
+      <img class="hero-photo" src="/photos/pfp.png" alt="Camron's profile photo">
+      <div class="hero-identity">
+        <div class="hero-name">Hey, I'm Camron 👋</div>
+        <div class="hero-title">Student · Researcher · Developer</div>
+      </div>
+    </div>
+    <p class="hero-bio">
+      I like science, skiing, and cooking. I'm based in Southern California, currently doing cancer research at USC and building things on the internet.
+    </p>
+    <div class="hero-actions">
+      <a href="/photos/Resume.pdf" target="_blank" rel="noopener" class="btn btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Resume
+      </a>
+      <a href="mailto:camron@camr.one" class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email me
+      </a>
+    </div>
+  </div>
+
+  <!-- ── About / Current Work ── -->
+  <div class="section fade-in">
+    <div class="kicker">// Current Work</div>
+    <div class="section-title">What I'm up to</div>
+    <div class="work-card">
+      <div class="work-card-logo">
+        <img src="https://identity.usc.edu/wp-content/uploads/2022/08/Trojan_Head_onblack_border.png" alt="USC">
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-org">University of Southern California</div>
+        <div class="work-card-role">Research Intern · <span id="m-days-usc">—</span> days</div>
+        <div class="work-card-desc">Working with <strong>Dr. Yaghmour</strong> on research into BPDCN — a rare and aggressive blood cancer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tech Stack ── -->
+  <div class="section fade-in">
+    <div class="kicker">// Tools &amp; Technologies</div>
+    <div class="section-title">Tech Stack</div>
+    <div class="tech-grid">
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/HTML5_Badge.svg" alt="HTML">HTML
+      </a>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg" alt="CSS">CSS
+      </a>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg" alt="JS">JS
+      </a>
+      <a href="https://react.dev" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React">React
+      </a>
+      <a href="https://www.python.org" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python">Python
+      </a>
+      <a href="https://www.r-project.org" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg" alt="R">R
+      </a>
+      <a href="https://figma.com" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt="Figma">Figma
+      </a>
+      <a href="https://git-scm.com" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" alt="Git">Git
+      </a>
+      <a href="https://github.com" target="_blank" rel="noopener" class="tech-item invert">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">GitHub
+      </a>
+      <a href="https://www.mongodb.com" target="_blank" rel="noopener" class="tech-item">
+        <img src="/photos/MongoDB.svg" alt="MongoDB">Mongo
+      </a>
+      <a href="https://www.php.net" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" alt="PHP">PHP
+      </a>
+      <a href="https://vercel.com" target="_blank" rel="noopener" class="tech-item invert">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel">Vercel
+      </a>
+      <a href="https://www.cloudflare.com" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://r2.e-z.host/2082d908-7c65-4fc3-b02a-5f50f9141543/me2uv8xk95n010sdwz.png" alt="CF">CF
+      </a>
+      <a href="https://code.visualstudio.com" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code">VSCode
+      </a>
+      <a href="https://wordpress.org" target="_blank" rel="noopener" class="tech-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg" alt="WordPress">WP
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Awards ── -->
+  <div class="section fade-in">
+    <div class="kicker">// Recognition</div>
+    <div class="section-title">Awards</div>
+    <div class="list-cards">
+      <a href="https://static.wixstatic.com/media/3f4d08_fa565fb9ffad4082b66456cffdf48500~mv2.jpg/v1/fill/w_1175,h_1519,al_c,q_85,enc_avif,quality_auto/USMDO2025_2_2.jpg" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">🥈</div>
+        <div class="list-card-body">
+          <div class="list-card-title">Silver Medalist — US Medicine &amp; Disease Olympiad</div>
+          <div class="list-card-sub">USMDO · Aug 2025 · Top 15% of 1,318 participants</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://edgeesmeralda2025.substack.com/p/announcing-our-first-inflection-grantees" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">🏆</div>
+        <div class="list-card-body">
+          <div class="list-card-title">Inflection Grant Recipient</div>
+          <div class="list-card-sub">Edge City &amp; Long Journey Ventures · Jun 2025 · 1 of 5 from 350+ applicants</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Certifications ── -->
+  <div class="section fade-in">
+    <div class="kicker">// Education &amp; Credentials</div>
+    <div class="section-title">Certifications</div>
+    <div class="list-cards">
+      <a href="https://camr.one/photos/cert.pdf" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">🔬</div>
+        <div class="list-card-body">
+          <div class="list-card-title">Biology Program</div>
+          <div class="list-card-sub">Science Mentorship Institute · Jun 2025</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://credsverse.com/credentials/2fb3b952-2741-46f3-8659-fef7872c36ff" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">📚</div>
+        <div class="list-card-body">
+          <div class="list-card-title">Research Foundations Program</div>
+          <div class="list-card-sub">Non-Trivial · May 2025</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://courses.edx.org/certificates/8b2736ee4f9c4323bb64f5355342e3a9" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">📊</div>
+        <div class="list-card-body">
+          <div class="list-card-title">Statistics and R</div>
+          <div class="list-card-sub">HarvardX · May 2025</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://www.redcross.org/take-a-class/qrCode?certnumber=01SALFE" target="_blank" rel="noopener" class="list-card">
+        <div class="list-card-icon">🩺</div>
+        <div class="list-card-body">
+          <div class="list-card-title">First Aid / CPR / AED</div>
+          <div class="list-card-sub">American Red Cross · Mar 2025 · Exp. Mar 2027</div>
+        </div>
+        <svg class="list-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="list-card">
+        <div class="list-card-icon">🥋</div>
+        <div class="list-card-body">
+          <div class="list-card-title">1st Poom Black Belt in Taekwondo</div>
+          <div class="list-card-sub">Kukkiwon · Mar 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Socials ── -->
+  <div class="section fade-in">
+    <div class="kicker">// Find Me Online</div>
+    <div class="section-title">Socials</div>
+    <div class="socials-grid">
+      <a href="https://www.linkedin.com/in/camron-farjami-608822359/" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1-.001 5.001A2.5 2.5 0 0 1 4.98 3.5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-.96 1.84-1.97 3.79-1.97C20.42 8.67 21 11.02 21 14.08V21h-4v-6.07c0-1.45-.03-3.31-2.02-3.31c-2.03 0-2.34 1.58-2.34 3.21V21H9z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/LuxologyGG" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38c0-.19-.01-.82-.01-1.49c-2.01.37-2.53-.49-2.69-.94c-.09-.23-.48-.94-.82-1.13c-.28-.15-.68-.52-.01-.53c.63-.01 1.08.58 1.23.82c.72 1.21 1.87.87 2.33.66c.07-.52.28-.87.5-1.07c-1.78-.2-3.64-.89-3.64-3.95c0-.87.31-1.59.82-2.15c-.08-.2-.36-1.02.08-2.12c0 0 .67-.21 2.2.82c.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82c.44 1.1.16 1.92.08 2.12c.51.56.82 1.27.82 2.15c0 3.07-1.87 3.75-3.65 3.95c.29.25.54.73.54 1.48c0 1.07-.01 1.93-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+        GitHub
+      </a>
+      <a href="https://discord.com/users/1042651808557977600" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20.317 4.3698a19.793 19.793 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.211.375-.445.865-.609 1.25a16.017 16.017 0 0 0-5.487 0c-.163-.394-.406-.875-.618-1.25a.077.077 0 0 0-.078-.037a19.738 19.738 0 0 0-4.885 1.515a.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056a19.889 19.889 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.042-.106a12.3 12.3 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.794 8.18 1.794 12.061 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.127a12.3 12.3 0 0 1-1.873.891a.077.077 0 0 0-.04.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029a19.887 19.887 0 0 0 6.002-3.03a.077.077 0 0 0 .031-.055c.5-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.331a2.42 2.42 0 1 1 0-4.838a2.42 2.42 0 0 1 0 4.838Zm7.955 0a2.42 2.42 0 1 1 0-4.838a2.42 2.42 0 0 1 0 4.838Z"/></svg>
+        Discord
+      </a>
+      <a href="https://open.spotify.com/user/wt4h8d6mugrn5aid768agec53" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.5C6.201 1.5 1.5 6.201 1.5 12S6.201 22.5 12 22.5 22.5 17.799 22.5 12 17.799 1.5 12 1.5zm5.384 15.436a.703.703 0 0 1-.968.238c-2.651-1.625-5.984-1.994-9.915-1.099a.703.703 0 0 1-.29-1.373c4.31-.91 8.03-.479 11.023 1.318a.703.703 0 0 1 .15.916zm1.379-3.067a.879.879 0 0 1-1.213.297c-3.031-1.862-7.653-2.402-11.223-1.316a.879.879 0 0 1-.505-1.685c4.062-1.215 9.123-.612 12.578 1.5a.879.879 0 0 1 .363 1.204zm.12-3.253c-3.636-2.164-9.622-2.363-13.085-1.3a1.055 1.055 0 0 1-.606-2.021c3.987-1.196 10.66-.96 15.007 1.619a1.055 1.055 0 1 1-1.116 1.802z"/></svg>
+        Spotify
+      </a>
+      <a href="https://www.last.fm/user/Camronia" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.595 0-.934.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.907 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.93-1.457-4.59-3.464l-.907-2.75c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z"/></svg>
+        Last.fm
+      </a>
+      <a href="https://orcid.org/0009-0007-9651-9681" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="50 36 170 170"><path fill="currentColor" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/><path fill="currentColor" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/><path fill="currentColor" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z"/></svg>
+        ORCID
+      </a>
+      <a href="https://steamcommunity.com/id/luxygg/" target="_blank" rel="noreferrer" class="social-card">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0z"/></svg>
+        Steam
+      </a>
+      <a href="https://namemc.com/profile/Camronia.1" target="_blank" rel="noreferrer" class="social-card">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0v24h24V0Zm4.8 4.8H16V8h3.2v11.2H16V8H8v11.2H4.8V8Z"/></svg>
+        Minecraft
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    <a href="/">camr.one</a> · made by camron
+  </div>
+
+</div><!-- /page-grid -->
+
+<script>
+  // Days at USC counter
+  (function () {
+    const start = Date.UTC(2025, 8, 18); // Sept 18, 2025
+    const now = new Date();
+    const days = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
+    const el = document.getElementById('m-days-usc');
+    if (el) el.textContent = days >= 0 ? days : 0;
+  })();
+
+  // If user visits on desktop, offer to switch back
+  const desktopLink = document.getElementById('desktop-link');
+  desktopLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    // Set a cookie so the redirect won't fire again this session
+    document.cookie = 'prefer_desktop=1; path=/; max-age=86400';
+    window.location.href = '/';
+  });
+</script>
+
+</body>
+</html>
