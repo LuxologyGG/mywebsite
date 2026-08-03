@@ -1,10 +1,6 @@
 {
   "devDependencies": {
-    "wrangler": "^4.68.0"
-  },
-  "dependencies": {
-    "geist": "^1.7.0",
-    "mongodb": "^7.1.0"
+    "wrangler": "4.106.0"
   },
   "scripts": {
     "test": "node test/profanity.test.mjs && node test/api.test.mjs"
